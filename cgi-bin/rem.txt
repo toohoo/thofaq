@@ -1,0 +1,22 @@
+#######################################################
+## Kommentardatei fuer Projekt Auszeichnung im Intranet
+## Thomas Hofmann, September 2005
+## 
+## Die Variablen entsprechen dem Mindestsatz an 
+##   noetigen Options-Variablen
+## Die Optionen-Variablen selbst werden fuer jeden User extra 
+##   gespeichert im Unterverzeichnis opt
+## Bei Nichtvorhandensein der Optionsdatei wird
+##   diese neu angelegt
+## Bei fehlenden Variablen werden diese vorbelegt
+##   mit Standardwerten (s. optstandard in webtools.pl)
+#######################################################
+ziel	Zielverzeichnis für das Speichern im Datenpool
+id	Dokument-ID
+datei	Dateiname ohne Erweiterung wie z.B. '.doc'
+bearb	Arbeitsverzeichnis zum Auszeichnen (im Pool auf F:)
+sic	Unterverzeichnis ziel zum Sichern beim Holen zum Bearbeiten aus dem Datennpool
+#sic	Unterverzeichnis in bearb zum Sichern beim Ablegen im Datennpool
+holen	Holen der SGM-Datei aus dem Datenpool zum Bearbeiten
+sichern	Sichern der SGM-Datei in den Datenpool nach dem Bearbeiten
+dtd-holen	Holen der aktuellen DTD von ihrem Platz an die Stelle zum Parsen

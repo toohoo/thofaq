@@ -1,0 +1,257 @@
+/* -------------------------------------------- */
+/* Stylesheet fuer Tools im Intranet            */
+/* Thomas Hofmann, Sep 2005                     */
+/*                                              */
+/* -------------------------------------------- */
+
+html {
+	background-color: #eeeeee;
+	font-family: Arial,Helvetica,Helv,sans-serif;
+}
+
+/*
+body {
+	background-color: #eeeeee;
+	font-family: Arial,Helvetica,Helv,sans-serif;
+}
+*/
+
+.webfehler {
+border: thin solid red;
+background-color: #ffcccc;
+/* langt es nicht, wenn 'Fehler' fett ist? */
+/*font-weight: bold;*/
+}
+
+.webhinweis {
+border: thin solid green;
+background-color: #ccffcc;
+}
+
+input[readonly] {
+color: #666666;
+background-color: #cccccc;
+}
+
+textarea[readonly] {
+color: #666666;
+background-color: #cccccc;
+}
+
+.hinterlegt {
+margin: 1px 1px 1px 1px;
+/*border: thin dotted black;*/
+font-style: normal;
+font-family: monospace;
+font-size: 9pt;
+background-color: #ffffcc;
+}
+
+fieldset {
+	padding: 10px;
+	background-color: #ffffcc;
+}
+
+/*
+label[for~=optionen] {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	padding: 2px;
+	border: 2px groove #cccccc;
+*/
+	/*margin-top: 20px;*/
+	/*margin-left: 10px;*/
+/*
+	background-color: #aaaaff;
+}
+label[for~=parsen] {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	padding: 2px;
+	border: 2px groove #cccccc;
+	background-color: #aaaaff;
+}
+*/
+
+legend {
+	padding: 1px;
+	border: 2px groove #cccccc;
+	background-color: #aaaaff;
+}
+
+.katwahl {
+	border: thin solid #999999;
+	background-color: #ffffcc;
+	float: left;
+	width: 200px;
+	margin-right: 20px;
+}
+
+.katwahltit {
+	background-color: #ffff99;
+	border-bottom: thin solid #ffff00;
+	margin: 0px;
+	padding: 5px;
+}
+
+.katwahl > p {
+	margin: 5px;
+}
+
+.katwahl > ol {
+	/*margin-left: 25px;*/
+	margin-top: 2px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+
+.faq {
+	margin-left: 220px;
+}
+
+.faqfragen {
+	/*border: thin solid #999999;*/
+	background-color: #eeeeee;
+}
+
+.faqfragtit {
+	background-color: #ddddff;
+	border: thin solid #999999;
+	/*border-bottom: thin solid #999999;*/
+	margin: 0px;
+	padding: 5px;
+}
+
+.faqantworten {
+	margin-top: 10px;
+	/*border: thin solid #999999;*/
+	background-color: #eeeeee;
+}
+
+.faqanttit {
+	background-color: #ddffff;
+	border: thin solid #999999;
+	/*border-bottom: thin solid #999999;*/
+	margin: 0px;
+	padding: 5px;
+}
+
+.editfaqanttit {
+	background-color: #ffccff;
+	border: thin solid #999999;
+	/*border-bottom: thin solid #999999;*/
+	margin: 0px;
+	padding: 5px;
+}
+
+
+.faqantworten dt {
+	font-weight: bold;
+}
+
+.faqantworten dd {
+	margin-bottom: 20px;
+	padding-bottom: 5px;
+	border-bottom: thin dashed #999999;
+}
+
+.zufragen {
+	display: block;
+	font-size: x-small;
+	margin-top: 10px;
+}
+
+.katedit {
+	border: thin solid #999999;
+	background-color: #ffdddd;
+	/*float: left;*/
+	width: 500px;
+	/*margin-right: 20px;*/
+	/*margin-right: auto;*/
+}
+
+.katedittit {
+	background-color: #ffaaaa;
+	border-bottom: thin solid #ff6666;
+	margin: 0px;
+	padding: 5px;
+}
+
+.kateditneu {
+	/*border: thin solid #999999;*/
+	/*background-color: #ffdddd;*/
+	/*float: left;*/
+	/*width: 500px;*/
+	/*margin-right: 20px;*/
+	/*margin-right: auto;*/
+
+	/*margin: 10px 20px 10px 20px;*/
+	margin-top: 0px;
+	padding: 10px 20px 10px 20px;
+	/*background-color: #ccccff;*/
+}
+
+.kateditneutit {
+	background-color: #ffaaaa;
+	border-bottom: thin solid #ff6666;
+	margin: 0px;
+	padding: 5px;
+}
+
+.kateditchecktit {
+	background-color: #9999ff;
+	border-bottom: thin solid #6666ff;
+	margin: 0px;
+	padding: 5px;
+}
+
+.kateditcheck {
+	/*margin: 10px 20px 10px 20px;*/
+	margin-top: 0px;
+	padding: 1px 20px 10px 20px;
+	background-color: #ccccff;
+}
+
+.faqtitedit {
+	background-color: #ddddbb;
+	border: 2px outset #ffffff;
+	font-size: x-small;
+	text-decoration: none;
+}
+
+.faqedit {
+	border: thin solid #999999;
+	background-color: #ffdddd;
+	/*float: left;*/
+	width: 670px;
+	/*margin-right: 20px;*/
+	/*margin-right: auto;*/
+}
+
+.faqedittit {
+	background-color: #ffaaaa;
+	border-bottom: thin solid #ff6666;
+	margin: 0px;
+	padding: 5px;
+}
+
+.faqeditchecktit {
+	background-color: #9999ff;
+	border-bottom: thin solid #6666ff;
+	margin: 0px;
+	padding: 5px;
+}
+
+.faqeditcheck {
+	/*margin: 10px 20px 10px 20px;*/
+	margin-top: 0px;
+	padding: 1px 20px 10px 20px;
+	background-color: #ccccff;
+}
+
+.faqedit > p {
+	margin: 20px;
+}
