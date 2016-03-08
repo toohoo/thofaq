@@ -73,6 +73,8 @@ print $head;
 
 print &webtag( &weblink("[zurück zu Edit Fragen]", "editfaq.pl") );
 
+print "<p>_____faqedit.pl_____</p>\n";
+
 $aktkat = 1;
 $input="";
 @input=();
@@ -85,7 +87,7 @@ if (&ReadParse(*input)) {
 		$faqnr = $input{'fnr'};
 	}
 } else {
-	&webabbruch("Keine Nr. zum Bearbeiten uebergeben.");
+	&webabbruch("Keine Nr. zum Bearbeiten uebergeben."); 
 }
 
 ($fkat, $ftit, $finh) = ($globals{"faq-kat"},$globals{"faq-tit"},$globals{"faq-inh"});
@@ -99,6 +101,8 @@ if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
+
+print &webtag( "p", "", "vor ausgabefaqedit: faqnr[$faqnr]" );
 
 ## jetzt kann ich Link zum Bearbeiten der Fragen in der richtigen Kategogie ausgeben
 ## 	ausser es ist "neu"

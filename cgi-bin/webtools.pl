@@ -723,7 +723,7 @@ sub ausgabekat {
 	local ($aktkat,$isedit,%ka) = @_;
 	local ($k, $v, @ke, $t);
 	
-	@ke = sort (keys (%ka) );
+	@ke = sort{$a <=> $b} (keys (%ka) );
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print &webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
@@ -756,7 +756,7 @@ sub ausgabekat {
 #&ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
 sub ausgabefaq {
 	local ($akat, $isedit, *kat, *tit, *inh, *nrkat) = @_;
-	local (@fke) = sort(keys(%nrkat));
+	local (@fke) = sort{$a <=> $b}(keys(%nrkat));
 	local (@aktfaq) = ();
 	local ($k, $temp);
 	
@@ -868,7 +868,7 @@ sub ausgabekatedit {
 	$katmax = 1;
 	#print &webtag("katmax vor Schleife: $katmax");
 	@katfrei = ();
-	@katnr = sort(keys(%ka));
+	@katnr = sort{$a <=> $b}(keys(%ka));
 	## jetzt ist oben auf @katnr die groesste Zahl
 	$katmax = $katnr[$#katnr];
 	#print &webtag("katnr+1: " . ($#katnr+1));
@@ -1036,6 +1036,8 @@ sub ausgabefaqedit {
 	#local ($keft);
 	local ($tempstring) = "";
 	local ($who) = undef;
+	
+	print "<p>_____ausgabefaqedit_____</p>\n"; 
 
 	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 50, 8);
 	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
@@ -1077,9 +1079,12 @@ PSEUDOHINWEISENDE
 	## frei sind auch alle oberhalb der hoechsten Nummer
 	$katmax = 1;
 	@katfrei = @katvorh = ();
-	@katnr = sort(keys(%kat));
+	@katnr = sort{$a <=> $b}(keys(%kat));
 	## jetzt ist oben auf @katnr die groesste Zahl
+	print &webtag( "p", "", "katnr_A: [" . join( '|', @katnr ) . "]" );
+	print &webtag( "p", "", "katnr_Imax: [$#katnr]" );
 	$katmax = $katnr[$#katnr];
+	print &webtag( "p", "", "katmax: [$katmax]" );
 
 	## hier muﬂ ich an den Zweck denken.
 	# 	der Benutzer sollte im Dropdown auch erkennen, wie die Kategogie heisst
@@ -1107,9 +1112,14 @@ PSEUDOHINWEISENDE
 	## frei sind auch alle oberhalb der hoechsten Nummer
 	$faqmax = 1;
 	@faqfrei = @faqvorh = ();
-	@faqnr = sort(keys(%tit));
+	@faqnr = sort{$a <=> $b}(keys(%tit));
+	my $faqnrjoin = join( '|', @faqnr );
+	print "<p>___faqnrjoin:[$faqnrjoin]___</p>\n";
 	## jetzt ist oben auf @faqnr die groesste Zahl
+	print &webtag( "p", "", "faqnr_A: " . &rofeld( "faqnrjoin", $faqnrjoin ) );
+	print &webtag( "p", "", "faqnr_Imax: " . &rofeld( "faqnr_Imax", $#faqnr ) );
 	$faqmax = $faqnr[$#faqnr];
+	print &webtag( "p", "", "faqmax: " . &rofeld( "faqmax_S", $faqmax ) );
 
 	## von 1 bis zur hoechsten Nummer
 	## Luecken entstehen nur durch Loeschen
