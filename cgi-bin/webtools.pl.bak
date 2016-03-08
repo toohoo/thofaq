@@ -1227,9 +1227,9 @@ sub faq2htm {
 
     	## Links steuern:
     	## 	nach innen gehende (ohne Protokoll http://) und Mail-Links (mailto:) ohne neues Fenster
-    	$text =~ s|\[link=(mailto:[^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
-    	$text =~ s~\[link=(http\:\/\/|ftp\:\/\/)([^\]]+)\](.*?)\[\/link\]~<a href="$1$2" target="_blank">$3<\/a>~igs;
-    	$text =~ s|\[link=([^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
+    	$text =~ s|\[link=(mailto:[^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|ig;
+    	$text =~ s~\[link=(http\:\/\/|ftp\:\/\/)([^\]]+)\](.*?)\[\/link\]~<a href="$1$2" target="_blank">$3<\/a>~ig;
+    	$text =~ s|\[link=([^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|ig;
     	
     	$text =~ s|\[b\](.*?)\[\/b\]|<b>$1<\/b>|ig;
     	$text =~ s|\[i\](.*?)\[\/i\]|<i>$1<\/i>|ig;
