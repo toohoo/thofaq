@@ -1037,7 +1037,7 @@ sub ausgabefaqedit {
 	local ($tempstring) = "";
 	local ($who) = undef;
 	
-	print "<p>_____ausgabefaqedit_____</p>\n"; 
+	#print "<p>_____ausgabefaqedit_____</p>\n"; 
 
 	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 50, 8);
 	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
@@ -1081,10 +1081,11 @@ PSEUDOHINWEISENDE
 	@katfrei = @katvorh = ();
 	@katnr = sort{$a <=> $b}(keys(%kat));
 	## jetzt ist oben auf @katnr die groesste Zahl
-	print &webtag( "p", "", "katnr_A: [" . join( '|', @katnr ) . "]" );
-	print &webtag( "p", "", "katnr_Imax: [$#katnr]" );
+	#print &webtag( "p", "", "katnr_A: [" . join( '|', @katnr ) . "]" );
+	#print &webtag( "p", "", "katnr_Imax: [$#katnr]" );
+	
 	$katmax = $katnr[$#katnr];
-	print &webtag( "p", "", "katmax: [$katmax]" );
+	#print &webtag( "p", "", "katmax: [$katmax]" );
 
 	## hier muﬂ ich an den Zweck denken.
 	# 	der Benutzer sollte im Dropdown auch erkennen, wie die Kategogie heisst
@@ -1114,12 +1115,14 @@ PSEUDOHINWEISENDE
 	@faqfrei = @faqvorh = ();
 	@faqnr = sort{$a <=> $b}(keys(%tit));
 	my $faqnrjoin = join( '|', @faqnr );
-	print "<p>___faqnrjoin:[$faqnrjoin]___</p>\n";
+	#print "<p>___faqnrjoin:[$faqnrjoin]___</p>\n";
 	## jetzt ist oben auf @faqnr die groesste Zahl
-	print &webtag( "p", "", "faqnr_A: " . &rofeld( "faqnrjoin", $faqnrjoin ) );
-	print &webtag( "p", "", "faqnr_Imax: " . &rofeld( "faqnr_Imax", $#faqnr ) );
+
+	#print &webtag( "p", "", "faqnr_A: " . &rofeld( "faqnrjoin", $faqnrjoin ) );
+	#print &webtag( "p", "", "faqnr_Imax: " . &rofeld( "faqnr_Imax", $#faqnr ) );
+
 	$faqmax = $faqnr[$#faqnr];
-	print &webtag( "p", "", "faqmax: " . &rofeld( "faqmax_S", $faqmax ) );
+	#print &webtag( "p", "", "faqmax: " . &rofeld( "faqmax_S", $faqmax ) );
 
 	## von 1 bis zur hoechsten Nummer
 	## Luecken entstehen nur durch Loeschen
