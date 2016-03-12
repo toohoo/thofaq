@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perlw
+#!D:/xampp/perl/bin/perl -w
 #!/usr/bin/perl
 #######################################################
 ## whoamip.pl
