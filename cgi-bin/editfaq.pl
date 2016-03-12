@@ -1,5 +1,5 @@
-#!/xampp/perl/bin/perl -w
-
+#!D:/xampp/perl/bin/perl -w
+#!/usr/bin/perl
 #######################################################
 ## editFAQ.pl
 ## uebernommen von FAQ.pl

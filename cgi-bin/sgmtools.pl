@@ -1,5 +1,5 @@
-#!/xampp/perl/bin/perl
-
+#!D:/xampp/perl/bin/perl
+#!/usr/bin/perl
 #***************************************
 #	 sgmtools.pl	    t.h. jan 1998
 # Tools zum Arbeiten mit SGM-Dateien

@@ -1,5 +1,5 @@
-#!/xampp/perl/bin/perl
-
+#!D:/xampp/perl/bin/perl
+#!/usr/bin/perl
 #***************************************************
 #       Script-Sammlung Perl - 
 #       Thomas Hofmann 

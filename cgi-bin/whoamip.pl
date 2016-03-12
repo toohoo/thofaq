@@ -1,5 +1,5 @@
-#!/xampp/perl/bin/perl -w
-
+#!D:/xampp/perl/bin/perlw
+#!/usr/bin/perl
 #######################################################
 ## whoamip.pl
 ## feststellen der IP des Abrufenden im Intranet

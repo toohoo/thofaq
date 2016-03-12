@@ -1,5 +1,5 @@
-#!/xampp/perl/bin/perl
-
+#!D:/xampp/perl/bin/perl
+#!/usr/bin/perl
 $page = 1;
 
 #---Ausdruck einer Liste-----------------#pl#

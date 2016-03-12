@@ -1,5 +1,5 @@
-#!/xampp/perl/bin/perl
-
+#!D:/xampp/perl/bin/perl
+#!/usr/bin/perl
 ######################################################
 # thplcopy.pl - t.h. feb 2001
 #

@@ -1,5 +1,5 @@
-#!/usr/local/bin/perl
-
+#!D:/xampp/perl/bin/perl
+#!/usr/bin/perl
 #http://www.iiv.de/wolfgang/buerger/tommyhof/test/host.pl
 
 print "Content-type: text/html","\n\n";
