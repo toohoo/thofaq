@@ -1058,6 +1058,7 @@ sub ausgabefaqedit {
 	## Bearbeitungshinweise Pseudocode
 	$phinweis=<<PSEUDOHINWEISENDE;
 [link=linkziel]Linktitel[/link] - 
+[linkx=(linkziel neues fenster)]Linktitel[/link] - 
 [b]fett[/b] - 
 [i]kursiv[/i] - 
 [list] (->ul) - 
@@ -1241,8 +1242,10 @@ sub faq2htm {
     	## Links steuern:
     	## 	nach innen gehende (ohne Protokoll http://) und Mail-Links (mailto:) ohne neues Fenster
     	$text =~ s|\[link=(mailto:[^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
-    	$text =~ s~\[link=(http\:\/\/|ftp\:\/\/)([^\]]+)\](.*?)\[\/link\]~<a href="$1$2" target="_blank">$3<\/a>~igs;
+    	$text =~ s~\[link=(https?\:\/\/|ftp\:\/\/)([^\]]+)\](.*?)\[\/link\]~<a href="$1$2" target="_blank">$3<\/a>~igs;
     	$text =~ s|\[link=([^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
+    	## 	interne Links in neuem Frame oeffnen
+    	$text =~ s|\[linkx=([^\]]+)\](.*?)\[\/link\]|<a href="$1" target="_blank">$2<\/a>|igs;
     	
     	$text =~ s|\[b\](.*?)\[\/b\]|<b>$1<\/b>|ig;
     	$text =~ s|\[i\](.*?)\[\/i\]|<i>$1<\/i>|ig;
@@ -1271,6 +1274,7 @@ sub faq2htm {
 ## 	\t		\x20
 ##    	<BR>		02 (oder 127?)
 ##    	<a href="xyz">abc</a>		[link=xyz]abc[/link]
+##    	<a href="xyz" target="_blank">abc</a>		[linkx=xyz]abc[/link]
 ##    	<b>abc</b>		[b]abc[/b]
 ##    	<i>abc</i>		[i]abc[/i]
 ##    	<ul>		[list]
@@ -1298,6 +1302,8 @@ sub input2faq {
     	## anscheinend Probleme mit \x0d
     	$text =~ s|\x0D||ig;
     	$text =~ s|<a href=[\"\']([^\"\']+)[\"\']>(.*?)<\/a>|\[link=$1\]$2\[\/link\]|ig;
+		## Links in neue Fenster
+    	$text =~ s~<a href=[\"\']([^\"\']+)[\"\'] target=\"(_blank|_new|new)\">(.*?)<\/a>~\[linkx=$1\]$3\[\/link\]~ig;
     	$text =~ s|<b>(.*?)<\/b>|\[b\]$1\[\/b\]|ig;
     	$text =~ s|<i>(.*?)<\/i>|\[i\]$1\[\/i\]|ig;
     	$text =~ s|<(\/)?ul>|[$1list]|ig;

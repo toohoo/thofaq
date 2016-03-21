@@ -20,6 +20,7 @@
 ##   - bestimmte HTML-Tags umwandeln in Pseudomarkup
 ##    	<BR>		02 (oder 127?)
 ##    	<a href="xyz">abc</a>		[link=xyz]abc[/link]
+##    	<a href="xyz" target="_blank">abc</a>		[linkx=xyz]abc[/link]
 ##    	<b>abc</b>		[b]abc[/b]
 ##    	<i>abc</i>		[i]abc[/i]
 ##    	<ul>		[list]
