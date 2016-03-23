@@ -6,7 +6,7 @@ REM Verzeichnistiefe muss mindestens 2 sein UND darf aber hoechstens 2 sein
 set FAQBAK_DRIVE=D:
 set FAQBAK_ROOT=%FAQBAK_DRIVE%\work\
 set FAQBAK_DIR=%FAQBAK_ROOT%faq\
-set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat faqbak.bat
+set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat faqbak.bat index.php
 set FAQBAK_XAMPPDRIVE=D:
 set FAQBAK_SOURCE=%FAQBAK_XAMPPDRIVE%\xampp\htdocs\faq\cgi-bin\
 set FAQBAK_ZIP=FAQBAK.zip
@@ -14,6 +14,7 @@ set FAQBAK_O_DRIVE=H:
 set FAQBAK_O_ROOT=%FAQBAK_O_DRIVE%\work\
 set FAQBAK_O_DIR=%FAQBAK_O_ROOT%faq\
 set ZIP="C:\Program Files\7-Zip\7z.exe"
+set FAQBAK_BAT=D:\temp\faqbak.bat
 
 :checkdir
 if not exist %FAQBAK_DIR%. goto dirnotfound
@@ -27,6 +28,9 @@ cd %FAQBAK_DIR%
 :copyfiles
 %FAQBAK_XAMPPDRIVE%
 cd %FAQBAK_SOURCE%
+  echo Hole Batch-Job ___ %FAQBAK_BAT%
+  copy %FAQBAK_BAT% .
+REM  echo Fertig Hole Batch-Job ___ %FAQBAK_BAT%
  for %%f in ( %FAQBAK_LIST% ) do echo %%f %FAQBAK_DIR%
  for %%f in ( %FAQBAK_LIST% ) do copy /y %%f %FAQBAK_DIR%
 

@@ -1,5 +1,5 @@
-#!/xampp/perl/bin/perl
-
+#!D:/xampp/perl/bin/perl
+#!/usr/bin/perl
 #######################################################
 ## webtools.pl
 ## Thomas Hofmann Sep 2005
@@ -413,7 +413,7 @@ sub getglobals {
 local %meine = (
 	"admin",	"Thomas Hofmann",
 	"admintel",	"146",
-	"adminmail",	"thofmann\@ubmedia.de",
+	"adminmail",	"hofmann.thomas\@draexlmaier.de",
 	"parsdir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\sgmls",
 	"dtddir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd",
 	"dtdhome",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd\\home",
@@ -723,7 +723,7 @@ sub ausgabekat {
 	local ($aktkat,$isedit,%ka) = @_;
 	local ($k, $v, @ke, $t);
 	
-	@ke = sort (keys (%ka) );
+	@ke = sort{$a <=> $b} (keys (%ka) );
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print &webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
@@ -756,7 +756,7 @@ sub ausgabekat {
 #&ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
 sub ausgabefaq {
 	local ($akat, $isedit, *kat, *tit, *inh, *nrkat) = @_;
-	local (@fke) = sort(keys(%nrkat));
+	local (@fke) = sort{$a <=> $b}(keys(%nrkat));
 	local (@aktfaq) = ();
 	local ($k, $temp);
 	
@@ -836,12 +836,13 @@ sub ausgabekatedit {
 	local ($keft);
 	local ($who);
 
-	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 50, 8);
+	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 70, 20);
 	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
 	if ($globals{"breitkurz"}) { $breitkurz = $globals{"breitkurz"}; }
 	if ($globals{"breitlang"}) { $breitlang = $globals{"breitlang"}; }
 	if ($globals{"breitfeld"}) { $breitfeld = $globals{"breitfeld"}; }
 	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
+	#($breitfeld, $hoch) 	= (100, 20);
 
 	## sollte Benutzername/Passwort hier einbringen koennen
 
@@ -868,7 +869,7 @@ sub ausgabekatedit {
 	$katmax = 1;
 	#print &webtag("katmax vor Schleife: $katmax");
 	@katfrei = ();
-	@katnr = sort(keys(%ka));
+	@katnr = sort{$a <=> $b}(keys(%ka));
 	## jetzt ist oben auf @katnr die groesste Zahl
 	$katmax = $katnr[$#katnr];
 	#print &webtag("katnr+1: " . ($#katnr+1));
@@ -1036,13 +1037,16 @@ sub ausgabefaqedit {
 	#local ($keft);
 	local ($tempstring) = "";
 	local ($who) = undef;
+	
+	#print "<p>_____ausgabefaqedit_____</p>\n"; 
 
-	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 50, 8);
+	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 70, 20);
 	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
 	if ($globals{"breitkurz"}) { $breitkurz = $globals{"breitkurz"}; }
 	if ($globals{"breitlang"}) { $breitlang = $globals{"breitlang"}; }
 	if ($globals{"breitfeld"}) { $breitfeld = $globals{"breitfeld"}; }
 	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
+	($breitfeld, $hoch) 	= (100, 20);
 
 	## Problem:
 	## 	welche Nr nehm ich bei "neu"?
@@ -1056,6 +1060,7 @@ sub ausgabefaqedit {
 	## Bearbeitungshinweise Pseudocode
 	$phinweis=<<PSEUDOHINWEISENDE;
 [link=linkziel]Linktitel[/link] - 
+[linkx=(linkziel neues fenster)]Linktitel[/link] - 
 [b]fett[/b] - 
 [i]kursiv[/i] - 
 [list] (->ul) - 
@@ -1077,9 +1082,13 @@ PSEUDOHINWEISENDE
 	## frei sind auch alle oberhalb der hoechsten Nummer
 	$katmax = 1;
 	@katfrei = @katvorh = ();
-	@katnr = sort(keys(%kat));
+	@katnr = sort{$a <=> $b}(keys(%kat));
 	## jetzt ist oben auf @katnr die groesste Zahl
+	#print &webtag( "p", "", "katnr_A: [" . join( '|', @katnr ) . "]" );
+	#print &webtag( "p", "", "katnr_Imax: [$#katnr]" );
+	
 	$katmax = $katnr[$#katnr];
+	#print &webtag( "p", "", "katmax: [$katmax]" );
 
 	## hier muﬂ ich an den Zweck denken.
 	# 	der Benutzer sollte im Dropdown auch erkennen, wie die Kategogie heisst
@@ -1107,9 +1116,16 @@ PSEUDOHINWEISENDE
 	## frei sind auch alle oberhalb der hoechsten Nummer
 	$faqmax = 1;
 	@faqfrei = @faqvorh = ();
-	@faqnr = sort(keys(%tit));
+	@faqnr = sort{$a <=> $b}(keys(%tit));
+	my $faqnrjoin = join( '|', @faqnr );
+	#print "<p>___faqnrjoin:[$faqnrjoin]___</p>\n";
 	## jetzt ist oben auf @faqnr die groesste Zahl
+
+	#print &webtag( "p", "", "faqnr_A: " . &rofeld( "faqnrjoin", $faqnrjoin ) );
+	#print &webtag( "p", "", "faqnr_Imax: " . &rofeld( "faqnr_Imax", $#faqnr ) );
+
 	$faqmax = $faqnr[$#faqnr];
+	#print &webtag( "p", "", "faqmax: " . &rofeld( "faqmax_S", $faqmax ) );
 
 	## von 1 bis zur hoechsten Nummer
 	## Luecken entstehen nur durch Loeschen
@@ -1227,9 +1243,11 @@ sub faq2htm {
 
     	## Links steuern:
     	## 	nach innen gehende (ohne Protokoll http://) und Mail-Links (mailto:) ohne neues Fenster
-    	$text =~ s|\[link=(mailto:[^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|ig;
-    	$text =~ s~\[link=(http\:\/\/|ftp\:\/\/)([^\]]+)\](.*?)\[\/link\]~<a href="$1$2" target="_blank">$3<\/a>~ig;
-    	$text =~ s|\[link=([^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|ig;
+    	$text =~ s|\[link=(mailto:[^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
+    	$text =~ s~\[link=(https?\:\/\/|ftp\:\/\/)([^\]]+)\](.*?)\[\/link\]~<a href="$1$2" target="_blank">$3<\/a>~igs;
+    	$text =~ s|\[link=([^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
+    	## 	interne Links in neuem Frame oeffnen
+    	$text =~ s|\[linkx=([^\]]+)\](.*?)\[\/link\]|<a href="$1" target="_blank">$2<\/a>|igs;
     	
     	$text =~ s|\[b\](.*?)\[\/b\]|<b>$1<\/b>|ig;
     	$text =~ s|\[i\](.*?)\[\/i\]|<i>$1<\/i>|ig;
@@ -1258,6 +1276,7 @@ sub faq2htm {
 ## 	\t		\x20
 ##    	<BR>		02 (oder 127?)
 ##    	<a href="xyz">abc</a>		[link=xyz]abc[/link]
+##    	<a href="xyz" target="_blank">abc</a>		[linkx=xyz]abc[/link]
 ##    	<b>abc</b>		[b]abc[/b]
 ##    	<i>abc</i>		[i]abc[/i]
 ##    	<ul>		[list]
@@ -1285,6 +1304,8 @@ sub input2faq {
     	## anscheinend Probleme mit \x0d
     	$text =~ s|\x0D||ig;
     	$text =~ s|<a href=[\"\']([^\"\']+)[\"\']>(.*?)<\/a>|\[link=$1\]$2\[\/link\]|ig;
+		## Links in neue Fenster
+    	$text =~ s~<a href=[\"\']([^\"\']+)[\"\'] target=\"(_blank|_new|new)\">(.*?)<\/a>~\[linkx=$1\]$3\[\/link\]~ig;
     	$text =~ s|<b>(.*?)<\/b>|\[b\]$1\[\/b\]|ig;
     	$text =~ s|<i>(.*?)<\/i>|\[i\]$1\[\/i\]|ig;
     	$text =~ s|<(\/)?ul>|[$1list]|ig;

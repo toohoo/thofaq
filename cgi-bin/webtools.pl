@@ -413,7 +413,7 @@ sub getglobals {
 local %meine = (
 	"admin",	"Thomas Hofmann",
 	"admintel",	"146",
-	"adminmail",	"thofmann\@ubmedia.de",
+	"adminmail",	"hofmann.thomas\@draexlmaier.de",
 	"parsdir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\sgmls",
 	"dtddir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd",
 	"dtdhome",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd\\home",
@@ -836,12 +836,13 @@ sub ausgabekatedit {
 	local ($keft);
 	local ($who);
 
-	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 50, 8);
+	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 70, 20);
 	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
 	if ($globals{"breitkurz"}) { $breitkurz = $globals{"breitkurz"}; }
 	if ($globals{"breitlang"}) { $breitlang = $globals{"breitlang"}; }
 	if ($globals{"breitfeld"}) { $breitfeld = $globals{"breitfeld"}; }
 	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
+	#($breitfeld, $hoch) 	= (100, 20);
 
 	## sollte Benutzername/Passwort hier einbringen koennen
 
@@ -1039,12 +1040,13 @@ sub ausgabefaqedit {
 	
 	#print "<p>_____ausgabefaqedit_____</p>\n"; 
 
-	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 50, 8);
+	local ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 70, 20);
 	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
 	if ($globals{"breitkurz"}) { $breitkurz = $globals{"breitkurz"}; }
 	if ($globals{"breitlang"}) { $breitlang = $globals{"breitlang"}; }
 	if ($globals{"breitfeld"}) { $breitfeld = $globals{"breitfeld"}; }
 	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
+	($breitfeld, $hoch) 	= (100, 20);
 
 	## Problem:
 	## 	welche Nr nehm ich bei "neu"?

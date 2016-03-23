@@ -36,6 +36,8 @@ background-color: #cccccc;
 textarea[readonly] {
 color: #666666;
 background-color: #cccccc;
+width: 100em;
+height: 20em;
 }
 
 .hinterlegt {
