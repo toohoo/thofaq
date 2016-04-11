@@ -257,3 +257,9 @@ legend {
 .faqedit > p {
 	margin: 20px;
 }
+
+b > code, code > b {
+	font-weight: 900;
+	/*font-style: italic;*/
+	font-size: 1.1em;
+}
