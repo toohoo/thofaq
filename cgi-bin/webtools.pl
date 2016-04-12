@@ -727,7 +727,7 @@ sub ausgabekat {
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print &webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
-	    print &webtag("h3", "class=katwahltit", "Kategorien <br>" . &webtag("small",&weblink("[zurück zu den FAQ]","faq.pl")) );
+	    print &webtag("h3", "class=katwahltit", "Kategorien <br>" . &webtag("small",&weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat")) );
 	} else {  ## normal nicht edit
 	    print &webtag("h3", "class=katwahltit", "Kategorien <br>" . &webtag("small",&weblink("[EDIT]","editfaqkat.pl")) );
 	}
@@ -767,9 +767,9 @@ sub ausgabefaq {
 
 	print &webtag("div", "class=faqfragen", "#EMPTY#");
 	if ($isedit) {
-	    print &webtag("h3", "class=faqfragtit", &webtag("a","name=fragen","Fragen") . " zum Thema: ''$kat{$aktkat}'' " . &webtag("small",&weblink("[zurück zu den FAQ]","faq.pl"))  . " " . &webtag("small",&weblink("[alle Kategorien]","editfaq.pl?kat=alle")) );
+	    print &webtag("h3", "class=faqfragtit", &webtag("a","name=fragen","Fragen") . " zum Thema: ''$kat{$aktkat}'' " . &webtag("small",&weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat"))  . " " . &webtag("small",&weblink("[alle Kategorien]","editfaq.pl?kat=alle")) );
 	} else {  ## normal nicht edit
-	    print &webtag("h3", "class=faqfragtit", &webtag("a","name=fragen","Fragen") . " zum Thema: ''$kat{$aktkat}'' " . &webtag("small",&weblink("[EDIT]","editfaq.pl")) . " " . &webtag("small",&weblink("[alle Kategorien]","faq.pl?kat=alle")) );
+	    print &webtag("h3", "class=faqfragtit", &webtag("a","name=fragen","Fragen") . " zum Thema: ''$kat{$aktkat}'' " . &webtag("small",&weblink("[EDIT]","editfaq.pl?kat=$aktkat")) . " " . &webtag("small",&weblink("[alle Kategorien]","faq.pl?kat=alle")) );
 	}
 	print &webtag("ol", "type=1", "#EMPTY#");
 	foreach $k (@fke) {
