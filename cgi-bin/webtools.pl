@@ -1251,6 +1251,7 @@ sub faq2htm {
     	
     	$text =~ s|\[b\](.*?)\[\/b\]|<b>$1<\/b>|ig;
     	$text =~ s|\[i\](.*?)\[\/i\]|<i>$1<\/i>|ig;
+    	$text =~ s|\[s\](.*?)\[\/s\]|<s>$1<\/s>|ig;
     	$text =~ s|\[(\/)?list\]|<$1ul>|ig;
     	$text =~ s|\[\*\]|<li>|ig;
     	$text =~ s|\[(\/)?list=1\]|<$1ol>|ig;
@@ -1308,6 +1309,8 @@ sub input2faq {
     	$text =~ s~<a href=[\"\']([^\"\']+)[\"\'] target=\"(_blank|_new|new)\">(.*?)<\/a>~\[linkx=$1\]$3\[\/link\]~ig;
     	$text =~ s|<b>(.*?)<\/b>|\[b\]$1\[\/b\]|ig;
     	$text =~ s|<i>(.*?)<\/i>|\[i\]$1\[\/i\]|ig;
+    	$text =~ s|<s>(.*?)<\/s>|\[s\]$1\[\/s\]|ig;
+    	$text =~ s|<strike>(.*?)<\/strike>|\[s\]$1\[\/s\]|ig;
     	$text =~ s|<(\/)?ul>|[$1list]|ig;
     	$text =~ s|<li>|[*]|ig;
     	$text =~ s|<(\/)?ol>|[$1list=1]|ig;
