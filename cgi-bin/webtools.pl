@@ -1266,7 +1266,7 @@ sub faq2htm {
     	$text =~ s|\[name=([^\]]+)\](.*?)\[\/name\]|<a name="$1" id="$1">$2<\/a>|ig;
 	
     	## das Umwandeln von \x02 in BR macht viele BR, wo sie nicht noetig sind, z.B. vor allen Blockelementen
-    	$text =~ s/<BR>(<\/?($blockel)[ >\t])/$1/ig;
+    	$text =~ s/<BR>([ \t]*<\/?($blockel)[ >\t])/$1/ig;
 
 	return ($text);	
 

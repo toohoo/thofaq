@@ -3,18 +3,25 @@ echo ___ FaqBAK - sichern der Daten der FAQ - Thomas Hofmann, Mar 2016 ___
 REM @echo on
 
 REM Verzeichnistiefe muss mindestens 2 sein UND darf aber hoechstens 2 sein
+set FAQBAK_BATNAME=faqbak.bat
+set FAQBAK_DOKNAME=DRX-FAQ-Bearbeiten-der-FAQ.pdf
 set FAQBAK_DRIVE=D:
 set FAQBAK_ROOT=%FAQBAK_DRIVE%\work\
 set FAQBAK_DIR=%FAQBAK_ROOT%faq\
-set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat faqbak.bat index.php
+set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_DOKNAME%
 set FAQBAK_XAMPPDRIVE=D:
 set FAQBAK_SOURCE=%FAQBAK_XAMPPDRIVE%\xampp\htdocs\faq\cgi-bin\
 set FAQBAK_ZIP=FAQBAK.zip
-set FAQBAK_O_DRIVE=H:
-set FAQBAK_O_ROOT=%FAQBAK_O_DRIVE%\work\
-set FAQBAK_O_DIR=%FAQBAK_O_ROOT%faq\
+set FAQBAK_H_DRIVE=H:
+set FAQBAK_H_ROOT=%FAQBAK_H_DRIVE%\work\
+set FAQBAK_H_DIR=%FAQBAK_H_ROOT%faq\
+set FAQBAK_O_DRIVE=O:
+set FAQBAK_O_ROOT=%FAQBAK_O_DRIVE%\DRXTransfer\
+set FAQBAK_O_PARENT=ie1
+set FAQBAK_O_DIR=%FAQBAK_O_ROOT%%FAQBAK_O_PARENT%\faq\
 set ZIP="C:\Program Files\7-Zip\7z.exe"
-set FAQBAK_BAT=D:\temp\faqbak.bat
+set FAQBAK_BAT=D:\temp\%FAQBAK_BATNAME%
+set FAQBAK_DOK=D:\temp\%FAQBAK_DOKNAME%
 
 :checkdir
 if not exist %FAQBAK_DIR%. goto dirnotfound
@@ -31,6 +38,9 @@ cd %FAQBAK_SOURCE%
   echo Hole Batch-Job ___ %FAQBAK_BAT%
   copy %FAQBAK_BAT% .
 REM  echo Fertig Hole Batch-Job ___ %FAQBAK_BAT%
+  echo Hole Doku ___ %FAQBAK_DOK%
+  copy %FAQBAK_DOK% .
+REM  echo Fertig Hole Doku ___ %FAQBAK_DOK%
  for %%f in ( %FAQBAK_LIST% ) do echo %%f %FAQBAK_DIR%
  for %%f in ( %FAQBAK_LIST% ) do copy /y %%f %FAQBAK_DIR%
 
@@ -38,6 +48,21 @@ REM  echo Fertig Hole Batch-Job ___ %FAQBAK_BAT%
 %FAQBAK_XAMPPDRIVE%
 cd %FAQBAK_SOURCE%
 %ZIP% u %FAQBAK_DIR%%FAQBAK_ZIP% %FAQBAK_LIST%
+
+:copyfilesH
+%FAQBAK_XAMPPDRIVE%
+cd %FAQBAK_SOURCE%
+ for %%f in ( %FAQBAK_LIST% ) do echo %%f %FAQBAK_H_DIR%
+ for %%f in ( %FAQBAK_LIST% ) do copy /y %%f %FAQBAK_H_DIR%
+
+:zipfilesH
+%FAQBAK_XAMPPDRIVE%
+cd %FAQBAK_SOURCE%
+%ZIP% u %FAQBAK_H_DIR%%FAQBAK_ZIP% %FAQBAK_LIST%
+
+:check_O_dir
+if not exist %FAQBAK_O_DIR%. goto dir_O_notfound
+echo Yippieh! Verzeichnis %FAQBAK_O_DIR% gefunden
 
 :copyfilesO
 %FAQBAK_XAMPPDRIVE%
@@ -83,6 +108,25 @@ goto ende
 :dirreallynotfound
 echo Verzeichnis %FAQBAK_DIR% wirklich nicht gefunden, Abbruch
 goto ende
+
+
+:dir_O_reallynotfound
+echo Verzeichnis %FAQBAK_O_DIR% wirklich nicht gefunden, Abbruch
+goto ende
+
+:dir_O_notfound
+echo Verzeichnis %FAQBAK_O_DIR% nicht gefunden, suche FAQ_O_PARENT
+if not exist %FAQBAK_O_ROOT%%FAQBAK_O_PARENT%\. goto FAQ_O_PARENTnotfound
+md %FAQBAK_O_DIR%
+if not exist %FAQBAK_O_DIR%. goto dir_O_reallynotfound
+goto check_O_dir
+
+:FAQ_O_PARENTnotfound
+md %FAQBAK_O_ROOT%%FAQBAK_O_PARENT%
+md %FAQBAK_O_DIR%
+if not exist %FAQBAK_O_DIR%. goto dir_O_reallynotfound
+goto check_O_dir
+
 
 :ende
 echo *** ENDE FaqBAK ***
