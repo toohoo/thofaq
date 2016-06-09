@@ -8,10 +8,13 @@ set FAQBAK_DOKNAME=DRX-FAQ-Bearbeiten-der-FAQ.pdf
 set FAQBAK_DRIVE=D:
 set FAQBAK_ROOT=%FAQBAK_DRIVE%\work\
 set FAQBAK_DIR=%FAQBAK_ROOT%faq\
-set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_DOKNAME%
+set FAQBAK_IMG_DIR=%FAQBAK_DIR%img\
 set FAQBAK_XAMPPDRIVE=D:
 set FAQBAK_SOURCE=%FAQBAK_XAMPPDRIVE%\xampp\htdocs\faq\cgi-bin\
-set FAQBAK_ZIP=FAQBAK.zip
+set FAQBAK_IMG_SRC=%FAQBAK_SOURCE%..\img\
+set FAQBAK_ZIP=FAQBAK-%DATE%.zip
+set FAQBAK_IMG_ZIP=FAQBAK-IMG-%DATE%.zip
+set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_DOKNAME% %FAQBAK_IMG_ZIP%
 set FAQBAK_H_DRIVE=H:
 set FAQBAK_H_ROOT=%FAQBAK_H_DRIVE%\work\
 set FAQBAK_H_DIR=%FAQBAK_H_ROOT%faq\
@@ -35,6 +38,8 @@ cd %FAQBAK_DIR%
 :copyfiles
 %FAQBAK_XAMPPDRIVE%
 cd %FAQBAK_SOURCE%
+REM  copy images
+%ZIP% u -r %FAQBAK_IMG_ZIP% %FAQBAK_IMG_SRC%*.*
   echo Hole Batch-Job ___ %FAQBAK_BAT%
   copy %FAQBAK_BAT% .
 REM  echo Fertig Hole Batch-Job ___ %FAQBAK_BAT%
@@ -43,7 +48,7 @@ REM  echo Fertig Hole Batch-Job ___ %FAQBAK_BAT%
 REM  echo Fertig Hole Doku ___ %FAQBAK_DOK%
  for %%f in ( %FAQBAK_LIST% ) do echo %%f %FAQBAK_DIR%
  for %%f in ( %FAQBAK_LIST% ) do copy /y %%f %FAQBAK_DIR%
-
+ 
 :zipfiles
 %FAQBAK_XAMPPDRIVE%
 cd %FAQBAK_SOURCE%
@@ -59,6 +64,7 @@ cd %FAQBAK_SOURCE%
 %FAQBAK_XAMPPDRIVE%
 cd %FAQBAK_SOURCE%
 %ZIP% u %FAQBAK_H_DIR%%FAQBAK_ZIP% %FAQBAK_LIST%
+del %FAQBAK_H_DIR%%FAQBAK_IMG_ZIP%
 
 :check_O_dir
 if not exist %FAQBAK_O_DIR%. goto dir_O_notfound
@@ -74,6 +80,7 @@ cd %FAQBAK_SOURCE%
 %FAQBAK_XAMPPDRIVE%
 cd %FAQBAK_SOURCE%
 %ZIP% u %FAQBAK_O_DIR%%FAQBAK_ZIP% %FAQBAK_LIST%
+del %FAQBAK_O_DIR%%FAQBAK_IMG_ZIP%
 
 :finished
 goto ende
@@ -129,4 +136,5 @@ goto check_O_dir
 
 
 :ende
+del %FAQBAK_SOURCE%%FAQBAK_IMG_ZIP%
 echo *** ENDE FaqBAK ***
