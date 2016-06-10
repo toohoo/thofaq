@@ -834,6 +834,102 @@ sub ausgabefaq {
 	return(1);
 }
 
+#---Ausgabe der Suchergebnisse der Fragen der aktuellen/aller Kategorie-------------------------------------------
+#&ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
+sub ausgabefaq {
+	local ($akat, $isedit, $searchstring, *kat, *tit, *inh, *nrkat) = @_;
+	local (@fke) = sort{$a <=> $b}(keys(%nrkat));
+	local (@aktfaq) = ();
+	local ($k, $temp);
+	
+	## erst Liste der Fragen ausgeben mit Links zu den Fragen unten
+	## dabei schon eine Liste der FAQ merken, die der Kategorie entsprechen
+	## zum Schluss die FAQ ausgeben
+	print webtag( "div", "class=faq", "#EMPTY#");
+
+	print webtag( "div", "class=faqfragen", "#EMPTY#");
+	if ($isedit) {
+	    print webtag( "h3", "class=faqfragtit", 
+	    	webtag( "a","name=fragen", "Fragen") 
+    		. " zum Thema: ''$kat{$aktkat}'' " 
+    		. webtag( "small",
+    			weblink( "[zurück zu den FAQ]","faq.pl?kat=$aktkat") ) 
+    		. " " 
+    		. webtag( "small", 
+    			weblink( "[alle Kategorien]","editfaq.pl?kat=alle") ) 
+	    );
+	} else {  ## normal nicht edit
+	    print webtag( "h3", "class=faqfragtit", 
+	    	webtag( "a", "name=fragen", "Fragen") 
+	    	. " zum Thema: ''$kat{$aktkat}'' " 
+	    	. webtag( "small", 
+	    		weblink( "[EDIT]", "editfaq.pl?kat=$aktkat") ) 
+	    	. " " 
+	    	. webtag( "small", 
+	    		weblink( "[alle Kategorien]","faq.pl?kat=alle") ) 
+	    );
+	}
+	print webtag( "ol", "type=1", "#EMPTY#" );
+
+	## erstmal fundstellen finden
+	## dazu erstmal Parser des searchstring aufrufen
+
+	foreach $k (@fke) {
+		if ($nrkat{$k} eq $akat) {
+			push (@aktfaq, $k);
+			print &webtag("li", "value=$k", &weblink("$tit{$k}", "#faq$k") );
+		} elsif ($akat eq "alle") {
+			push (@aktfaq, $k);
+			print &webtag("li", "value=$k", &weblink("$tit{$k}", "#faq$k") );
+		}
+	}
+	if ($#aktfaq < 0) {
+		if ($isedit) {
+			print &webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]");
+		}
+		&webhinweis("Keine FAQ in dieser Kategorie");
+	}
+	print &webtag("ol", "", "#ENDETAG#");
+	print &webtag("div", "", "#ENDETAG#");
+
+	if ($#aktfaq >= 0) {
+		print &webtag("div", "class=faqantworten", "#EMPTY#");
+		if ($isedit) {
+		    print &webtag("h3", "class=editfaqanttit", "Antworten " . &webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]"));
+		} else {
+		    print &webtag("h3", "class=faqanttit", "Antworten");
+		}
+		print &webtag("dl", "", "#EMPTY#");
+		foreach $k (@aktfaq) {
+			if ($isedit) {
+			    if ($akat eq "alle") { 
+			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k} ") 
+			    		. &webtag("small", " (Kat. $nrkat{$k}) ") 
+			    		. &webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") );
+			    } else {
+			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k} ") 
+			    		. &webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]"));
+			    }
+			    print $temp;
+			} else {
+			    if ($akat eq "alle") { 
+			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k}") 
+			    		. &webtag("small", " (Kat. $nrkat{$k})") );
+			    } else {
+			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k}") );
+			    }
+			    print $temp;
+			}
+			print &webtag("dd", &faq2htm($inh{$k}) . "<br>" . &webtag ("a", "href=#fragen\tclass=zufragen", "&uArr; zu den Fragen") );
+		}
+		print &webtag("dl", "", "#ENDETAG#");
+		print &webtag("div", "", "#ENDETAG#");
+	}
+
+	print &webtag("div", "", "#ENDETAG#");
+	
+	return(1);
+}
 #---Ausgabe der Bearbeitung der FAQ-Kategorien-------------------------------------------
 sub ausgabekatedit {
 	local (*ka) = @_;
@@ -1267,7 +1363,7 @@ SEARCHHINWEIS
 
 		print inputfeld("searchstring", "", $breit);
 		print " ";
-		print webtag("input", "type=hidden\tname=katnr\tvalue=$kat", "#EMPTY#" );
+		print webtag("input", "type=hidden\tname=kat\tvalue=$kat", "#EMPTY#" );
 		print webtag("input", "type=submit\tname=aktion\tvalue=$searchbuttonval", "#EMPTY#");
 
 	print webtag("span","","#ENDETAG#");
