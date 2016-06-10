@@ -720,8 +720,9 @@ sub holfaq {
 
 #---Ausgabe der Kategorien der FAQ-------------------------------------------
 sub ausgabekat {
-	local ($aktkat,$isedit,%ka) = @_;
-	local ($k, $v, @ke, $t);
+	my ($aktkat,$isedit,%ka) = @_;
+	my ($k, $v, @ke, $t);
+	my $aktkatsic = $aktkat;
 	
 	@ke = sort{$a <=> $b} (keys (%ka) );
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
@@ -747,8 +748,12 @@ sub ausgabekat {
 		    }
 		}
 	}
-	
+
 	print &webtag("ol", "", "#ENDETAG#");
+
+	#if (($aktkat eq "") || !defined($aktkat)) { $aktkatsic = 'alle'; }
+	ausgabesearchbox( $aktkatsic, '' );
+	
 	print &webtag("div", "", "#ENDETAG#");
 }
 
@@ -1209,6 +1214,68 @@ PSEUDOHINWEISENDE
 	print &webtag("form", "", "#ENDETAG#" );
 }
 
+#---Ausgabe des Suchfeldes-------------------------------------------
+sub ausgabesearchbox {
+	# kat[0..|alle] prefix searchstring
+	my ($kat, $prefix) = @_; ## , $searchstring - hab ich hier noch gar nicht
+	#my ($k, $v, @ke, $t, $katmax, @katfrei, @katnr, $i, $katneuende, @katvorh);
+	#my ($faqmax, @faqfrei, @faqnr, $faqneuende, @faqvorh);
+	my ($tempstring) = "";
+	my ($who) = undef;
+	
+	#print "<p>_____ausgabefaqedit_____</p>\n"; 
+
+	my ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 70, 20);
+	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
+	if ($globals{"breitkurz"}) { $breitkurz = $globals{"breitkurz"}; }
+	if ($globals{"breitlang"}) { $breitlang = $globals{"breitlang"}; }
+	if ($globals{"breitfeld"}) { $breitfeld = $globals{"breitfeld"}; }
+	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
+	($breitfeld, $hoch) 	= (100, 20);
+
+	## Bearbeitungshinweise Pseudocode
+	my $shinweis=<<SEARCHHINWEIS;
+	UND-Suche,
+	Es gibt keine Phrasensuche.
+	Sonderzeichen werden entfernt.
+	Hashtag-Suche mit: #(hashtag),
+	alles case-insensitive
+SEARCHHINWEIS
+	
+
+	print webtag("form", "action=faqsearch.pl\tmethod=post", "#EMPTY#" );
+
+	print webtag("div", "class=searchbox", "#EMPTY#");
+
+	print ' &nbsp;';
+
+	## Ausgabe:
+	##		Prefix wenn vorhanden, 
+	##		Kategorie hidden wenn belegt - sonst alle, 
+	##		search input, 
+	##		submit button
+
+	my $searchbuttonval = '?';
+	if ( !$kat ) { $kat = "alle"; }
+	if ( $prefix ) {
+		print 	webtag("span", "class=searchboxprefix", 
+		 			webtag("a", "href=faq.pl?kat=5#faq7\ttarget=_blank\tname=searchhinweis\ttitle=$shinweis", "$prefix")
+		 		);
+	}
+
+	print webtag("span","class=searchinput","#EMPTY#");
+
+		print inputfeld("searchstring", "", $breit);
+		print " ";
+		print webtag("input", "type=hidden\tname=katnr\tvalue=$kat", "#EMPTY#" );
+		print webtag("input", "type=submit\tname=aktion\tvalue=$searchbuttonval", "#EMPTY#");
+
+	print webtag("span","","#ENDETAG#");
+
+	print webtag("div", "", "#ENDETAG#");  ## searchbox
+
+	print webtag("form", "", "#ENDETAG#" );
+}
 #---Rueckgabe des HTML fuer ein Dropdown eines Feldes-------------------------------------------
 sub HTMLdropdown {
 	## name, selected, @feld
