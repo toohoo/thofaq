@@ -56,6 +56,8 @@ if (&ReadParse(*input)) {
 	}
 }
 
+#webhinweis( "aktkat nach Einlesen input: [$aktkat]" );
+
 ## sind die Dateien da?
 ## 	faq-titel faq-kategogien faq-inhalt
 ## 		in globals.pl festlegen
@@ -120,7 +122,7 @@ if (&ReadParse(*input)) {
 #%fkat = %ftit = %finh = ();
 #%fnrkat = ();
 
-if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
+if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 	&webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
 }
 
@@ -134,7 +136,8 @@ $fueredit = undef;
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-&ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+#webhinweis( "aktkat vor ausgabefaq: [$aktkat]" );
+ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";

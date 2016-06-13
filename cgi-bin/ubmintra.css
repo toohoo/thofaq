@@ -263,3 +263,8 @@ b > code, code > b {
 	/*font-style: italic;*/
 	font-size: 1.1em;
 }
+
+.foundterm {
+	font-weight: bold;
+	background-color: #00ffff;
+}

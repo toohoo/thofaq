@@ -46,20 +46,29 @@ print &PrintHeader();
 $head = &UbmCgiHead("FAQ - Suche");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 print $head;
 
-$aktkat = 1;
-$input="";
-@input=();
-%input=();
-$searchstring='';
+$aktkat 		= 1;
+$input 			= "";
+@input 			= ();
+%input 			= ();
+$searchstring 	= '';
+$onlypickedkat	= undef;
 ## wurde was uebergeben?
-if (&ReadParse(*input)) {
+if ( ReadParse( *input ) ) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
 	}
 	if ($input{'searchstring'}) {
 		$searchstring = $input{'searchstring'};
 	}
+	if ( $input{'onlypickedkat'}) {
+		$onlypickedkat = $input{'onlypickedkat'};
+	} else {
+		$aktkat = 'alle';
+	}
 }
+
+#webhinweis( "searchstring in faqsearch.pl: [$searchstring]" );
+#webhinweis( "IN faqsearch.pl; aktkat/onlypickedkat: [$aktkat/$onlypickedkat]" );
 
 ## sind die Dateien da?
 ## 	faq-titel faq-kategogien faq-inhalt
@@ -125,8 +134,8 @@ if (&ReadParse(*input)) {
 #%fkat = %ftit = %finh = ();
 #%fnrkat = ();
 
-if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	&webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
+	webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
 }
 
 ## Kommentare holen, keine Fehlermeldung noetig
@@ -135,11 +144,12 @@ if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
 $fueredit = undef;
-&ausgabekat($aktkat, $fueredit, %fkat);
+ausgabekat($aktkat, $fueredit, %fkat);
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-&ausgabefaqfound($aktkat, $fueredit, $searchstring, *fkat, *ftit, *finh, *fnrkat);
+#webhinweis( "searchstring vor ausgabefaqfound: [$searchstring]" );
+ausgabefaqfound($aktkat, $fueredit, $searchstring, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";

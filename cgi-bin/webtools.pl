@@ -11,23 +11,23 @@
 #---Fehlerausgabe in HTML-Seite------------------------------------
 sub webfehler {
 	## Uebergabe: Nachricht
-	local (@mes) = @_;
-	print "\n<p class='webfehler'><strong class='fehltit'>Fehler:</strong> $mes[0]</p>\n";
+	local ( $message, @rest) = @_;
+	print "\n<p class='webfehler'><strong class='fehltit'>Fehler:</strong> $message</p>\n";
 }
 
 #---Fehlerausgabe in HTML-Seite und Abbruch------------------------------------
 sub webabbruch {
 	## Uebergabe: Nachricht
-	local (@mes) = @_;
-	print "\n<p class='webfehler'><strong class='fehltit'>Abbruch, Fehler:</strong> $mes[0]</p>\n";
+	local ( $message, @rest ) = @_;
+	print "\n<p class='webfehler'><strong class='fehltit'>Abbruch, Fehler:</strong> $message</p>\n";
 	exit;
 }
 
 #---Hinweisausgabe in HTML-Seite------------------------------------
 sub webhinweis {
 	## Uebergabe: Nachricht
-	local (@mes) = @_;
-	print "\n<p class='webhinweis'><strong class='hinwtit'>Hinweis:</strong> $mes[0]</p>\n";
+	local ( $message, @rest) = @_;
+	print "\n<p class='webhinweis'><strong class='hinwtit'>Hinweis:</strong> $message</p>\n";
 }
 
 #---Hinweisausgabe in HTML-Seite mit Link --------------------------
@@ -40,8 +40,8 @@ sub webhinweislink {
 #---Rueckgabe des Codes fuer einen Link in HTML --------------------------
 sub weblink {
 	## Uebergabe: Linktext, Link
-	local (@mes) = @_;
-	return ("<a href=\"$mes[1]\">$mes[0]</a>");
+	local ( $linktext, $linkurl, @rest) = @_;
+	return ("<a href=\"$linkurl\">$linktext</a>");
 }
 
 #---Rueckgabe des Codes fuer ein Element in HTML mit Attributen --------------------------
@@ -657,12 +657,12 @@ sub sichereSGM {
 #---Holen der Daten der FAQ-------------------------------------------
 sub holfaq {
 	local (*kat, *tit, *inh, *nrkat) = @_;
-	local (@datei) = ($kat, $tit, $inh);
-	local ($d, $i, @f, %f, $z, $k, $v, $t, $ke, $va);
+	my (@datei) = ($kat, $tit, $inh);
+	my ($d, $i, @f, %f, $z, $k, $v, $t, $ke, $va);
 	
 	foreach $d (@datei) {
 		if ( !(-f $d) ) {
-			&webabbruch ("Datei nicht gefunden [$d]. $globals{'adminmes'}");
+			webabbruch ("Datei nicht gefunden [$d]. $globals{'adminmes'}");
 		}
 	}
 	
@@ -670,7 +670,7 @@ sub holfaq {
 	for ($i=0; $i<3; $i++) {
 		@f = %f = ();
 		if ( !(open (DAT, $datei[$i]) ) ) {
-			&webabbruch ("Kann Datei nicht lesen [$datei[$i]]. $globals{'adminmes'}");
+			webabbruch ("Kann Datei nicht lesen [$datei[$i]]. $globals{'adminmes'}");
 		}
 		@f = <DAT>;
 		close (DAT);
@@ -764,6 +764,8 @@ sub ausgabefaq {
 	local (@fke) = sort{$a <=> $b}(keys(%nrkat));
 	local (@aktfaq) = ();
 	local ($k, $temp);
+
+	#webhinweis( "aktkat in ausgabefaq: [$aktkat]" );
 	
 	## erst Liste der Fragen ausgeben mit Links zu den Fragen unten
 	## dabei schon eine Liste der FAQ merken, die der Kategorie entsprechen
@@ -836,11 +838,16 @@ sub ausgabefaq {
 
 #---Ausgabe der Suchergebnisse der Fragen der aktuellen/aller Kategorie-------------------------------------------
 #&ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
-sub ausgabefaq {
-	local ($akat, $isedit, $searchstring, *kat, *tit, *inh, *nrkat) = @_;
-	local (@fke) = sort{$a <=> $b}(keys(%nrkat));
-	local (@aktfaq) = ();
-	local ($k, $temp);
+sub ausgabefaqfound {
+	local ( $akat, $isedit, $searchstring, *kat, *tit, *inh, *nrkat ) = @_;
+	my ( @fke ) = sort{$a <=> $b}(keys(%nrkat));
+	my ( @aktfaq ) = ();
+	my ( $k, $temp );
+	my $foundbg = '#00ffff';
+	my $countfound = 0;
+
+	#webhinweis( "searchstring in ausgabefaqfound: [$searchstring]" );
+	#webhinweis( "IN ausgabefaqfound; akat: [$akat]" );
 	
 	## erst Liste der Fragen ausgeben mit Links zu den Fragen unten
 	## dabei schon eine Liste der FAQ merken, die der Kategorie entsprechen
@@ -869,64 +876,92 @@ sub ausgabefaq {
 	    		weblink( "[alle Kategorien]","faq.pl?kat=alle") ) 
 	    );
 	}
+
+	webhinweis( "In Kategorie: $akat - Suche: $searchstring" );
+	#webhinweis( "IN ausgabefaqfound; akat: [$akat]" );
+
 	print webtag( "ol", "type=1", "#EMPTY#" );
 
 	## erstmal fundstellen finden
 	## dazu erstmal Parser des searchstring aufrufen
+	#webhinweis( "vor parsesearch" );
+	my @searchwords = parsesearch( $searchstring );
+	#webhinweis( "searchwords: [".join(' - ', @searchwords)."] anzahl: ".($#searchwords + 1) );
 
+	my $matched = undef;
+	
 	foreach $k (@fke) {
 		if ($nrkat{$k} eq $akat) {
-			push (@aktfaq, $k);
-			print &webtag("li", "value=$k", &weblink("$tit{$k}", "#faq$k") );
+			#webfehler( "tit[$k]: $tit{$k}" ) if ( $k == 60 );
+			#webfehler( "ismatch( tit[$k] ): " . ismatch( $tit{ $k } ) ) if ( $k == 60 );
+			if( ismatch( $tit{ $k } .' '. $inh{ $k }, @searchwords ) ) {
+				push (@aktfaq, $k);
+				print webtag("li", "value=$k", weblink("$tit{$k}", "#faq$k") );
+				$countfound++;
+			}
 		} elsif ($akat eq "alle") {
-			push (@aktfaq, $k);
-			print &webtag("li", "value=$k", &weblink("$tit{$k}", "#faq$k") );
+			if( ismatch( $tit{ $k } .' '. $inh{ $k }, @searchwords ) ) {
+				push (@aktfaq, $k);
+				print webtag("li", "value=$k", weblink("$tit{$k}", "#faq$k") );
+				$countfound++;
+			}
 		}
 	}
 	if ($#aktfaq < 0) {
 		if ($isedit) {
-			print &webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]");
+			print webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]");
 		}
-		&webhinweis("Keine FAQ in dieser Kategorie");
+		webhinweis("Keine FAQ in dieser Kategorie");
 	}
-	print &webtag("ol", "", "#ENDETAG#");
-	print &webtag("div", "", "#ENDETAG#");
+	print webtag("ol", "", "#ENDETAG#");
+	webhinweis( "Anzahl gefundene Eintr&auml;ge: $countfound" );
+	print webtag("div", "", "#ENDETAG#");
 
+	my ( $titout, $inhout ) = ( undef, undef );
 	if ($#aktfaq >= 0) {
-		print &webtag("div", "class=faqantworten", "#EMPTY#");
+		print webtag("div", "class=faqantworten", "#EMPTY#");
 		if ($isedit) {
-		    print &webtag("h3", "class=editfaqanttit", "Antworten " . &webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]"));
+		    print webtag("h3", "class=editfaqanttit", "Antworten " . webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]"));
 		} else {
-		    print &webtag("h3", "class=faqanttit", "Antworten");
+		    print webtag("h3", "class=faqanttit", "Antworten");
 		}
-		print &webtag("dl", "", "#EMPTY#");
+		print webtag("dl", "", "#EMPTY#");
 		foreach $k (@aktfaq) {
+			#webhinweis( $tit{$k} ) ;
+			#webfehler( ismatch( $tit{$k}, (@searchwords, 'sonder') ) ) ;
+			if ( !($titout = ismatch( $tit{$k}, @searchwords )) ) {
+				$titout = $tit{$k};
+			}
 			if ($isedit) {
 			    if ($akat eq "alle") { 
-			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k} ") 
-			    		. &webtag("small", " (Kat. $nrkat{$k}) ") 
-			    		. &webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") );
+			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout ) 
+			    		. webtag("small", " (Kat. $nrkat{$k}) ") 
+			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") );
 			    } else {
-			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k} ") 
-			    		. &webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]"));
+			    	$temp = webtag("dt", &webtag("a","name=faq$k", "$k\. " . $titout ) 
+			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") );
 			    }
 			    print $temp;
 			} else {
 			    if ($akat eq "alle") { 
-			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k}") 
-			    		. &webtag("small", " (Kat. $nrkat{$k})") );
+			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout )  
+			    		. webtag("small", " (Kat. $nrkat{$k})") );
 			    } else {
-			    	$temp = &webtag("dt", &webtag("a","name=faq$k", "$k\. $tit{$k}") );
+			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout ) );
 			    }
 			    print $temp;
 			}
-			print &webtag("dd", &faq2htm($inh{$k}) . "<br>" . &webtag ("a", "href=#fragen\tclass=zufragen", "&uArr; zu den Fragen") );
+			$inhtemp = faq2htm($inh{$k});
+			if ( !($inhout = ismatch( $inhtemp, @searchwords )) ) {
+				$inhout = $inhtemp;
+			}
+			print webtag("dd", $inhout . "<br>" . webtag ("a", "href=#fragen\tclass=zufragen", "&uArr; zu den Fragen") );
 		}
-		print &webtag("dl", "", "#ENDETAG#");
-		print &webtag("div", "", "#ENDETAG#");
+		print webtag("dl", "", "#ENDETAG#");
+		print webtag("div", "", "#ENDETAG#");
 	}
 
-	print &webtag("div", "", "#ENDETAG#");
+	print webtag("div", "", "#ENDETAG#");
 	
 	return(1);
 }
@@ -1313,11 +1348,12 @@ PSEUDOHINWEISENDE
 #---Ausgabe des Suchfeldes-------------------------------------------
 sub ausgabesearchbox {
 	# kat[0..|alle] prefix searchstring
-	my ($kat, $prefix) = @_; ## , $searchstring - hab ich hier noch gar nicht
+	my ($kat, $prefix, $searchval, @rest) = @_; ## , $searchstring - hab ich hier noch gar nicht
 	#my ($k, $v, @ke, $t, $katmax, @katfrei, @katnr, $i, $katneuende, @katvorh);
 	#my ($faqmax, @faqfrei, @faqnr, $faqneuende, @faqvorh);
 	my ($tempstring) = "";
 	my ($who) = undef;
+	my ( $helpkat, $helpfaq ) = ( 5, 68 );
 	
 	#print "<p>_____ausgabefaqedit_____</p>\n"; 
 
@@ -1355,16 +1391,29 @@ SEARCHHINWEIS
 	if ( !$kat ) { $kat = "alle"; }
 	if ( $prefix ) {
 		print 	webtag("span", "class=searchboxprefix", 
-		 			webtag("a", "href=faq.pl?kat=5#faq7\ttarget=_blank\tname=searchhinweis\ttitle=$shinweis", "$prefix")
+		 			webtag("a", "href=faq.pl?kat=$helpkat#faq$helpfaq\ttarget=_blank\tname=searchhinweis\ttitle=$shinweis", "$prefix")
 		 		);
 	}
 
 	print webtag("span","class=searchinput","#EMPTY#");
 
-		print inputfeld("searchstring", "", $breit);
+		print inputfeld("searchstring", "$searchval", $breit);
 		print " ";
 		print webtag("input", "type=hidden\tname=kat\tvalue=$kat", "#EMPTY#" );
+		print ' &nbsp;';
 		print webtag("input", "type=submit\tname=aktion\tvalue=$searchbuttonval", "#EMPTY#");
+
+		print webtag("span","class=searchinputext","#EMPTY#");
+			#print webtag("br","#ENDETAG#");
+			if ( !$prefix ) {
+				print webtag( "small", ' &nbsp;' . 
+				  webtag("a", "href=faq.pl?kat=$helpkat#faq$helpfaq\ttarget=_blank\tname=searchhinweis\ttitle=$shinweis", "nur gew&auml;hlte Kat.") . ' ' );
+				#print weblink( webtag("small"," &nbsp;nur gew&auml;hlte Kat. ") , "faq.pl?kat=$helpkat#faq$helpfaq" );
+			} else {
+				print webtag("small"," &nbsp;nur gew&auml;hlte Kat. ")
+			}
+			print webtag("input", "type=checkbox\tname=onlypickedkat\tvalue=1", "#EMPTY#" );
+		print webtag("span","","#ENDETAG#");
 
 	print webtag("span","","#ENDETAG#");
 
@@ -1504,5 +1553,75 @@ sub whoamip {
 	}
 }
 
-#--- ENDE Alles ------------------------------------
+sub parsesearch{
+	my ( $searchstring, @rest ) = @_;
 	
+	#webhinweis( "IN parsesearch; searchstring: [$searchstring]" );
+
+	## keine Phrasen (vorerst)
+	##   Anfuehrung loeschen
+	## Wortbestandteil Sonderzeichen kann sein: -_
+	##   und alle Umlaute ‰ˆ¸ƒ÷‹ﬂ
+	## alles Andere ersetzen durch ' '
+	## Achtung, hier erstmal kein case insensitive (doppelt pruefung)
+	
+	my $searchnormalized = $searchstring;
+	#webhinweis( "searchnormalized vor substitute: [$searchnormalized]" );
+	$searchnormalized =~ s/[^a-zA-Z0-9_\xE4\xF6\xFC\xC4\xD6\xDC\xDF\#\-]+/ /gs;   ## Zeichen '#' ausnehmen
+	$searchnormalized =~ s/\#/\x23/gs;   ## Zeichen '#' maskieren, gilt sonst evtl. als Kommentar
+	#webhinweis( "searchnormalized past substitute: [$searchnormalized]" );
+
+	my @searchterms = split( / +/, $searchnormalized );
+	
+	## doppelt pruefung
+	my %singledterms;
+	foreach my $term( @searchterms ) {
+		$singledterms{ $term } = 1;
+	}
+	@searchterms = keys( %singledterms );
+	
+	return( @searchterms );
+}
+
+sub ismatch{
+	my ( $text, @searchterms ) = @_;
+	my $foundstring = $text;
+	my $term = undef;
+	
+	my $searchstring = join( ' ', @searchterms );
+	my $dohint = undef;
+	if ( $searchstring =~ s/ sonder//is ) {
+		$dohint = 1;
+		@searchterms = split( / /, $searchstring );
+	}
+
+	webhinweis( "IN ismatch; searchterms: [".join(' - ', @searchterms)."] anzahl: ".($#searchterms + 1) ) if $dohint;
+	
+	EVERYTERM:
+	foreach $term( @searchterms ) {
+		if( ( $foundstring !~ m/([^~])($term)([^~])/is ) 
+			&& ( $foundstring !~ m/([^~])($term)$/is ) 
+			&& ( $foundstring !~ m/^($term)([^~])/is ) 
+			&& ( $foundstring !~ m/^($term)$/is )
+		) {
+			#webfehler( "___ ismatch kein match auf [$term] in: --[" . $foundstring . "]--"  ) if ( $dohint );
+			$foundstring = '';
+			last EVERYTERM;
+		} elsif ( $foundstring =~ m/([^~])($term)([^~])/is ) {
+			$foundstring =~ s/([^~])($term)([^~])/$1<span class="foundterm">~~$2~~<\/span>$3/igs;
+		} elsif ( $foundstring =~ m/([^~])($term)$/is ) {
+			$foundstring =~ s/([^~])($term)$/$1<span class="foundterm">~~$2~~<\/span>/igs;
+		} elsif ( $foundstring =~ m/^($term)([^~])/is ) {
+			$foundstring =~ s/^($term)([^~])/<span class="foundterm">~~$1~~<\/span>$2/igs;
+		} elsif ( $foundstring =~ m/^($term)$/is ) {
+			$foundstring =~ s/^($term)$/<span class="foundterm">~~$1~~<\/span>/igs;
+		}
+	}
+	$foundstring =~ s|(href=")([^<>"]*)(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$4|igs;
+	$foundstring =~ s|(name=")([^<>"]*)(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$4|igs;
+	$foundstring =~ s|(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$3|igs;
+	return( $foundstring );
+}
+
+#--- ENDE Alles ------------------------------------
+1;
