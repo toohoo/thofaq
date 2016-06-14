@@ -428,6 +428,7 @@ local %meine = (
 	"breitlang" ,   "40",
 	"breitfeld" ,   "75",
 	"hoch"      ,   "10",
+	"breittiny" ,   "18",
 	);
 $meine{"adminmes"} = "Bitte informieren Sie $meine{'admin'} (Tel. $meine{'admintel'}).";
 
@@ -1357,12 +1358,13 @@ sub ausgabesearchbox {
 	
 	#print "<p>_____ausgabefaqedit_____</p>\n"; 
 
-	my ($breit, $breitkurz, $breitlang, $breitfeld, $hoch) = (20, 5, 40, 70, 20);
+	my ($breit, $breitkurz, $breitlang, $breitfeld, $hoch, $breittiny) = (20, 5, 40, 70, 20, 18);
 	if ($globals{"breit"    }) { $breit     = $globals{"breit"    }; }
 	if ($globals{"breitkurz"}) { $breitkurz = $globals{"breitkurz"}; }
 	if ($globals{"breitlang"}) { $breitlang = $globals{"breitlang"}; }
 	if ($globals{"breitfeld"}) { $breitfeld = $globals{"breitfeld"}; }
 	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
+	if ($globals{"breittiny"}) { $breittiny = $globals{"breittiny"}; }
 	($breitfeld, $hoch) 	= (100, 20);
 
 	## Bearbeitungshinweise Pseudocode
@@ -1397,10 +1399,10 @@ SEARCHHINWEIS
 
 	print webtag("span","class=searchinput","#EMPTY#");
 
-		print inputfeld("searchstring", "$searchval", $breit);
-		print " ";
+		print inputfeld("searchstring", "$searchval", $breittiny);
+		print "&nbsp;";
 		print webtag("input", "type=hidden\tname=kat\tvalue=$kat", "#EMPTY#" );
-		print ' &nbsp;';
+		print '&nbsp;';
 		print webtag("input", "type=submit\tname=aktion\tvalue=$searchbuttonval", "#EMPTY#");
 
 		print webtag("span","class=searchinputext","#EMPTY#");
@@ -1558,6 +1560,8 @@ sub parsesearch{
 	
 	#webhinweis( "IN parsesearch; searchstring: [$searchstring]" );
 
+	#if ( $searchstring =~ /^[ \t\r\n]*$/ ) { return( undef ); }
+
 	## keine Phrasen (vorerst)
 	##   Anfuehrung loeschen
 	## Wortbestandteil Sonderzeichen kann sein: -_
@@ -1570,12 +1574,16 @@ sub parsesearch{
 	$searchnormalized =~ s/[^a-zA-Z0-9_\xE4\xF6\xFC\xC4\xD6\xDC\xDF\#\-]+/ /gs;   ## Zeichen '#' ausnehmen
 	$searchnormalized =~ s/\#/\x23/gs;   ## Zeichen '#' maskieren, gilt sonst evtl. als Kommentar
 	#webhinweis( "searchnormalized past substitute: [$searchnormalized]" );
+	my @leeresfeld = ();
+	if ( $searchnormalized =~ /^[ \t\r\n]*$/ ) { return( @leeresfeld ); }
 
 	my @searchterms = split( / +/, $searchnormalized );
 	
 	## doppelt pruefung
 	my %singledterms;
+	parseeveryterm:
 	foreach my $term( @searchterms ) {
+		next parseeveryterm if ( $term =~ /^[ \t\r\n]*$/ );
 		$singledterms{ $term } = 1;
 	}
 	@searchterms = keys( %singledterms );
@@ -1593,6 +1601,12 @@ sub ismatch{
 	if ( $searchstring =~ s/ sonder//is ) {
 		$dohint = 1;
 		@searchterms = split( / /, $searchstring );
+	}
+
+	if ( $#searchterms < 0 ) {
+		#webhinweis( "IN ismatch; searchterms: [".join(' - ', @searchterms)."] anzahl: ".($#searchterms + 1) );
+		#exit;
+		return( '' );
 	}
 
 	webhinweis( "IN ismatch; searchterms: [".join(' - ', @searchterms)."] anzahl: ".($#searchterms + 1) ) if $dohint;
