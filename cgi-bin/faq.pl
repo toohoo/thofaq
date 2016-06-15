@@ -20,7 +20,7 @@
 ## geht nicht, daher diese Variable
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
-$aktdir = &holpfad0($scriptname);
+$aktdir = holpfad0($scriptname);
 
 #print "Content-type: text/html\n\n";
 #print "<html>\n<head>\n<title>Test</title>\n</head>\n<body>\n";
@@ -36,23 +36,27 @@ require "webtools.pl";
 
 ## packe ich bei webtools mit rein
 #require "globals.pl";
-%globals = &getglobals;
+%globals = getglobals();
 
 ## nur global festlegen
 #%opt = ();
 
-print &PrintHeader();
-$head = &UbmCgiHead("FAQ - Hilfe: häufig gestellte Fragen");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+print PrintHeader();
+$head = UbmCgiHead("FAQ - Hilfe: häufig gestellte Fragen");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 print $head;
 
 $aktkat = 1;
 $input="";
 @input=();
 %input=();
+my $hashtags = 'off';  ## or simply '' but NOT 'on'
 ## wurde was uebergeben?
-if (&ReadParse(*input)) {
+if (ReadParse(*input)) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
+	}
+	if ( $input{'hashtags'} =~ m/on/i ) {
+		$hashtags = 'on';
 	}
 }
 
@@ -116,23 +120,31 @@ if (&ReadParse(*input)) {
 ##
 ## 	d.h. arbeiten mit Referenzen
 
+
+
+#webhinweis( "faq.pl - VOR Dateinamen Festlegung" );
 ($fkat, $ftit, $finh) = ($globals{"faq-kat"},$globals{"faq-tit"},$globals{"faq-inh"});
+#webhinweis( "faq.pl - NACH Dateinamen Festlegung" );
 
 #@fkat = @ftit = @finh = ();
 #%fkat = %ftit = %finh = ();
 #%fnrkat = ();
 
 if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	&webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+	webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
 }
+#webhinweis( "faq.pl - NACH holfaq" );
 
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
+my @hashtags = gethashtags( \%finh ) if $hashtags eq 'on';
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
+$fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fueredit = undef;
-&ausgabekat($aktkat, $fueredit, %fkat);
+ausgabekat($aktkat, $fueredit, %fkat);
+delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?

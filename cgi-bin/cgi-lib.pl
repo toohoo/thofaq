@@ -48,10 +48,14 @@ sub ReadParse {
 
   # Read in text
   if (&MethGet) {
+	#print "<p>*** ReadParse MethGet</p>\n";
     $in = $ENV{'QUERY_STRING'};
   } elsif (&MethPost) {
+	#print "<p>*** ReadParse MethPost</p>\n";
     read(STDIN,$in,$ENV{'CONTENT_LENGTH'});
   }
+
+  #print "<p>*** ReadParse MethGet[".&MethGet."] - MethPost[".&MethPost."] - in[$in] - ENV{'QUERY_STRING'}[$ENV{'QUERY_STRING'}]</p>\n";
 
   @in = split(/[&;]/,$in); 
 

@@ -21,7 +21,7 @@
 ## geht nicht, daher diese Variable
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
-$aktdir = &holpfad0($scriptname);
+$aktdir = holpfad0($scriptname);
 
 #print "Content-type: text/html\n\n";
 #print "<html>\n<head>\n<title>Test</title>\n</head>\n<body>\n";
@@ -37,13 +37,13 @@ require "webtools.pl";
 
 ## packe ich bei webtools mit rein
 #require "globals.pl";
-%globals = &getglobals;
+%globals = getglobals();
 
 ## nur global festlegen
 #%opt = ();
 
-print &PrintHeader();
-$head = &UbmCgiHead("FAQ - Suche");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+print PrintHeader();
+$head = UbmCgiHead("FAQ - Suche");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 print $head;
 
 $aktkat 		= 1;
@@ -144,7 +144,10 @@ if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
 $fueredit = undef;
+## searchstring uebergeben
+$fkat{'searchstring'} = $searchstring;
 ausgabekat($aktkat, $fueredit, %fkat);
+delete $fkat{'searchstring'} if defined( $fkat{'searchstring'} );
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?

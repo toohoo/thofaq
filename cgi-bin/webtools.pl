@@ -244,29 +244,29 @@ sub holrem {
 	while ($z = <REMARK>) {
 		chop ($z) if ($z =~ m/\n$/i);
 	    #-- leere Zeile und Kommentar
-	    if (($z !~ m/^[ \t]*$/i) && ($z !~ m/^[ \t]*#/i)) {
-		if ($z =~ m/\t/i) {
-			($k,$v) = split(/\t/, $z, 2);
-		} else {
-			$k = $z;
-			$v = undef();
-		}
-		#-- Kleinschreibung bei Key
-		$k = "\l$k";
-		if (defined($myrem{$k})) {
-			#-- ist die Unterscheidung nach defined und $myrem{$k} noetig?
-			if ($myrem{$k}) {
-				if ($v) {
-					$myrem{$k} .= "\t$v";
+	    if (($z !~ m/^[ \t]*$/i) && ($z !~ m/^[ \t]*\#/i)) {
+			if ($z =~ m/\t/i) {
+				($k,$v) = split(/\t/, $z, 2);
+			} else {
+				$k = $z;
+				$v = undef();
+			}
+			#-- Kleinschreibung bei Key
+			$k = "\l$k";
+			if (defined($myrem{$k})) {
+				#-- ist die Unterscheidung nach defined und $myrem{$k} noetig?
+				if ($myrem{$k}) {
+					if ($v) {
+						$myrem{$k} .= "\t$v";
+					}
+				} else {
+					if ($v) {
+						$myrem{$k} = "$v";
+					}
 				}
 			} else {
-				if ($v) {
-					$myrem{$k} = "$v";
-				}
+				$myrem{$k} = "$v";
 			}
-		} else {
-			$myrem{$k} = "$v";
-		}
 	    }  #-- of is Kommentar or leere Zeile
 	}
 	close (REMARK);
@@ -661,6 +661,7 @@ sub holfaq {
 	my (@datei) = ($kat, $tit, $inh);
 	my ($d, $i, @f, %f, $z, $k, $v, $t, $ke, $va);
 	
+	#webhinweis( "IN holfaq: [kat/tit/inh]: [$kat/$tit/$inh]" );
 	foreach $d (@datei) {
 		if ( !(-f $d) ) {
 			webabbruch ("Datei nicht gefunden [$d]. $globals{'adminmes'}");
@@ -721,45 +722,64 @@ sub holfaq {
 
 #---Ausgabe der Kategorien der FAQ-------------------------------------------
 sub ausgabekat {
-	my ($aktkat,$isedit,%ka) = @_;
-	my ($k, $v, @ke, $t);
+	my ( $aktkat, $isedit, %ka ) = @_;
+	my ( $k, $v, @ke, $t );
 	my $aktkatsic = $aktkat;
 	
+	my $hasharray = undef;
+	my @hasharray = undef;
+	if ( defined( $ka{ 'hashtags' } ) ) {
+		$hasharray = $ka{ 'hashtags' };
+		delete $ka{ 'hashtags' };
+		@hasharray = @{ $hasharray };
+	}
+
+	my $searchstring = undef;
+	if ( defined( $ka{ 'searchstring' } ) ) {
+		$searchstring = $ka{ 'searchstring' };
+		delete $ka{ 'searchstring' };
+	}
+
 	@ke = sort{$a <=> $b} (keys (%ka) );
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
-	print &webtag("div", "class=katwahl", "#EMPTY#");
+	print webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
-	    print &webtag("h3", "class=katwahltit", "Kategorien <br>" . &webtag("small",&weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat")) );
+	    print webtag("h3", "class=katwahltit", "Kategorien <br>" . webtag("small",weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat")) );
 	} else {  ## normal nicht edit
-	    print &webtag("h3", "class=katwahltit", "Kategorien <br>" . &webtag("small",&weblink("[EDIT]","editfaqkat.pl")) );
+	    print webtag("h3", "class=katwahltit", "Kategorien <br>" . webtag("small",weblink("[EDIT]","editfaqkat.pl")) );
 	}
-	#print &webtag("p", &weblink("[EDIT]","editfaqkat.pl"));
-	#print &webtag("blah");
-	print &webtag("ol", "type=1", "#EMPTY#");
+	#print webtag("p", weblink("[EDIT]","editfaqkat.pl"));
+	#print webtag("blah");
+	print webtag("ol", "type=1", "#EMPTY#");
 
 	foreach $k (@ke) {
 		if ($aktkat eq $k) {
-			#$t = &webtag("b", &weblink("$ka{$k}", "faq.pl?kat=$k"));
-			print &webtag("li", "value=$k", &webtag("b", "*$ka{$k}*") );
+			#$t = webtag("b", &weblink("$ka{$k}", "faq.pl?kat=$k"));
+			print webtag("li", "value=$k", webtag("b", "*$ka{$k}*") );
 		} else {
 		    if ($isedit) {
-			print &webtag("li", "value=$k", &weblink("$ka{$k}", "editfaq.pl?kat=$k") );
+				print webtag("li", "value=$k", weblink("$ka{$k}", "editfaq.pl?kat=$k") );
 		    } else {  ## normal nicht edit
-			print &webtag("li", "value=$k", &weblink("$ka{$k}", "faq.pl?kat=$k") );
+				print webtag("li", "value=$k", weblink("$ka{$k}", "faq.pl?kat=$k") );
 		    }
 		}
 	}
 
-	print &webtag("ol", "", "#ENDETAG#");
+	print webtag("ol", "", "#ENDETAG#");
 
 	#if (($aktkat eq "") || !defined($aktkat)) { $aktkatsic = 'alle'; }
-	ausgabesearchbox( $aktkatsic, '' );
+	ausgabesearchbox( $aktkatsic, '', $searchstring );
 	
-	print &webtag("div", "", "#ENDETAG#");
+	print gethashtagsblock( $hasharray );
+	if ( !$hasharray ) {
+		print '&nbsp;' . webtag( "small", weblink( "Hashtags","faq.pl?kat=$aktkat\&hashtags=on" ) );
+	}
+	
+	print webtag("div", "", "#ENDETAG#");
 }
 
 #---Ausgabe der Fragen der aktuellen Kategorie-------------------------------------------
-#&ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
+#ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
 sub ausgabefaq {
 	local ($akat, $isedit, *kat, *tit, *inh, *nrkat) = @_;
 	local (@fke) = sort{$a <=> $b}(keys(%nrkat));
@@ -1571,7 +1591,7 @@ sub parsesearch{
 	
 	my $searchnormalized = $searchstring;
 	#webhinweis( "searchnormalized vor substitute: [$searchnormalized]" );
-	$searchnormalized =~ s/[^a-zA-Z0-9_\xE4\xF6\xFC\xC4\xD6\xDC\xDF\#\-]+/ /gs;   ## Zeichen '#' ausnehmen
+	$searchnormalized =~ s/[^a-zA-Z0-9_\xE4\xF6\xFC\xC4\xD6\xDC\xDF\#\-\.]+/ /gs;   ## Zeichen '#' ausnehmen
 	$searchnormalized =~ s/\#/\x23/gs;   ## Zeichen '#' maskieren, gilt sonst evtl. als Kommentar
 	#webhinweis( "searchnormalized past substitute: [$searchnormalized]" );
 	my @leeresfeld = ();
@@ -1609,6 +1629,7 @@ sub ismatch{
 		return( '' );
 	}
 
+	#$dohint = 1;
 	webhinweis( "IN ismatch; searchterms: [".join(' - ', @searchterms)."] anzahl: ".($#searchterms + 1) ) if $dohint;
 	
 	EVERYTERM:
@@ -1635,6 +1656,49 @@ sub ismatch{
 	$foundstring =~ s|(name=")([^<>"]*)(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$4|igs;
 	$foundstring =~ s|(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$3|igs;
 	return( $foundstring );
+}
+
+sub gethashtags {
+	# gethashtags( \%finh );
+	my ( $faqinh, @rest ) = @_;
+	
+	my %hashtag = ();
+	my @inhkeys = keys( %{ $faqinh } );
+	my @faqhash = ();
+	my ( $ikey, $fhash );
+	foreach $ikey ( @inhkeys ) {
+		@faqhash = ( $$faqinh{ $ikey } =~ /(?:^|[^a-zA-Z_&?\-])(\#\w+)(?:[^a-zA-Z0-9;_\-\]]|$)/g );
+		foreach $fhash ( @faqhash ) {
+			if ( !defined( $hashtag{ $fhash } ) && ( $fhash !~ /\#\d{8}/ ) ) {
+				$hashtag{ $fhash } = 1;
+			}
+		}
+	}
+	
+	return( keys( %hashtag ) );
+}
+
+sub gethashtagsblock {
+	# gethashtagsblock( $hasharray ); ## where $hasharray = \@hasharray;
+	my ( $arref , @rest ) = @_;
+	
+	my $hashblock = '';
+	if ( $arref eq undef ) {
+		return( '' );
+	}
+	
+	$hashblock .= "<div class=\"hashblock\">\n";
+	
+	# faqsearch.pl?searchstring=#hashtag
+	my $hashcount = @{ $arref };
+	#webhinweis( "IN gethashtagsblock - hashcount: $hashcount" );
+	foreach my $hashtag ( sort( @{ $arref } ) ) {
+			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\">$hashtag</a> - ";
+	}
+	
+	$hashblock .= "</div>\n";
+	
+	return( $hashblock );
 }
 
 #--- ENDE Alles ------------------------------------
