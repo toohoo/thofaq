@@ -1395,12 +1395,13 @@ sub ausgabesearchbox {
 	($breitfeld, $hoch) 	= (100, 20);
 
 	## Bearbeitungshinweise Pseudocode
-	my $shinweis=<<SEARCHHINWEIS;
-	UND-Suche,
-	Es gibt keine Phrasensuche.
-	Sonderzeichen werden entfernt.
-	Hashtag-Suche mit: #(hashtag),
-	alles case-insensitive
+	##   Achtung! nicht mit Tab arbeiten, daraus macht webtag Attribute
+	my $shinweis = <<SEARCHHINWEIS;
+    UND-Suche,
+    Es gibt keine Phrasensuche.
+    Sonderzeichen werden entfernt.
+    Hashtag-Suche mit: #(hashtag),
+    alles case-insensitive
 SEARCHHINWEIS
 	
 
