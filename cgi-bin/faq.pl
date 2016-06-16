@@ -143,6 +143,7 @@ my @hashtags = gethashtags( \%finh ) if $hashtags eq 'on';
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fueredit = undef;
+$input{'fueredit'} = $fueredit;
 ausgabekat($aktkat, $fueredit, %fkat);
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 

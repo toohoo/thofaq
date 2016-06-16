@@ -52,6 +52,7 @@ $input 			= "";
 %input 			= ();
 $searchstring 	= '';
 $onlypickedkat	= undef;
+$hashtags = 'off';  ## or simply '' but NOT 'on'
 ## wurde was uebergeben?
 if ( ReadParse( *input ) ) {
 	if ($input{'kat'}) {
@@ -64,6 +65,12 @@ if ( ReadParse( *input ) ) {
 		$onlypickedkat = $input{'onlypickedkat'};
 	} else {
 		$aktkat = 'alle';
+	}
+	if ( $input{'hashtags'} =~ m/on/i ) {
+		$hashtags = 'on';
+	}
+	if ($input{'fueredit'}) {
+		$fueredit = $input{'fueredit'};
 	}
 }
 
@@ -141,13 +148,17 @@ if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
+my @hashtags = gethashtags( \%finh ) if $hashtags eq 'on';
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
-$fueredit = undef;
+$fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
+#$fueredit = undef;  ## siehe oben
+#$input{'fueredit'} = $fueredit;  ## siehe oben
 ## searchstring uebergeben
 $fkat{'searchstring'} = $searchstring;
 ausgabekat($aktkat, $fueredit, %fkat);
 delete $fkat{'searchstring'} if defined( $fkat{'searchstring'} );
+delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?

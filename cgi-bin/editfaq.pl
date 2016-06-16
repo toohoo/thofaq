@@ -43,10 +43,14 @@ $aktkat = 1;
 $input="";
 @input=();
 %input=();
+my $hashtags = 'off';  ## or simply '' but NOT 'on'
 ## wurde was uebergeben?
 if (&ReadParse(*input)) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
+	}
+	if ( $input{'hashtags'} =~ m/on/i ) {
+		$hashtags = 'on';
 	}
 }
 
@@ -61,22 +65,26 @@ if (&ReadParse(*input)) {
 #%fnrkat = ();
 
 ## 	d.h. arbeiten mit Referenzen
-if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	&webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
+	webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
 }
 
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
+my @hashtags = gethashtags( \%finh ) if $hashtags eq 'on';
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------
 ## 	hier brauch ich neue Routine oder einen zusaetzlichen Parameter
+$fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fueredit = 1;
-&ausgabekat($aktkat, $fueredit, %fkat);
+$input{'fueredit'} = $fueredit;
+ausgabekat($aktkat, $fueredit, %fkat);
+delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-&ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";

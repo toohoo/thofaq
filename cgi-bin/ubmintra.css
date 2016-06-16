@@ -268,3 +268,7 @@ b > code, code > b {
 	font-weight: bold;
 	background-color: #00ffff;
 }
+
+.hashblock {
+	margin: 5px 5px 5px 5px;
+}

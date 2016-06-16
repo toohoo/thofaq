@@ -770,9 +770,16 @@ sub ausgabekat {
 	#if (($aktkat eq "") || !defined($aktkat)) { $aktkatsic = 'alle'; }
 	ausgabesearchbox( $aktkatsic, '', $searchstring );
 	
+	#webhinweis( "\$0: $0" );
+	my $scriptname = getfilename( $0 );
+	#webhinweis( "scriptname: $scriptname" );
+	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
+	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
 	print gethashtagsblock( $hasharray );
 	if ( !$hasharray ) {
-		print '&nbsp;' . webtag( "small", weblink( "Hashtags","faq.pl?kat=$aktkat\&hashtags=on" ) );
+		my $sicsearchstring = $searchstring;
+		$sicsearchstring =~ s/\#/\%23/i;
+		print '&nbsp;' . webtag( "small", weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) );
 	}
 	
 	print webtag("div", "", "#ENDETAG#");
@@ -1693,13 +1700,51 @@ sub gethashtagsblock {
 	my $hashcount = @{ $arref };
 	#webhinweis( "IN gethashtagsblock - hashcount: $hashcount" );
 	foreach my $hashtag ( sort( @{ $arref } ) ) {
-			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\">$hashtag</a> - ";
+			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
 	}
 	
 	$hashblock .= "</div>\n";
 	
 	return( $hashblock );
 }
+
+sub getpath {
+## Uebergabe: vollstaendiges Verzeichnis/Dateiname
+## Rueckgabe: Verzeichnis ohne Dateiname bzw. letztes Unterverzeichnis
+## globale Variablen: nurpfad, nurdat, slash
+
+        my ( $vpfad, @par ) = @_;
+        $vpfad =~ m/^(.+)([\\\/])([^\\\/]*)$/;
+        if (defined($1)) {
+                $nurpfad = $1;
+                $slash   = $2;
+                $nurdat  = $3;
+        } else {
+                $nurpfad = '';
+                $nurdat = $vpfad;
+        }
+        return ($nurpfad);
+}
+
+sub getfilename {
+## Uebergabe: vollstaendiges Verzeichnis/Dateiname
+## Rueckgabe: Verzeichnis ohne Dateiname bzw. letztes Unterverzeichnis
+## globale Variablen: nurpfad, nurdat, slash
+
+        my ( $vpfad, @par ) = @_;
+        $vpfad =~ m/^(.+)([\\\/])([^\\\/]*)$/;
+        if (defined($1)) {
+                $nurpfad 	= $1;
+                $slash   	= $2;
+                $nurdat  	= $3;
+        } else {
+                $nurpfad 	= $vpfad;
+                $nurdat 	= '';
+        }
+        $nurdat =~ s/(\?.*)$//;
+        return ($nurdat);
+}
+
 
 #--- ENDE Alles ------------------------------------
 1;
