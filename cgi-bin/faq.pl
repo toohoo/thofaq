@@ -50,6 +50,7 @@ $input="";
 @input=();
 %input=();
 my $hashtags = 'off';  ## or simply '' but NOT 'on'
+my $hashcloud = 'off';  ## or simply '' but NOT 'on'
 ## wurde was uebergeben?
 if (ReadParse(*input)) {
 	if ($input{'kat'}) {
@@ -57,6 +58,9 @@ if (ReadParse(*input)) {
 	}
 	if ( $input{'hashtags'} =~ m/on/i ) {
 		$hashtags = 'on';
+	}
+	if ( $input{'hashcloud'} =~ m/on/i ) {
+		$hashcloud = 'on';
 	}
 }
 
@@ -138,14 +142,20 @@ if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
-my @hashtags = gethashtags( \%finh ) if $hashtags eq 'on';
+my ( %hashtag, @hashtags );
+if ( $hashtags eq 'on' or $hashcloud eq 'on' ) {
+	%hashtag = gethashtags( \%finh ) ;
+	@hashtags = keys( %hashtag );
+}
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
+$fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
 $fueredit = undef;
 $input{'fueredit'} = $fueredit;
 ausgabekat($aktkat, $fueredit, %fkat);
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
+delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?

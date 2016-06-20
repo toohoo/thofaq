@@ -726,12 +726,17 @@ sub ausgabekat {
 	my ( $k, $v, @ke, $t );
 	my $aktkatsic = $aktkat;
 	
-	my $hasharray = undef;
-	my @hasharray = undef;
+	my ( $hasharray, @hasharray ) = ( undef, undef );
+	my ( $hashcloud, %hashcloud ) = ( undef, undef );
 	if ( defined( $ka{ 'hashtags' } ) ) {
 		$hasharray = $ka{ 'hashtags' };
 		delete $ka{ 'hashtags' };
 		@hasharray = @{ $hasharray };
+	}
+	if ( defined( $ka{ 'hashcloud' } ) ) {
+		$hashcloud = $ka{ 'hashcloud' };
+		delete $ka{ 'hashcloud' };
+		%hashcloud = %{ $hashcloud };
 	}
 
 	my $searchstring = undef;
@@ -776,13 +781,18 @@ sub ausgabekat {
 	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
 	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
 	print gethashtagsblock( $hasharray );
-	if ( !$hasharray ) {
+	print gethashtagcloud( $hashcloud );
+	if ( !$hasharray || !$hashcloud ) {
 		my $sicsearchstring = $searchstring;
 		$sicsearchstring =~ s/\#/\%23/i;
-		print '&nbsp;' . webtag( "small", weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) );
+		print '&nbsp;' . webtag( "small", '#EMPTY#' );
+		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hasharray;
+		print ' - ' if ( !$hasharray && !$hashcloud );
+		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hashcloud;
+		print            webtag( "small", '#ENDETAG#' );
 	}
 	
-	print webtag("div", "", "#ENDETAG#");
+	print webtag("div", "", "#ENDETAG#");  ## of class=katwahl
 }
 
 #---Ausgabe der Fragen der aktuellen Kategorie-------------------------------------------
@@ -1701,15 +1711,18 @@ sub gethashtags {
 	my @faqhash = ();
 	my ( $ikey, $fhash );
 	foreach $ikey ( @inhkeys ) {
-		@faqhash = ( $$faqinh{ $ikey } =~ /(?:^|[^a-zA-Z_&?\-])(\#\w+)(?:[^a-zA-Z0-9;_\-\]]|$)/g );
+		#@faqhash = ( $$faqinh{ $ikey } =~ /(?:^|[^a-zA-Z_&?\-])(\#\w+)(?:[^a-zA-Z0-9;_\-\]]|$)/g );
+		@faqhash = ( $$faqinh{ $ikey } =~ /(\#\w+)(?:[^a-zA-Z0-9;_\-\]]|$)/g );
 		foreach $fhash ( @faqhash ) {
 			if ( !defined( $hashtag{ $fhash } ) && ( $fhash !~ /\#\d{8}/ ) ) {
 				$hashtag{ $fhash } = 1;
+			} elsif ( ($hashtag{ $fhash } >= 1) && ( $fhash !~ /\#\d{8}/ ) ) {
+				$hashtag{ $fhash }++;
 			}
 		}
 	}
 	
-	return( keys( %hashtag ) );
+	return( %hashtag );
 }
 
 sub gethashtagsblock {
@@ -1730,6 +1743,48 @@ sub gethashtagsblock {
 			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
 	}
 	
+	$hashblock .= "</div>\n";
+	
+	return( $hashblock );
+}
+
+sub gethashtagcloud {
+	# gethashtagsblock( $hasharray ); ## where $hasharray = \@hasharray;
+	my ( $hashref , @rest ) = @_;
+	
+	my $hashblock = '';
+	if ( $hashref eq undef ) {
+		return( '' );
+	}
+	
+	$hashblock .= "<div class=\"hashblock\">\n";
+	
+	# faqsearch.pl?searchstring=#hashtag
+	my $hashcount = keys( %{ $hashref } );
+	#webhinweis( "IN gethashtagcloud - hashcount: $hashcount" );
+	my ( $hashtag, $maxcloud, $lvl ) = ( undef, 0, 0 );
+	my @lvl = ( 0.2, 0.4, 0.85, 0.95, 1 );
+	my @big = ( 0.6, 0.9, 1.3, 1.6, 1.8 );
+	my $ilvl;
+	
+	foreach $hashtag ( keys(%{ $hashref }) )  {
+		$maxcloud = $$hashref{$hashtag} if $$hashref{$hashtag} > $maxcloud;
+	}
+	foreach $hashtag ( sort( keys(%{ $hashref }) ) ) {
+		$lvl = 0;
+		#webfehler( "hashtag(count): $hashtag($$hashref{$hashtag})" );
+		foreach $ilvl ( 1..$#lvl ) {
+			if ( $$hashref{$hashtag} >= ($lvl[$ilvl-1] * $maxcloud) ) {
+				$lvl = $ilvl;
+				#webhinweis( "hashref{$hashtag} > lvl[".($ilvl-1)."] * maxcloud(".($lvl[$ilvl-1] * $maxcloud).") - lvl($lvl)" );
+			} else {
+				#webhinweis( "NOT hashref{$hashtag} > lvl[".($ilvl-1)."] * maxcloud(".($lvl[$ilvl-1] * $maxcloud).") - lvl($lvl)" );
+			}
+		}
+		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
+		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - ";
+	}
+	#exit;
 	$hashblock .= "</div>\n";
 	
 	return( $hashblock );
