@@ -780,8 +780,6 @@ sub ausgabekat {
 	#webhinweis( "scriptname: $scriptname" );
 	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
 	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
-	print gethashtagsblock( $hasharray );
-	print gethashtagcloud( $hashcloud );
 	if ( !$hasharray || !$hashcloud ) {
 		my $sicsearchstring = $searchstring;
 		$sicsearchstring =~ s/\#/\%23/i;
@@ -791,6 +789,8 @@ sub ausgabekat {
 		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hashcloud;
 		print            webtag( "small", '#ENDETAG#' );
 	}
+	print gethashtagsblock( $hasharray );
+	print gethashtagcloud( $hashcloud );
 	
 	print webtag("div", "", "#ENDETAG#");  ## of class=katwahl
 }
