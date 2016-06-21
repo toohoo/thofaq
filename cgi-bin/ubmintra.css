@@ -272,3 +272,20 @@ b > code, code > b {
 .hashblock {
 	margin: 5px 5px 5px 5px;
 }
+
+.hashblock a {
+	text-decoration: none;
+}
+
+.hashtag {
+	padding: 0px 1px 0px 1px;
+	margin: 1px 1px 1px 1px;
+	text-decoration: none;
+	border: thin solid #cccccc;
+	color: #669999;
+	background: #dddddd;
+}
+
+.hashtag:visited, .hashtag a:visited {
+	color: #aaaaaa;
+}

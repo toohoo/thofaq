@@ -14,7 +14,8 @@ set FAQBAK_SOURCE=%FAQBAK_XAMPPDRIVE%\xampp\htdocs\faq\cgi-bin\
 set FAQBAK_IMG_SRC=%FAQBAK_SOURCE%..\img\
 set FAQBAK_ZIP=FAQBAK-%DATE%.zip
 set FAQBAK_IMG_ZIP=FAQBAK-IMG-%DATE%.zip
-set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_DOKNAME% %FAQBAK_IMG_ZIP%
+set FAQBAK_CGI_ZIP=FAQBAK-CGI.zip
+set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_DOKNAME% %FAQBAK_IMG_ZIP% %FAQBAK_CGI_ZIP%
 set FAQBAK_H_DRIVE=H:
 set FAQBAK_H_ROOT=%FAQBAK_H_DRIVE%\work\
 set FAQBAK_H_DIR=%FAQBAK_H_ROOT%faq\
@@ -40,6 +41,7 @@ cd %FAQBAK_DIR%
 cd %FAQBAK_SOURCE%
 REM  copy images
 %ZIP% u -r %FAQBAK_IMG_ZIP% %FAQBAK_IMG_SRC%*.*
+%ZIP% u %FAQBAK_CGI_ZIP% *.pl *.css
   echo Hole Batch-Job ___ %FAQBAK_BAT%
   copy %FAQBAK_BAT% .
 REM  echo Fertig Hole Batch-Job ___ %FAQBAK_BAT%

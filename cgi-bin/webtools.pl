@@ -1524,7 +1524,7 @@ sub faq2htm {
     	$text =~ s|\[link=(mailto:[^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
     	$text =~ s~\[link=(https?\:\/\/|ftp\:\/\/)([^\]]+)\](.*?)\[\/link\]~<a href="$1$2" target="_blank">$3<\/a>~igs;
     	$text =~ s|\[link=([^\]]+)\](.*?)\[\/link\]|<a href="$1">$2<\/a>|igs;
-    	## 	interne Links in neuem Frame oeffnen
+    	## 	eXterne Links in neuem Frame oeffnen
     	$text =~ s|\[linkx=([^\]]+)\](.*?)\[\/link\]|<a href="$1" target="_blank">$2<\/a>|igs;
     	
     	$text =~ s|\[b\](.*?)\[\/b\]|<b>$1<\/b>|ig;
@@ -1538,6 +1538,30 @@ sub faq2htm {
     	$text =~ s|\[img=([^\]]+)\]|<img src="$1">|ig;
     	$text =~ s|\[(\/)?code\]|<$1code>|ig;
     	$text =~ s|\[(\/)?quote\]|<$1blockquote>|ig;
+    	
+    ## hashtags verlinken
+    my ( $sictext0, $sictext1, $sictext2 );
+	    	#$sictext0 = $text;
+	    	#$sictext0 =~ s/\</\&lt;/sg;
+	    	#$sictext0 =~ s/\>/\&gt;/sg;
+	    	$text =~ s/\#(faq\d+)([^\d])/~$1$2/isg;
+	    	$text =~ s/(\.pl\?kat=\d+)\#([^\x22>]+)([\x22>])/$1~~$2$3~/isg;
+	    	$text =~ s/(<a href=\")([^\"#]+)\#/$1$2~~~/igs;
+	    	#$sictext1 = $text;
+	    	#$sictext1 =~ s/\</\&lt;/sg;
+	    	#$sictext1 =~ s/\>/\&gt;/sg;
+	    	$text =~ s/\#(\w+)([^a-zA-Z0-9;_\-\]]|$)/<a href=\"faqsearch.pl?searchstring=\%23$1\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" class=\"hashtag\">\#$1<\/a>$2 - /gs ;
+	    	#$text =~ s/<a href=\"[^. \t>\r\n?&].pl?searchstring=\%23(faq\d+)\&fueredit=[^. \t>\r\n?&]\&kat=[^. \t>\r\n?&]\" class=\"hashtag\">(\#faq\d+)<\/a>([^a-zA-Z0-9;_\-\]]|$) - /$2$3/igs ;
+	    	$text =~ s/(<a href=\")([^\"#]+)\~\~\~/$1$2\#/igs;
+	    	$text =~ s/(\.pl\?kat=\d+)\~\~([^\x22>]+)([\x22>])~/$1\#$2$3/isg;
+	    	$text =~ s/\~(faq\d+)([^\d])/\#$1$2/isg;
+	    	$text =~ s/(<a href=\")([^\"<]*)<a href=[^>]*>([^<]+)<\/a>/$1$2$3/igs;
+	    	#$sictext2 = $text;
+	    	#$sictext2 =~ s/\</\&lt;/sg;
+	    	#$sictext2 =~ s/\>/\&gt;/sg;
+	    	#$text .= "<textarea>$sictext0<\/textarea>\n";
+	    	#$text .= "<textarea>$sictext1<\/textarea>\n";
+	    	#$text .= "<textarea>$sictext2<\/textarea>\n";
 
 	## Ausnahmen/Erweiterungen zu HTML-Input
 	## 	Namen/Linkziele
@@ -1696,9 +1720,13 @@ sub ismatch{
 			$foundstring =~ s/^($term)$/<span class="foundterm">~~$1~~<\/span>/igs;
 		}
 	}
-	$foundstring =~ s|(href=")([^<>"]*)(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$4|igs;
-	$foundstring =~ s|(name=")([^<>"]*)(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$4|igs;
-	$foundstring =~ s|(<span class="foundterm">)~~([^~]+)~~(</span>)|$1$2$3|igs;
+	do { $foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(href=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	$foundstring =~ s|(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$3|igs;
+	do { $foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(href=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;  	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	return( $foundstring );
 }
 
