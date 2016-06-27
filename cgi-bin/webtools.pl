@@ -1453,7 +1453,7 @@ SEARCHHINWEIS
 	##		search input, 
 	##		submit button
 
-	my $searchbuttonval = '?';
+	my $searchbuttonval = '&nbsp;?&nbsp;';
 	if ( !$kat ) { $kat = "alle"; }
 	if ( $prefix ) {
 		print 	webtag("span", "class=searchboxprefix", 
@@ -1472,11 +1472,11 @@ SEARCHHINWEIS
 		print webtag("span","class=searchinputext","#EMPTY#");
 			#print webtag("br","#ENDETAG#");
 			if ( !$prefix ) {
-				print webtag( "small", ' &nbsp;' . 
+				print webtag( "small", ' &nbsp;&nbsp;' . 
 				  webtag("a", "href=faq.pl?kat=$helpkat#faq$helpfaq\ttarget=_blank\tname=searchhinweis\ttitle=$shinweis", "nur gew&auml;hlte Kat.") . ' ' );
-				#print weblink( webtag("small"," &nbsp;nur gew&auml;hlte Kat. ") , "faq.pl?kat=$helpkat#faq$helpfaq" );
+				#print weblink( webtag("small"," &nbsp;&nbsp;nur gew&auml;hlte Kat. ") , "faq.pl?kat=$helpkat#faq$helpfaq" );
 			} else {
-				print webtag("small"," &nbsp;nur gew&auml;hlte Kat. ")
+				print webtag("small"," &nbsp;&nbsp;nur gew&auml;hlte Kat. ")
 			}
 			print webtag("input", "type=checkbox\tname=onlypickedkat\tvalue=1", "#EMPTY#" );
 		print webtag("span","","#ENDETAG#");
