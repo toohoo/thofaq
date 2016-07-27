@@ -17,15 +17,18 @@ body {
 */
 
 .webfehler {
-border: thin solid red;
-background-color: #ffcccc;
+/*border: thin solid red;*/
+background-color: #fcc;
+border-top: 3px solid #f66;
+border-bottom: 3px solid #900;
 /* langt es nicht, wenn 'Fehler' fett ist? */
 /*font-weight: bold;*/
 }
 
 .webhinweis {
-border: thin solid green;
-background-color: #eeffff;
+/*border: thin solid green;*/
+border-bottom: 3px solid green;
+background-color: #eff;
 }
 
 input[readonly] {
@@ -174,13 +177,30 @@ legend {
 .faqantworten dd {
 	margin-bottom: 20px;
 	padding-bottom: 5px;
-	border-bottom: thin dashed #999999;
+	/*border-bottom: thin dashed #999999;*/
+	border-bottom: 3px solid #699;
+	padding-bottom: 0;
 }
 
 .zufragen {
 	display: block;
-	font-size: x-small;
+	/*font-size: x-small;*/
+	font-size: small;
 	margin-top: 10px;
+	margin-left: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	max-width: 110px;
+	background: #add;
+	/*border-right: 3px solid #699;*/
+	/*border-bottom: 3px solid #add;*/
+	/*border-top: 3px solid #add;*/
+	border-left: 3px solid #add;
+	padding-left: 5px;
+	padding-right: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	text-decoration: none;
 }
 
 .katedit {
@@ -237,13 +257,15 @@ legend {
 .faqtitedit {
 	position: relative;
 	top: -2px;
-	background-color: #ddd;
+	background-color: #eee;
 	padding: 2px 2px 2px 2px;
 	/*border: 2px outset #ffffff;*/
-	border-top: 3px solid #eee;
-	border-left: 3px solid #eee;
-	border-right: 3px solid #ccc;
-	border-bottom: 3px solid #aaa;
+	/*border-top: 3px solid #eee;*/
+	/*border-left: 3px solid #eee;*/
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 4px solid #ccc;
+	border-bottom: 4px solid #aaa;
 	/*margin-bottom: 2px;*/
 	font-size: x-small;
 	text-decoration: none;
@@ -320,9 +342,9 @@ b > code, code > b {
 	padding: 0px 1px 0px 1px;
 	margin: 1px 1px 1px 1px;
 	text-decoration: none;
-	border: thin solid #cccccc;
-	color: #669999;
-	background: #dddddd;
+	border: thin solid #ccc;
+	color: #699;
+	background: #ddd;
 }
 
 .hashtag:visited, .hashtag a:visited {
