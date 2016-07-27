@@ -204,7 +204,7 @@ legend {
 }
 
 .katedit {
-	border: thin solid #999999;
+	/*border: thin solid #999999;*/
 	background-color: #ffdddd;
 	/*float: left;*/
 	width: 500px;
@@ -213,8 +213,13 @@ legend {
 }
 
 .katedittit {
-	background-color: #ffaaaa;
-	border-bottom: thin solid #ff6666;
+	background-color: #faa;
+	/*border-bottom: thin solid #ff6666;*/
+	border-top: 3px solid #fcc;
+	border-bottom: 3px solid #c77;
+	/*border-left: 3px solid #faa;
+	border-right: 3px solid #faa;*/
+
 	margin: 0px;
 	padding: 5px;
 }
@@ -227,6 +232,11 @@ legend {
 	/*margin-right: 20px;*/
 	/*margin-right: auto;*/
 
+	/*border-top: 3px solid #fcc;*/
+	border-bottom: 3px solid #c77;
+	/*border-left: 3px solid #faa;
+	border-right: 3px solid #faa;*/
+
 	/*margin: 10px 20px 10px 20px;*/
 	margin-top: 0px;
 	padding: 10px 20px 10px 20px;
@@ -235,14 +245,24 @@ legend {
 
 .kateditneutit {
 	background-color: #ffaaaa;
-	border-bottom: thin solid #ff6666;
+	/*border-bottom: thin solid #ff6666;*/
+
+	border-top: 3px solid #fcc;
+	border-bottom: 3px solid #c77;
+	/*border-left: 3px solid #faa;
+	border-right: 3px solid #faa;*/
+
 	margin: 0px;
 	padding: 5px;
 }
 
 .kateditchecktit {
-	background-color: #9999ff;
-	border-bottom: thin solid #6666ff;
+	background-color: #99f;
+	/*border-bottom: thin solid #6666ff;*/
+	border-top: 3px solid #bbf;
+	border-bottom: 3px solid #66c;
+	/*border-left: 3px solid #99f;
+	border-right: 3px solid #99f;*/
 	margin: 0px;
 	padding: 5px;
 }
