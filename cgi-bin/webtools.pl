@@ -480,13 +480,13 @@ sub UbmCgiHead {
 		$head =~ s|(<title>).*?(<\/title>)|$1$temp$2|i
 	}
 	## Doctype einfuegen
-	$head =~ s|(<html>)|<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n\1|i;
+	$head =~ s|(<html>)|<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n$1|i;
 	## Charset
-	$head =~ s|(<head>)|\1\n<META http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">|i;
+	$head =~ s|(<head>)|$1\n<META http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">|i;
 	## Styles
-	$head =~ s|(<\/head>)|\n<link rel=\"stylesheet\" type=\"text/css\" href=\"ubmintra.css\">\n\1|i;
+	$head =~ s|(<\/head>)|\n<link rel=\"stylesheet\" type=\"text/css\" href=\"ubmintra.css\">\n$1|i;
 	## Cache auf 0 setzen
-	$head =~ s|(<\/head>)|\n<meta http-equiv=\"expires\" content=\"0\">\n\1|i;
+	$head =~ s|(<\/head>)|\n<meta http-equiv=\"expires\" content=\"0\">\n$1|i;
 	return ($head);
 }
 
@@ -727,7 +727,8 @@ sub ausgabekat {
 	my $aktkatsic = $aktkat;
 	
 	my ( $hasharray, @hasharray ) = ( undef, undef );
-	my ( $hashcloud, %hashcloud ) = ( undef, undef );
+	my $hashcloud = undef;
+	my %hashcloud;
 	if ( defined( $ka{ 'hashtags' } ) ) {
 		$hasharray = $ka{ 'hashtags' };
 		delete $ka{ 'hashtags' };

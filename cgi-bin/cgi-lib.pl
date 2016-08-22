@@ -184,7 +184,7 @@ sub CgiDie {
 sub PrintVariables {
   local (%in) = @_;
   local ($old, $out, $output);
-  $old = $*;  $* =1;
+  #$old = $*;  $* =1;
   $output .=  "\n<dl compact>\n";
   foreach $key (sort keys(%in)) {
     foreach (split("\0", $in{$key})) {
@@ -193,7 +193,7 @@ sub PrintVariables {
     }
   }
   $output .=  "</dl>\n";
-  $* = $old;
+  #$* = $old;
 
   return $output;
 }
