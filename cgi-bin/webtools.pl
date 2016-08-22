@@ -745,6 +745,7 @@ sub ausgabekat {
 		$searchstring = $ka{ 'searchstring' };
 		delete $ka{ 'searchstring' };
 	}
+	if ( !$searchstring ) { $searchstring = ''; }
 
 	@ke = sort{$a <=> $b} (keys (%ka) );
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
@@ -780,6 +781,7 @@ sub ausgabekat {
 	my $scriptname = getfilename( $0 );
 	#webhinweis( "scriptname: $scriptname" );
 	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
+	if ( !$fueredit ) { $fueredit = ''; }
 	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
 	if ( !$hasharray || !$hashcloud ) {
 		my $sicsearchstring = $searchstring;
@@ -1455,6 +1457,7 @@ SEARCHHINWEIS
 	##		submit button
 
 	my $searchbuttonval = '&nbsp;?&nbsp;';
+	if ( !$searchval ) { $searchval = ''; }
 	if ( !$kat ) { $kat = "alle"; }
 	if ( $prefix ) {
 		print 	webtag("span", "class=searchboxprefix", 
@@ -1760,7 +1763,7 @@ sub gethashtagsblock {
 	my ( $arref , @rest ) = @_;
 	
 	my $hashblock = '';
-	if ( $arref eq undef ) {
+	if ( !$arref ) {
 		return( '' );
 	}
 	
@@ -1783,7 +1786,7 @@ sub gethashtagcloud {
 	my ( $hashref , @rest ) = @_;
 	
 	my $hashblock = '';
-	if ( $hashref eq undef ) {
+	if ( !$hashref ) {
 		return( '' );
 	}
 	
