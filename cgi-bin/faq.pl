@@ -63,7 +63,8 @@ if (ReadParse(*input)) {
 		$hashcloud = 'on';
 	}
 }
-
+#$input{'kat'}='alle';
+#$aktkat = $input{'kat'};
 #webhinweis( "aktkat nach Einlesen input: [$aktkat]" );
 
 ## sind die Dateien da?
@@ -178,7 +179,7 @@ sub holpfad0 {
         local (@par)=@_;
         local ($vpfad);
 
-        $vpfad=$par[0];
+        $vpfad = $par[0] ? $par[0] : '';
         #print ">$vpfad<\n";
         $vpfad =~ m/^(.+)([\\\/])(.*)$/;
         if (defined($1)) {

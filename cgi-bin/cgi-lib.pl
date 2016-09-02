@@ -119,6 +119,7 @@ sub HtmlBot
 # Return true if this cgi call was using the GET request, false otherwise
 
 sub MethGet {
+	if ( !defined( $ENV{'REQUEST_METHOD'} ) ) { $ENV{'REQUEST_METHOD'} = ''; }
   return ($ENV{'REQUEST_METHOD'} eq "GET");
 }
 
@@ -127,6 +128,7 @@ sub MethGet {
 # Return true if this cgi call was using the POST request, false otherwise
 
 sub MethPost {
+	if ( !defined( $ENV{'REQUEST_METHOD'} ) ) { $ENV{'REQUEST_METHOD'} = ''; }
   return ($ENV{'REQUEST_METHOD'} eq "POST");
 }
 
