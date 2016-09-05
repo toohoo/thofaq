@@ -300,7 +300,7 @@ sub holpfad0cd {
         local (@par)=@_;
         local (@alles,$vpfad);
 
-        $vpfad=$par[0];
+        $vpfad = $par[0] ? $par[0] : '';
         #print ">$vpfad<\n";
         $vpfad =~ m/^(.+)([\\\/])(.*)$/;
         if (defined($1)) {
