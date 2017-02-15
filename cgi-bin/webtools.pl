@@ -1537,7 +1537,7 @@ sub faq2htm {
     	$text =~ s|\[i\](.*?)\[\/i\]|<i>$1<\/i>|ig;
     	$text =~ s|\[s\](.*?)\[\/s\]|<s>$1<\/s>|ig;
     	$text =~ s|\[u\](.*?)\[\/u\]|<u>$1<\/u>|ig;
-    	$text =~ s|\[button\](.*?)\[\/button\]|<span style="border:3px outset darkgrey;margin:0 2px 0 2px;background:lightgrey;">$1<\/span>|ig;
+    	$text =~ s|\[button\](.*?)\[\/button\]|<span style="border:3px outset darkgrey;margin:0 2px 0 2px;padding:0 2px 0 2px;background:lightgrey;">$1<\/span>|ig;
     	$text =~ s|\[(\/)list\]|<$1ul>|ig;
     	$text =~ s|\[list\]|<ul>|ig;
     	$text =~ s|\[\*\]|<li>|ig;
