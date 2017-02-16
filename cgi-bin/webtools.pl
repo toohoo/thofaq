@@ -1804,7 +1804,7 @@ sub gethashtagcloud {
 	#webhinweis( "IN gethashtagcloud - hashcount: $hashcount" );
 	my ( $hashtag, $maxcloud, $lvl ) = ( undef, 0, 0 );
 	my @lvl = ( 0.2, 0.4, 0.85, 0.95, 1 );  ## lvls in percent of max count
-	my @big = ( 0.6, 0.9, 1.3, 1.6, 1.8 );  ## font-size in em
+	my @big = ( 0.6, 1.0, 1.3, 1.6, 1.8 );  ## font-size in em
 	my $ilvl;
 	
 	foreach $hashtag ( keys(%{ $hashref }) )  {
