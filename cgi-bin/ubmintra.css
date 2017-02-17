@@ -16,6 +16,13 @@ body {
 }
 */
 
+body > h1 {
+	background: #f9f9f9;
+	text-align: center;
+	border-top: 2px solid #fff;
+	border-bottom: 2px solid #ddd;
+}
+
 .webfehler {
 /*border: thin solid red;*/
 background-color: #fcc;

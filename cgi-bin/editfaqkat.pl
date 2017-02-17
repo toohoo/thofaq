@@ -43,8 +43,9 @@ require "checkdate.pl";
 
 print &PrintHeader();
 $head = &UbmCgiHead("FAQ - Edit Kategorien" );  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head =~ s/<H1>/<H1 id="faqtitle">/i;
 print $head;
-print &webtag(&weblink("[zurück zu den FAQ]","faq.pl") . " " . &weblink("[Start FAQ-Edit Kategorien]","editfaqkat.pl") );
+print &webtag(&weblink("[zurück zu den FAQ]","faq.pl","faqleaveeditkat") . " " . &weblink("[Start FAQ-Edit Kategorien]","editfaqkat.pl","starteditfaqkat") );
 
 
 ## sind die Dateien da?
