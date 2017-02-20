@@ -859,20 +859,20 @@ sub ausgabefaq {
 		foreach $k (@aktfaq) {
 			if ($isedit) {
 			    if ($akat eq "alle") { 
-			    	$temp = webtag("dt", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k} ") 
+			    	$temp = webtag("dt", "name=quest_faq$k\tid=quest_faq$k", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k} ") 
 			    		. webtag("small", " (" 
 			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1", "katlink.$nrkat{$k}" ) 
 			    			. ") ") 
 			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit\tkateditlink.$nrkat{$k}", "[Edit]") 
 			    	);
 			    } else {
-			    	$temp = webtag("dt", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k} ") 
+			    	$temp = webtag("dt", "name=quest_faq$k\tid=quest_faq$k", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k} ") 
 			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit\tkateditlink.$nrkat{$k}", "[Edit]"));
 			    }
 			    print $temp;
 			} else {
 			    if ($akat eq "alle") { 
-			    	$temp = webtag("dt", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k}") 
+			    	$temp = webtag("dt", "name=quest_faq$k\tid=quest_faq$k", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k}") 
 			    		. webtag("small", 
 			    			" (" 
 			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1", "katlink.$nrkat{$k}" ) 
@@ -880,11 +880,11 @@ sub ausgabefaq {
 			    		)
 			    	);
 			    } else {
-			    	$temp = webtag("dt", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k}") );
+			    	$temp = webtag("dt", "name=quest_faq$k\tid=quest_faq$k", webtag("a","name=faq$k\tid=faq$k", "$k\. $tit{$k}") );
 			    }
 			    print $temp;
 			}
-			print webtag("dd", faq2htm($inh{$k}) . "<br>" . webtag ("a", "href=#fragen\tclass=zufragen\tid=zufragenlink.$k", "&uArr; zu den Fragen") );
+			print webtag("dd", "name=answer_faq$k\tid=answer_faq$k", faq2htm($inh{$k}) . "<br>" . webtag ("a", "href=#fragen\tclass=zufragen\tid=zufragenlink.$k", "&uArr; zu den Fragen") );
 		}
 		print webtag("dl", "", "#ENDETAG#");
 		print webtag("div", "", "#ENDETAG#");
