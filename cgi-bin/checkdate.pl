@@ -32,7 +32,7 @@ sub isrightdate {
 	local ($who,$from) = ();
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
 	#if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|microsoft)/i) { $slash = "/"; }
 	
 	## wenn er schon eingeloggt ist, dann sollte hier der Zeitstempel aktualisiert werden
@@ -98,7 +98,7 @@ sub isdating {
 	local ($where, $who, $when, $someone, $something);
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
 	
 	## welche Zeitspanne bis Rauswurf? 15 min?
 	local ($einestunde)= 3600; 	# 3600 = 1 h
@@ -140,7 +140,7 @@ sub isdating {
 			}
 			close (DATING);
 		} else {
-			&webfehler("Kann Datei nicht schreiben bei [$secondhand]. $globals{'adminmes'}");
+			&webfehler("Kann Datei nicht schreiben bei [$were$slash$secondhand]. $globals{'adminmes'}");
 			## aber nicht return, er soll ja weiter machen
 		}
 		## auf IP checken, existiert noch ein aktueller Name zu der uebergebenen IP?
@@ -165,7 +165,7 @@ sub pushdating {
 	local ($secondhand) = "dating.dat";
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
 	
 	## Aufbau Datei (tab-separated):
 	## 	ip, user, zeitstempel
@@ -177,7 +177,7 @@ sub pushdating {
 		#&webhinweis("Datei geschrieben [$secondhand]"); 
 		return(1);
 	} else {
-		&webfehler("Kann Datei nicht schreiben (anhängen) [$secondhand]. $globals{'adminmes'}");
+		&webfehler("Kann Datei nicht schreiben (anhängen) [$were$slash$secondhand]. $globals{'adminmes'}");
 		return(undef);
 	}
 }
@@ -194,7 +194,7 @@ sub killdating {
 	local ($where, $who, $when, $someone, $something);
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
 	
 	## ip, user, zeitstempel
 	## einlesen
@@ -229,11 +229,11 @@ sub killdating {
 			close (DATING);
 			return($who);
 		} else {
-			&webfehler("Kann Datei nicht schreiben [$secondhand]. $globals{'adminmes'}");
+			&webfehler("Kann Datei nicht schreiben [$were$slash$secondhand]. $globals{'adminmes'}");
 			return(undef);
 		}
 	} else {
-		&webfehler("Kann Datei nicht schreiben: [$secondhand]. $globals{'adminmes'}");
+		&webfehler("Kann Datei nicht schreiben: [$were$slash$secondhand]. $globals{'adminmes'}");
 		return(undef);
 	}
 }
@@ -250,7 +250,7 @@ sub freshdating {
 	local ($where, $who, $when, $someone, $something);
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
 	
 	## ip, user, zeitstempel
 	## einlesen
@@ -281,11 +281,11 @@ sub freshdating {
 			close (DATING);
 			return($wer{$wheree});
 		} else {
-			&webfehler("Kann Datei nicht aktualisieren [$secondhand]. $globals{'adminmes'}");
+			&webfehler("Kann Datei nicht aktualisieren [$were$slash$secondhand]. $globals{'adminmes'}");
 			return(undef);
 		}
 	} else {
-		&webfehler("Kann Datei nicht aktualisieren: [$secondhand]. $globals{'adminmes'}");
+		&webfehler("Kann Datei nicht aktualisieren: [$were$slash$secondhand]. $globals{'adminmes'}");
 		return(undef);
 	}
 }
