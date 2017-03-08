@@ -21,6 +21,7 @@ body > h1 {
 	text-align: center;
 	border-top: 2px solid #fff;
 	border-bottom: 2px solid #ddd;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .webfehler {
@@ -103,6 +104,7 @@ legend {
 	float: left;
 	width: 200px;
 	margin-right: 20px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .katwahltit {
@@ -143,6 +145,7 @@ legend {
 	border-right: 3px solid #ddf;*/
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .faqantworten {
@@ -162,6 +165,7 @@ legend {
 
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .editfaqanttit {
@@ -174,19 +178,25 @@ legend {
 	border-right: 3px solid #fcf;*/
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 
 .faqantworten dt {
 	font-weight: bold;
+	box-shadow: -3px 5px 5px grey;
+	margin-bottom: 5px;
+	padding: 2px 2px 2px 2px;
 }
 
 .faqantworten dd {
-	border-bottom: 3px solid #64b5c8; /*#699;*/
+	border-bottom: 2px solid #64b5c8; /*#699;*/
 	/*border-bottom: thin dashed #999999;*/
 	margin-bottom: 20px;
 	padding-bottom: 5px;
 	padding-bottom: 0;
+	box-shadow: 0 2px 0px #64b5c8;
+	padding-left: 4px;
 }
 
 .zufragen {
@@ -383,6 +393,7 @@ blockquote {
   margin: 1.5em 10px;
   padding: 0.5em 10px;
   quotes: "\201C""\201D""\2018""\2019";
+	box-shadow: 4px 6px 10px grey;
 }
 blockquote:before {
   color: #ccc;
