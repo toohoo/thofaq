@@ -3,7 +3,7 @@ little FAQ in Perl
 -- was uploaded on GitHub at 08.03.2016 by thomas@th-o.de
 -- This should really be a very small FAQ app for someone
 who wants to save some ideas. The app is runable on any
-Webserver including a local installation on XAMPP on Wondows 
+Webserver including a local installation on XAMPP on Windows 
 or similar. The development is not going continiously as 
 might be expected. The application includes an over all
 search as well as tag-list and tag-cloud. In the difference
