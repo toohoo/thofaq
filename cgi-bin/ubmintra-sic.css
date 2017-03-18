@@ -16,17 +16,10 @@ body {
 }
 */
 
-body > h1 {
-	background: #f9f9f9;
-	text-align: center;
-	border-top: 2px solid #fff;
-	border-bottom: 2px solid #ddd;
-}
-
 .webfehler {
 /*border: thin solid red;*/
 background-color: #fcc;
-border-top: 3px solid #fee; /*#f66;*/
+border-top: 3px solid #f66;
 border-bottom: 3px solid #900;
 /* langt es nicht, wenn 'Fehler' fett ist? */
 /*font-weight: bold;*/
@@ -34,8 +27,8 @@ border-bottom: 3px solid #900;
 
 .webhinweis {
 /*border: thin solid green;*/
-border-bottom: 3px solid #64b5c8;/*green;*/
-background-color: #a4f5f8; /*#eff;*/
+border-bottom: 3px solid green;
+background-color: #eff;
 }
 
 input[readonly] {
@@ -94,20 +87,20 @@ legend {
 }
 
 .katwahl {
-	border-top: 3px solid #FDE7D6; /*#F8Cd5f;*/
-	background-color: #F5DECD; /*#F2D2BB;*/ /*#E1D2BB;*/ /*#e8ad3f;*/ /* ffc */
-	border-bottom: 3px solid #D5BEAD; /*#B87d1f;*/
 	/*border: thin solid #999999;*/
+	border-top: 3px solid #ffe;
+	border-bottom: 3px solid #cc9;
 	/*border-left: 3px solid #ffe;
 	border-right: 3px solid #cc9;*/
+	background-color: #ffc;
 	float: left;
 	width: 200px;
 	margin-right: 20px;
 }
 
 .katwahltit {
-	background-color: #E8AD3F; /*#E8AD3F;*/ /*#e1d2bb;*/ /* #ee9; */
-	border-bottom: 3px solid #C88D1F; /*#C1B29b;*/ /* #cc9;  */
+	background-color: #ee9;
+	border-bottom: 3px solid #cc9; 
 	margin: 0px;
 	padding: 5px;
 }
@@ -134,11 +127,11 @@ legend {
 }
 
 .faqfragtit {
-	border-top: 3px solid #9debff; /*#eef;*/
-	background-color: #7dcbef; /*#ddf;*/
-	border-bottom: 3px solid #4d9bbf; /*#99c;*/
+	background-color: #ddf;
 	/*border: thin solid #999999;*/
 	/*border-bottom: thin solid #999999;*/
+	border-top: 3px solid #eef;
+	border-bottom: 3px solid #99c;
 	/*border-left: 3px solid #ddf;
 	border-right: 3px solid #ddf;*/
 	margin: 0px;
@@ -152,11 +145,11 @@ legend {
 }
 
 .faqanttit {
-	border-top: 3px solid #a4f5f8; /*#eff;*/
-	background-color: #94e5f8; /*#dff;*/
-	border-bottom: 3px solid #64b5c8; /*#acc;*/
+	background-color: #dff;
 	/*border-bottom: thin solid #999999;*/
 	/*border: thin solid #999999;*/
+	border-top: 3px solid #eff;
+	border-bottom: 3px solid #acc;
 	/*border-left: 3px solid #dff;
 	border-right: 3px solid #dff;*/
 
@@ -165,11 +158,11 @@ legend {
 }
 
 .editfaqanttit {
-	border-top: 3px solid #94E5F8; /*#fef;*/
-	background-color: #74C5D8; /* #fcf;*/
-	border-bottom: 3px solid #54A5B8; /*#c9c;*/
+	background-color: #fcf;
 	/*border-bottom: thin solid #999999;*/
 	/*border: thin solid #999999;*/
+	border-top: 3px solid #fef;
+	border-bottom: 3px solid #c9c;
 	/*border-left: 3px solid #fcf;
 	border-right: 3px solid #fcf;*/
 	margin: 0px;
@@ -182,19 +175,14 @@ legend {
 }
 
 .faqantworten dd {
-	border-bottom: 3px solid #64b5c8; /*#699;*/
-	/*border-bottom: thin dashed #999999;*/
 	margin-bottom: 20px;
 	padding-bottom: 5px;
+	/*border-bottom: thin dashed #999999;*/
+	border-bottom: 3px solid #699;
 	padding-bottom: 0;
 }
 
 .zufragen {
-	background: #94e5f8; /*#add;*/
-	border-left: 3px solid #94e5f8; /*#add;*/
-	/*border-right: 3px solid #699;*/
-	/*border-bottom: 3px solid #add;*/
-	/*border-top: 3px solid #add;*/
 	display: block;
 	/*font-size: x-small;*/
 	font-size: small;
@@ -203,6 +191,11 @@ legend {
 	margin-right: auto;
 	margin-bottom: 0;
 	max-width: 110px;
+	background: #add;
+	/*border-right: 3px solid #699;*/
+	/*border-bottom: 3px solid #add;*/
+	/*border-top: 3px solid #add;*/
+	border-left: 3px solid #add;
 	padding-left: 5px;
 	padding-right: 3px;
 	padding-top: 3px;
@@ -211,8 +204,8 @@ legend {
 }
 
 .katedit {
-	background-color: #acfdff;
-	/*border: thin solid #999999;*/
+	border: thin solid #999999;
+	background-color: #ffdddd;
 	/*float: left;*/
 	width: 500px;
 	/*margin-right: 20px;*/
@@ -220,29 +213,19 @@ legend {
 }
 
 .katedittit {
-	border-top: 3px solid #a4f5f8;
-	background-color: #94e5f8;
-	border-bottom: 3px solid #64b5c8;
-	/*border-bottom: thin solid #ff6666;*/
-	/*border-left: 3px solid #faa;
-	border-right: 3px solid #faa;*/
-
+	background-color: #ffaaaa;
+	border-bottom: thin solid #ff6666;
 	margin: 0px;
 	padding: 5px;
 }
 
 .kateditneu {
-	border-bottom: 3px solid #94e5f8;
-	/*border-top: 3px solid #fcc;*/
-	/*border-left: 3px solid #faa;
-	border-right: 3px solid #faa;*/
 	/*border: thin solid #999999;*/
 	/*background-color: #ffdddd;*/
 	/*float: left;*/
 	/*width: 500px;*/
 	/*margin-right: 20px;*/
 	/*margin-right: auto;*/
-
 
 	/*margin: 10px 20px 10px 20px;*/
 	margin-top: 0px;
@@ -251,72 +234,63 @@ legend {
 }
 
 .kateditneutit {
-	border-top: 3px solid #a4f5f8;
-	background-color: #94e5f8;
-	border-bottom: 3px solid #64b5c8;
-	/*border-left: 3px solid #faa;
-	border-right: 3px solid #faa;*/
-	/*border-bottom: thin solid #ff6666;*/
-
+	background-color: #ffaaaa;
+	border-bottom: thin solid #ff6666;
 	margin: 0px;
 	padding: 5px;
 }
 
 .kateditchecktit {
-	border-top: 3px solid #FDE7D6;
-	background-color: #E8AD3F;
-	border-bottom: 3px solid #C88D1F;
-	/*border-bottom: thin solid #6666ff;*/
-	/*border-left: 3px solid #99f;
-	border-right: 3px solid #99f;*/
+	background-color: #9999ff;
+	border-bottom: thin solid #6666ff;
 	margin: 0px;
 	padding: 5px;
 }
 
 .kateditcheck {
-	background-color: #F5DECD;
 	/*margin: 10px 20px 10px 20px;*/
 	margin-top: 0px;
 	padding: 1px 20px 10px 20px;
+	background-color: #ccccff;
 }
 
 .faqtitedit {
-	border-top: 1px solid #a4f5f8; /*#ddd;*/
-	background-color: #94e5f8; /*#eee;*/
-	border-bottom: 4px solid #64b5c8; /*#aaa;*/
-	border-left: 1px solid #a4f5f8; /*#ddd;*/
-	border-right: 4px solid #64b5c8; /*#ccc;*/
+	position: relative;
+	top: -2px;
+	background-color: #eee;
+	padding: 2px 2px 2px 2px;
 	/*border: 2px outset #ffffff;*/
 	/*border-top: 3px solid #eee;*/
 	/*border-left: 3px solid #eee;*/
-	position: relative;
-	top: -2px;
-	padding: 2px 2px 2px 2px;
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 4px solid #ccc;
+	border-bottom: 4px solid #aaa;
 	/*margin-bottom: 2px;*/
 	font-size: x-small;
 	text-decoration: none;
 }
 
 .faqedit {
-	background-color: #acfdff; /*#fdd;*/
-	border-bottom: 3px solid #94e5f8; /*#caa;*/
 	/*border: thin solid #999999;*/
 	/*border-top: 3px solid #eee;
 	border-bottom: 3px solid #aaa;*/
 	/*border-left: 3px solid #eee;
 	border-right: 3px solid #ccc;*/
+	background-color: #fdd;
 	/*float: left;*/
 	width: 850px;
 	/*margin-right: 20px;*/
 	/*margin-right: auto;*/
 	padding-bottom: 3px;
+	border-bottom: 3px solid #caa;
 }
 
 .faqedittit {
-	border-top: 3px solid #a4f5f8; /*#fdd;*/
-	background-color: #94e5f8; /*#faa;*/
-	border-bottom: 3px solid #64b5c8; /*#c77;*/
+	background-color: #faa;
 	/*border-bottom: thin solid #f66;*/
+	border-top: 3px solid #fdd;
+	border-bottom: 3px solid #c77;
 	/*border-left: 3px solid #faa;
 	border-right: 3px solid #faa;*/
 	margin: 0px;
@@ -324,10 +298,10 @@ legend {
 }
 
 .faqeditchecktit {
-	border-top: 3px solid #FDE7D6; /*#ccf;*/
-	background-color: #E8AD3F; /*#99e;*/
-	border-bottom: 3px solid #C88D1F; /*#66b;*/
+	background-color: #99e;
 	/*border-bottom: thin solid #6666ff;*/
+	border-top: 3px solid #ccf;
+	border-bottom: 3px solid #66b;
 	/*border-left: 3px solid #99e;
 	border-right: 3px solid #99e;*/
 	margin: 0px;
@@ -335,10 +309,10 @@ legend {
 }
 
 .faqeditcheck {
-	background-color: #F5DECD; /*#ccccff;*/
 	/*margin: 10px 20px 10px 20px;*/
 	margin-top: 0px;
 	padding: 1px 20px 10px 20px;
+	background-color: #ccccff;
 }
 
 .faqedit > p {

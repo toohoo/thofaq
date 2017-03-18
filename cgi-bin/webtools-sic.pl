@@ -480,13 +480,13 @@ sub UbmCgiHead {
 		$head =~ s|(<title>).*?(<\/title>)|$1$temp$2|i
 	}
 	## Doctype einfuegen
-	$head =~ s|(<html>)|<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n$1|i;
+	$head =~ s|(<html>)|<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\n\1|i;
 	## Charset
-	$head =~ s|(<head>)|$1\n<META http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">|i;
+	$head =~ s|(<head>)|\1\n<META http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">|i;
 	## Styles
-	$head =~ s|(<\/head>)|\n<link rel=\"stylesheet\" type=\"text/css\" href=\"ubmintra.css\">\n$1|i;
+	$head =~ s|(<\/head>)|\n<link rel=\"stylesheet\" type=\"text/css\" href=\"ubmintra.css\">\n\1|i;
 	## Cache auf 0 setzen
-	$head =~ s|(<\/head>)|\n<meta http-equiv=\"expires\" content=\"0\">\n$1|i;
+	$head =~ s|(<\/head>)|\n<meta http-equiv=\"expires\" content=\"0\">\n\1|i;
 	return ($head);
 }
 
@@ -727,8 +727,7 @@ sub ausgabekat {
 	my $aktkatsic = $aktkat;
 	
 	my ( $hasharray, @hasharray ) = ( undef, undef );
-	my $hashcloud = undef;
-	my %hashcloud;
+	my ( $hashcloud, %hashcloud ) = ( undef, undef );
 	if ( defined( $ka{ 'hashtags' } ) ) {
 		$hasharray = $ka{ 'hashtags' };
 		delete $ka{ 'hashtags' };
@@ -745,7 +744,6 @@ sub ausgabekat {
 		$searchstring = $ka{ 'searchstring' };
 		delete $ka{ 'searchstring' };
 	}
-	if ( !$searchstring ) { $searchstring = ''; }
 
 	@ke = sort{$a <=> $b} (keys (%ka) );
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
@@ -781,10 +779,9 @@ sub ausgabekat {
 	my $scriptname = getfilename( $0 );
 	#webhinweis( "scriptname: $scriptname" );
 	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
-	if ( !$fueredit ) { $fueredit = ''; }
 	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
 	if ( !$hasharray || !$hashcloud ) {
-		my $sicsearchstring = $searchstring; if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
+		my $sicsearchstring = $searchstring;
 		$sicsearchstring =~ s/\#/\%23/i;
 		print '&nbsp;' . webtag( "small", '#EMPTY#' );
 		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hasharray;
@@ -802,8 +799,15 @@ sub ausgabekat {
 #ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
 sub ausgabefaq {
 	local ($akat, $isedit, *kat, *tit, *inh, *nrkat) = @_;
-	local (@fke) = sort{$a <=> $b}(keys(%nrkat));
-	local (@aktfaq) = ();
+
+	my @nrkatkeys = keys( %nrkat );
+	my $nrkatanz = @nrkatkeys;
+	#webhinweis( "ausgabefaq - anz keys nrkat: $nrkatanz (max index nrkatkeys: $#nrkatkeys)" );
+
+	local @fke = sort{$a <=> $b}  @nrkatkeys ;
+	#webhinweis( "ausgabefaq - \@fke: max index: $#fke" );
+
+	local @aktfaq = ();
 	local ($k, $temp);
 
 	my $scriptname = getfilename( $0 );
@@ -824,6 +828,7 @@ sub ausgabefaq {
 	}
 	print webtag("ol", "type=1", "#EMPTY#");
 	foreach $k (@fke) {
+		#webhinweis( "k(fke): $k" );
 		if ($nrkat{$k} eq $akat) {
 			push (@aktfaq, $k);
 			print webtag("li", "value=$k", weblink("$tit{$k}", "#faq$k") );
@@ -839,10 +844,9 @@ sub ausgabefaq {
 		webhinweis("Keine FAQ in dieser Kategorie");
 	}
 	print webtag("ol", "", "#ENDETAG#");
+	#webhinweis( "ausgabefaq: aktfaq: $#aktfaq" );
 	print webtag("div", "", "#ENDETAG#");
-	  if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
-	  if ( !defined( $input{'hashtags'} ) ) { $input{'hashtags'} = ''; }
-	  if ( !defined( $fueredit ) ) { $fueredit = ''; }
+
 	if ($#aktfaq >= 0) {
 		print webtag("div", "class=faqantworten", "#EMPTY#");
 		if ($isedit) {
@@ -852,6 +856,7 @@ sub ausgabefaq {
 		}
 		print webtag("dl", "", "#EMPTY#");
 		foreach $k (@aktfaq) {
+			#webhinweis( "ausgabefaq: foreach k(aktfaq): $k / isedit($isedit) / akat($akat)" );
 			if ($isedit) {
 			    if ($akat eq "alle") { 
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. $tit{$k} ") 
@@ -974,7 +979,7 @@ sub ausgabefaqfound {
 	webhinweis( "Anzahl gefundene Eintr&auml;ge: $countfound" );
 	print webtag("div", "", "#ENDETAG#");
 
-	my $sicsearchstring = $searchstring; if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
+	my $sicsearchstring = $searchstring;
 	$sicsearchstring =~ s/\#/\%23/g;
 
 	my ( $titout, $inhout ) = ( undef, undef );
@@ -1459,7 +1464,6 @@ SEARCHHINWEIS
 	##		submit button
 
 	my $searchbuttonval = '&nbsp;?&nbsp;';
-	if ( !$searchval ) { $searchval = ''; }
 	if ( !$kat ) { $kat = "alle"; }
 	if ( $prefix ) {
 		print 	webtag("span", "class=searchboxprefix", 
@@ -1521,7 +1525,7 @@ sub faq2htm {
 	local ($text) = $_[0];
 	## siehe auch blockel in: webtag
 	local ($blockel) = "P|H1|H2|H3|H4|H5|H6|UL|OL|PRE|DL|DIV|NOSCRIPT|BLOCKQUOTE|FORM|HR|TABLE|FIELDSET|ADDRESS|TR|TD|TH|FRAME|FRAMESET|NOFRAMES|LI|DD|DT|SELECT|OPTION";
-	if ( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
+	
 	## ein \n vor BR rein, damit man den Quelltext verfolgen kann
     	$text =~ s|\x02|\n<BR>|ig;
 
@@ -1536,20 +1540,14 @@ sub faq2htm {
     	$text =~ s|\[b\](.*?)\[\/b\]|<b>$1<\/b>|ig;
     	$text =~ s|\[i\](.*?)\[\/i\]|<i>$1<\/i>|ig;
     	$text =~ s|\[s\](.*?)\[\/s\]|<s>$1<\/s>|ig;
-    	$text =~ s|\[u\](.*?)\[\/u\]|<u>$1<\/u>|ig;
-    	$text =~ s|\[button\](.*?)\[\/button\]|<span style="border:3px outset darkgrey;margin:0 2px 0 2px;padding:0 2px 0 2px;background:lightgrey;">$1<\/span>|ig;
-    	$text =~ s|\[(\/)list\]|<$1ul>|ig;
-    	$text =~ s|\[list\]|<ul>|ig;
+    	$text =~ s|\[(\/)?list\]|<$1ul>|ig;
     	$text =~ s|\[\*\]|<li>|ig;
-    	$text =~ s|\[(\/)list=1\]|<$1ol>|ig;
-    	$text =~ s|\[list=1\]|<ol>|ig;
+    	$text =~ s|\[(\/)?list=1\]|<$1ol>|ig;
     	$text =~ s|\[list=([1ai])\]|<ol type="$1">|ig;
     	$text =~ s|\[\/list=([1ai])\]|<\/ol>|ig;
     	$text =~ s|\[img=([^\]]+)\]|<img src="$1">|ig;
-    	$text =~ s|\[(\/)code\]|<$1code>|ig;
-    	$text =~ s|\[code\]|<code>|ig;
-    	$text =~ s|\[(\/)quote\]|<$1blockquote>|ig;
-    	$text =~ s|\[quote\]|<blockquote>|ig;
+    	$text =~ s|\[(\/)?code\]|<$1code>|ig;
+    	$text =~ s|\[(\/)?quote\]|<$1blockquote>|ig;
     	
     ## hashtags verlinken
     my ( $sictext0, $sictext1, $sictext2 );
@@ -1770,7 +1768,7 @@ sub gethashtagsblock {
 	my ( $arref , @rest ) = @_;
 	
 	my $hashblock = '';
-	if ( !$arref ) {
+	if ( $arref eq undef ) {
 		return( '' );
 	}
 	
@@ -1793,7 +1791,7 @@ sub gethashtagcloud {
 	my ( $hashref , @rest ) = @_;
 	
 	my $hashblock = '';
-	if ( !$hashref ) {
+	if ( $hashref eq undef ) {
 		return( '' );
 	}
 	
@@ -1804,7 +1802,7 @@ sub gethashtagcloud {
 	#webhinweis( "IN gethashtagcloud - hashcount: $hashcount" );
 	my ( $hashtag, $maxcloud, $lvl ) = ( undef, 0, 0 );
 	my @lvl = ( 0.2, 0.4, 0.85, 0.95, 1 );  ## lvls in percent of max count
-	my @big = ( 0.6, 1.0, 1.3, 1.6, 1.8 );  ## font-size in em
+	my @big = ( 0.6, 0.9, 1.3, 1.6, 1.8 );  ## font-size in em
 	my $ilvl;
 	
 	foreach $hashtag ( keys(%{ $hashref }) )  {
