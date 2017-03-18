@@ -123,7 +123,7 @@ sub isrightdate {
 	local ($who,$from) = ();
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
 	#if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|microsoft)/i) { $slash = "/"; }
 	
 	##-- boese Falle, das darf ich nicht, 

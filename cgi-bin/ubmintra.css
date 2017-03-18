@@ -21,6 +21,7 @@ body > h1 {
 	text-align: center;
 	border-top: 2px solid #fff;
 	border-bottom: 2px solid #ddd;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .webfehler {
@@ -103,6 +104,7 @@ legend {
 	float: left;
 	width: 200px;
 	margin-right: 20px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .katwahltit {
@@ -143,6 +145,7 @@ legend {
 	border-right: 3px solid #ddf;*/
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .faqantworten {
@@ -162,6 +165,7 @@ legend {
 
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .editfaqanttit {
@@ -174,19 +178,25 @@ legend {
 	border-right: 3px solid #fcf;*/
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 
 .faqantworten dt {
 	font-weight: bold;
+	box-shadow: -2px 3px 3px grey;
+	margin-bottom: 5px;
+	padding: 2px 2px 2px 2px;
 }
 
 .faqantworten dd {
-	border-bottom: 3px solid #64b5c8; /*#699;*/
+	border-bottom: 2px solid #64b5c8; /*#699;*/
 	/*border-bottom: thin dashed #999999;*/
 	margin-bottom: 20px;
 	padding-bottom: 5px;
 	padding-bottom: 0;
+	box-shadow: 0 2px 0px #64b5c8;
+	padding-left: 4px;
 }
 
 .zufragen {
@@ -208,6 +218,7 @@ legend {
 	padding-top: 3px;
 	padding-bottom: 3px;
 	text-decoration: none;
+	box-shadow: 3px -3px 5px grey;
 }
 
 .katedit {
@@ -217,6 +228,7 @@ legend {
 	width: 500px;
 	/*margin-right: 20px;*/
 	/*margin-right: auto;*/
+	box-shadow: 4px 6px 10px grey;
 }
 
 .katedittit {
@@ -226,9 +238,9 @@ legend {
 	/*border-bottom: thin solid #ff6666;*/
 	/*border-left: 3px solid #faa;
 	border-right: 3px solid #faa;*/
-
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 3px 3px 5px grey;
 }
 
 .kateditneu {
@@ -242,8 +254,6 @@ legend {
 	/*width: 500px;*/
 	/*margin-right: 20px;*/
 	/*margin-right: auto;*/
-
-
 	/*margin: 10px 20px 10px 20px;*/
 	margin-top: 0px;
 	padding: 10px 20px 10px 20px;
@@ -257,20 +267,24 @@ legend {
 	/*border-left: 3px solid #faa;
 	border-right: 3px solid #faa;*/
 	/*border-bottom: thin solid #ff6666;*/
-
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 3px 3px 5px grey;
 }
 
 .kateditchecktit {
 	border-top: 3px solid #FDE7D6;
 	background-color: #E8AD3F;
 	border-bottom: 3px solid #C88D1F;
+	/*border: thin solid red;*/
+	/*border-bottom: thin solid red;*/
 	/*border-bottom: thin solid #6666ff;*/
 	/*border-left: 3px solid #99f;
 	border-right: 3px solid #99f;*/
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 3px 3px 5px grey;
+	z-index: 103;
 }
 
 .kateditcheck {
@@ -295,6 +309,8 @@ legend {
 	/*margin-bottom: 2px;*/
 	font-size: x-small;
 	text-decoration: none;
+	/*border: thin solid red;*/
+	box-shadow: 3px 3px 5px grey;
 }
 
 .faqedit {
@@ -310,6 +326,7 @@ legend {
 	/*margin-right: 20px;*/
 	/*margin-right: auto;*/
 	padding-bottom: 3px;
+	box-shadow: 4px 6px 10px grey;
 }
 
 .faqedittit {
@@ -321,6 +338,7 @@ legend {
 	border-right: 3px solid #faa;*/
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 3px 3px 5px grey;
 }
 
 .faqeditchecktit {
@@ -332,6 +350,7 @@ legend {
 	border-right: 3px solid #99e;*/
 	margin: 0px;
 	padding: 5px;
+	box-shadow: 3px 3px 5px grey;
 }
 
 .faqeditcheck {
@@ -339,6 +358,7 @@ legend {
 	/*margin: 10px 20px 10px 20px;*/
 	margin-top: 0px;
 	padding: 1px 20px 10px 20px;
+	/*border: thin solid red;*/
 }
 
 .faqedit > p {
@@ -383,6 +403,7 @@ blockquote {
   margin: 1.5em 10px;
   padding: 0.5em 10px;
   quotes: "\201C""\201D""\2018""\2019";
+	box-shadow: 4px 6px 10px grey;
 }
 blockquote:before {
   color: #ccc;
