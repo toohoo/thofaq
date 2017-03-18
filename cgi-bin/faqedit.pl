@@ -70,6 +70,7 @@ require "checkdate.pl";
 
 print &PrintHeader();
 $head = &UbmCgiHead("FAQ - Edit FAQ Frage");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head =~ s/<H1>/<H1 id="faqtitle">/i;
 print $head;
 
 print &webtag( &weblink("[zurück zu Edit Fragen]", "editfaq.pl") );
