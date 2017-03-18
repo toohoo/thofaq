@@ -1,0 +1,401 @@
+/* -------------------------------------------- */
+/* Stylesheet fuer Tools im Intranet            */
+/* Thomas Hofmann, Sep 2005                     */
+/*                                              */
+/* -------------------------------------------- */
+
+html {
+	background-color: #eeeeee;
+	font-family: Arial,Helvetica,Helv,sans-serif;
+}
+
+/*
+body {
+	background-color: #eeeeee;
+	font-family: Arial,Helvetica,Helv,sans-serif;
+}
+*/
+
+body > h1 {
+	background: #f9f9f9;
+	text-align: center;
+	border-top: 2px solid #fff;
+	border-bottom: 2px solid #ddd;
+}
+
+.webfehler {
+/*border: thin solid red;*/
+background-color: #fcc;
+border-top: 3px solid #f66;
+border-bottom: 3px solid #900;
+/* langt es nicht, wenn 'Fehler' fett ist? */
+/*font-weight: bold;*/
+}
+
+.webhinweis {
+/*border: thin solid green;*/
+border-bottom: 3px solid green;
+background-color: #eff;
+}
+
+input[readonly] {
+color: #666666;
+background-color: #cccccc;
+}
+
+textarea[readonly] {
+color: #666666;
+background-color: #cccccc;
+width: 100em;
+height: 20em;
+}
+
+.hinterlegt {
+margin: 1px 1px 1px 1px;
+/*border: thin dotted black;*/
+font-style: normal;
+font-family: monospace;
+font-size: 9pt;
+background-color: #ffffcc;
+}
+
+fieldset {
+	padding: 10px;
+	background-color: #ffffcc;
+}
+
+/*
+label[for~=optionen] {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	padding: 2px;
+	border: 2px groove #cccccc;
+*/
+	/*margin-top: 20px;*/
+	/*margin-left: 10px;*/
+/*
+	background-color: #aaaaff;
+}
+label[for~=parsen] {
+	position: relative;
+	top: 5px;
+	left: 10px;
+	padding: 2px;
+	border: 2px groove #cccccc;
+	background-color: #aaaaff;
+}
+*/
+
+legend {
+	padding: 1px;
+	border: 2px groove #cccccc;
+	background-color: #aaaaff;
+}
+
+.katwahl {
+	/*border: thin solid #999999;*/
+	border-top: 3px solid #ffe;
+	border-bottom: 3px solid #cc9;
+	/*border-left: 3px solid #ffe;
+	border-right: 3px solid #cc9;*/
+	background-color: #ffc;
+	float: left;
+	width: 200px;
+	margin-right: 20px;
+}
+
+.katwahltit {
+	background-color: #ee9;
+	border-bottom: 3px solid #cc9; 
+	margin: 0px;
+	padding: 5px;
+}
+
+.katwahl > p {
+	margin: 5px;
+}
+
+.katwahl > ol {
+	/*margin-left: 25px;*/
+	margin-top: 2px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+
+.faq {
+	margin-left: 220px;
+}
+
+.faqfragen {
+	/*border: thin solid #999999;*/
+	background-color: #eeeeee;
+}
+
+.faqfragtit {
+	background-color: #ddf;
+	/*border: thin solid #999999;*/
+	/*border-bottom: thin solid #999999;*/
+	border-top: 3px solid #eef;
+	border-bottom: 3px solid #99c;
+	/*border-left: 3px solid #ddf;
+	border-right: 3px solid #ddf;*/
+	margin: 0px;
+	padding: 5px;
+}
+
+.faqantworten {
+	margin-top: 10px;
+	/*border: thin solid #999999;*/
+	background-color: #eeeeee;
+}
+
+.faqanttit {
+	background-color: #dff;
+	/*border-bottom: thin solid #999999;*/
+	/*border: thin solid #999999;*/
+	border-top: 3px solid #eff;
+	border-bottom: 3px solid #acc;
+	/*border-left: 3px solid #dff;
+	border-right: 3px solid #dff;*/
+
+	margin: 0px;
+	padding: 5px;
+}
+
+.editfaqanttit {
+	background-color: #fcf;
+	/*border-bottom: thin solid #999999;*/
+	/*border: thin solid #999999;*/
+	border-top: 3px solid #fef;
+	border-bottom: 3px solid #c9c;
+	/*border-left: 3px solid #fcf;
+	border-right: 3px solid #fcf;*/
+	margin: 0px;
+	padding: 5px;
+}
+
+
+.faqantworten dt {
+	font-weight: bold;
+/*	clear: both;*/
+}
+
+.faqantworten dd {
+	margin-bottom: 20px;
+	padding-bottom: 5px;
+	/*border-bottom: thin dashed #999999;*/
+	border-bottom: 3px solid #699;
+	padding-bottom: 0;
+}
+
+.zufragen {
+	display: block;
+	/*font-size: x-small;*/
+	font-size: small;
+/*	max-width: 118px;*/
+	/*float: left;*/
+	background: #add;
+	text-decoration: none;
+	margin-top: 10px;
+	margin-left: 0;
+	margin-right: 0;
+	margin-bottom: 0;
+	padding-left: 5px;
+	padding-right: 0px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-left: 3px solid #add;
+	/*border-right: 3px solid #699;*/
+	border-right: 100% solid #699;
+	/*border-bottom: 3px solid #add;*/
+	/*border-top: 3px solid #add;*/
+}
+.zufragen::after {
+	/*content: '';*/
+	/*display: table-cell;*/
+	font-size: small;
+	/*clear: both;*/
+	/*max-width: 110px;*/
+	width: 100%;
+	/*min-width: 200px;*/
+	background: #699;
+	text-decoration: none;
+	margin-top: 10px;
+	margin-left: 5px;
+	margin-right: 0;
+	margin-bottom: 0;
+	padding-left: 3px;
+	/*padding-right: 3px;*/
+	padding-right: auto;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	/*border-left: 3px solid #add;*/
+	border-right: 100% solid #699;
+}
+
+
+.katedit {
+	border: thin solid #999999;
+	background-color: #ffdddd;
+	/*float: left;*/
+	width: 500px;
+	/*margin-right: 20px;*/
+	/*margin-right: auto;*/
+}
+
+.katedittit {
+	background-color: #ffaaaa;
+	border-bottom: thin solid #ff6666;
+	margin: 0px;
+	padding: 5px;
+}
+
+.kateditneu {
+	/*border: thin solid #999999;*/
+	/*background-color: #ffdddd;*/
+	/*float: left;*/
+	/*width: 500px;*/
+	/*margin-right: 20px;*/
+	/*margin-right: auto;*/
+
+	/*margin: 10px 20px 10px 20px;*/
+	margin-top: 0px;
+	padding: 10px 20px 10px 20px;
+	/*background-color: #ccccff;*/
+}
+
+.kateditneutit {
+	background-color: #ffaaaa;
+	border-bottom: thin solid #ff6666;
+	margin: 0px;
+	padding: 5px;
+}
+
+.kateditchecktit {
+	background-color: #9999ff;
+	border-bottom: thin solid #6666ff;
+	margin: 0px;
+	padding: 5px;
+}
+
+.kateditcheck {
+	/*margin: 10px 20px 10px 20px;*/
+	margin-top: 0px;
+	padding: 1px 20px 10px 20px;
+	background-color: #ccccff;
+}
+
+.faqtitedit {
+	position: relative;
+	top: -2px;
+	background-color: #eee;
+	padding: 2px 2px 2px 2px;
+	/*border: 2px outset #ffffff;*/
+	/*border-top: 3px solid #eee;*/
+	/*border-left: 3px solid #eee;*/
+	border-top: 1px solid #ddd;
+	border-left: 1px solid #ddd;
+	border-right: 4px solid #ccc;
+	border-bottom: 4px solid #aaa;
+	/*margin-bottom: 2px;*/
+	font-size: x-small;
+	text-decoration: none;
+}
+
+.faqedit {
+	/*border: thin solid #999999;*/
+	/*border-top: 3px solid #eee;
+	border-bottom: 3px solid #aaa;*/
+	/*border-left: 3px solid #eee;
+	border-right: 3px solid #ccc;*/
+	background-color: #fdd;
+	/*float: left;*/
+	width: 850px;
+	/*margin-right: 20px;*/
+	/*margin-right: auto;*/
+	padding-bottom: 3px;
+	border-bottom: 3px solid #caa;
+}
+
+.faqedittit {
+	background-color: #faa;
+	/*border-bottom: thin solid #f66;*/
+	border-top: 3px solid #fdd;
+	border-bottom: 3px solid #c77;
+	/*border-left: 3px solid #faa;
+	border-right: 3px solid #faa;*/
+	margin: 0px;
+	padding: 5px;
+}
+
+.faqeditchecktit {
+	background-color: #99e;
+	/*border-bottom: thin solid #6666ff;*/
+	border-top: 3px solid #ccf;
+	border-bottom: 3px solid #66b;
+	/*border-left: 3px solid #99e;
+	border-right: 3px solid #99e;*/
+	margin: 0px;
+	padding: 5px;
+}
+
+.faqeditcheck {
+	/*margin: 10px 20px 10px 20px;*/
+	margin-top: 0px;
+	padding: 1px 20px 10px 20px;
+	background-color: #ccccff;
+}
+
+.faqedit > p {
+	margin: 20px;
+}
+
+b > code, code > b {
+	font-weight: 900;
+	/*font-style: italic;*/
+	font-size: 1.1em;
+}
+
+.foundterm {
+	font-weight: bold;
+	background-color: #00ffff;
+}
+
+.hashblock {
+	margin: 5px 5px 5px 5px;
+}
+
+.hashblock a {
+	text-decoration: none;
+}
+
+.hashtag {
+	padding: 0px 1px 0px 1px;
+	margin: 1px 1px 1px 1px;
+	text-decoration: none;
+	border: thin solid #ccc;
+	color: #699;
+	background: #ddd;
+}
+
+.hashtag:visited, .hashtag a:visited {
+	color: #aaaaaa;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}

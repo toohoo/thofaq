@@ -43,7 +43,6 @@ require "webtools.pl";
 
 print PrintHeader();
 $head = UbmCgiHead("FAQ - Hilfe: häufig gestellte Fragen");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
-$head =~ s/<H1>/<H1 id="faqtitle">/i;
 print $head;
 
 $aktkat = 1;
