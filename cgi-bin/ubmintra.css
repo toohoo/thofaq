@@ -373,7 +373,7 @@ b > code, code > b {
 
 .foundterm {
 	font-weight: bold;
-	background-color: #00ffff;
+	background-color: #FFFF99; /*#00ffff;*/
 }
 
 .hashblock {
