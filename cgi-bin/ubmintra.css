@@ -385,13 +385,39 @@ b > code, code > b {
 }
 
 .hashtag {
-	padding: 0px 1px 0px 1px;
-	margin: 1px 1px 1px 1px;
+	/*position: relative;
+	top: 0px;*/
+	padding: 0 0 0 0;
+	padding-top: -5px;
+	padding-right: 2px;
+	margin: 0 0 0 0;
+	margin-top: 3px;
+	margin-right: 1px;
 	text-decoration: none;
 	border: thin solid #ccc;
-	color: #699;
-	background: #ddd;
+	border-left: none;
+	color: #3366AA;
+	background: #FFC;/*#ddd;*/
+	/*display: inline-block;*/
+	white-space: nowrap;
 }
+
+.hashtag:before {
+	background-color: #eeeeee;
+	content: url("tagleft.gif");
+	position: relative;
+	top: 4px;
+	margin: 0 0 0 0;
+	margin-top: -1px;
+	margin-bottom: -1px;
+	padding: 0 0 0 0;
+	padding-top: -1px;
+	padding-bottom: -1px;
+	/*display: inline;*/
+	break-after: none;
+	white-space: nowrap;
+}
+
 
 .hashtag:visited, .hashtag a:visited {
 	color: #aaaaaa;
