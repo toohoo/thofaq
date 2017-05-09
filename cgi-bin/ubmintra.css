@@ -416,6 +416,7 @@ b > code, code > b {
 	/*display: inline;*/
 	break-after: none;
 	white-space: nowrap;
+	border: none;
 }
 
 
