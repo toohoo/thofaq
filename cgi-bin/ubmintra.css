@@ -184,11 +184,20 @@ legend {
 
 .faqantworten dt {
 	font-weight: bold;
+	font-size: 1.3em;
 	box-shadow: -2px 3px 3px grey;
 	margin-bottom: 5px;
 	padding: 2px 2px 2px 2px;
 }
-
+/*
+.faqantworthead {
+	font-weight: bold;
+	font-size: 20px;
+	box-shadow: -2px 3px 3px grey;
+	margin-bottom: 5px;
+	padding: 2px 2px 2px 2px;
+}
+*/
 .faqantworten dd {
 	border-bottom: 2px solid #64b5c8; /*#699;*/
 	/*border-bottom: thin dashed #999999;*/
@@ -411,10 +420,13 @@ b > code, code > b {
 	margin-top: -1px;
 	margin-bottom: -1px;
 	padding: 0 0 0 0;
-	padding-top: -1px;
-	padding-bottom: -1px;
+	/*padding-top: -1px;*/
+	padding-top: 0px;
+	/*padding-bottom: -1px;*/
+	padding-bottom: 0px;
 	/*display: inline;*/
-	break-after: none;
+	/*break-after: none;*/
+	break-after: auto;
 	white-space: nowrap;
 	border: none;
 }
