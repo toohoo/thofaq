@@ -186,25 +186,27 @@ legend {
 	font-weight: bold;
 	font-size: 1.3em;
 	box-shadow: -2px 3px 3px grey;
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 	padding: 2px 2px 2px 2px;
+	background-color: #d4e9fb;
 }
 /*
 .faqantworthead {
 	font-weight: bold;
 	font-size: 20px;
 	box-shadow: -2px 3px 3px grey;
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 	padding: 2px 2px 2px 2px;
+	background-color: #c4e5f8;
 }
 */
 .faqantworten dd {
-	border-bottom: 2px solid #64b5c8; /*#699;*/
+	border-bottom: 0px solid #94e5f8; /*#64b5c8;*/ /*#699;*/
 	/*border-bottom: thin dashed #999999;*/
 	margin-bottom: 20px;
 	padding-bottom: 5px;
 	padding-bottom: 0;
-	box-shadow: 0 2px 0px #64b5c8;
+	/*box-shadow: 0 2px 0px #64b5c8;*/
 	padding-left: 4px;
 }
 
