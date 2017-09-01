@@ -51,6 +51,7 @@ $input="";
 %input=();
 my $hashtags = 'off';  ## or simply '' but NOT 'on'
 my $hashcloud = 'off';  ## or simply '' but NOT 'on'
+my $hashcloudsmall = 'off';  ## or simply '' but NOT 'on'
 ## wurde was uebergeben?
 if (ReadParse(*input)) {
 	if ($input{'kat'}) {
@@ -61,6 +62,9 @@ if (ReadParse(*input)) {
 	}
 	if ( $input{'hashcloud'} =~ m/on/i ) {
 		$hashcloud = 'on';
+	}
+	if ( $input{'hashcloudsmall'} =~ m/on/i ) {
+		$hashcloudsmall = 'on';
 	}
 }
 #$input{'kat'}='alle';
@@ -144,7 +148,7 @@ if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 #%rem = &holrem();
 
 my ( %hashtag, @hashtags );
-if ( $hashtags eq 'on' or $hashcloud eq 'on' ) {
+if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
 	%hashtag = gethashtags( \%finh ) ;
 	@hashtags = keys( %hashtag );
 }
@@ -152,11 +156,13 @@ if ( $hashtags eq 'on' or $hashcloud eq 'on' ) {
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
+$fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
 $fueredit = undef;
 $input{'fueredit'} = $fueredit;
 ausgabekat($aktkat, $fueredit, %fkat);
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
+delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
