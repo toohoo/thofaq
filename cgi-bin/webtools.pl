@@ -1733,22 +1733,26 @@ sub ismatch{
 			$foundstring = '';
 			last EVERYTERM;
 		} elsif ( $foundstring =~ m/([^~])($term)([^~])/is ) {
-			$foundstring =~ s/([^~])($term)([^~])/$1<span class="foundterm">~~$2~~<\/span>$3/igs;
+				  $foundstring =~ s/([^~])($term)([^~])/$1<span class="foundterm">~~$2~~<\/span>$3/igs;
 		} elsif ( $foundstring =~ m/([^~])($term)$/is ) {
-			$foundstring =~ s/([^~])($term)$/$1<span class="foundterm">~~$2~~<\/span>/igs;
+				  $foundstring =~ s/([^~])($term)$/$1<span class="foundterm">~~$2~~<\/span>/igs;
 		} elsif ( $foundstring =~ m/^($term)([^~])/is ) {
-			$foundstring =~ s/^($term)([^~])/<span class="foundterm">~~$1~~<\/span>$2/igs;
+				  $foundstring =~ s/^($term)([^~])/<span class="foundterm">~~$1~~<\/span>$2/igs;
 		} elsif ( $foundstring =~ m/^($term)$/is ) {
-			$foundstring =~ s/^($term)$/<span class="foundterm">~~$1~~<\/span>/igs;
+				  $foundstring =~ s/^($term)$/<span class="foundterm">~~$1~~<\/span>/igs;
 		}
 	}
 	do { $foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(href=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
 	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
 	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   } while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	
 	$foundstring =~ s|(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$3|igs;
+	
 	do { $foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(href=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;  	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	return( $foundstring );
 }
 
