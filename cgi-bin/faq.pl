@@ -1,5 +1,5 @@
 #!D:/xampp/perl/bin/perl -w
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 #######################################################
 ## FAQ.pl
 ## uebernommen von Start.pl
@@ -21,6 +21,8 @@
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
 $aktdir = holpfad0($scriptname);
+$debug = 0;
+$fueredit = undef;
 
 #print "Content-type: text/html\n\n";
 #print "<html>\n<head>\n<title>Test</title>\n</head>\n<body>\n";
@@ -44,6 +46,21 @@ require "webtools.pl";
 print PrintHeader();
 $head = UbmCgiHead("FAQ - Hilfe: häufig gestellte Fragen");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 print $head;
+if( !defined( $ENV{'faq_debug'} ) ) {
+	#webhinweis("ENV{faq_debug} OFF: $ENV{'faq_debug'}");
+} elsif( $ENV{'faq_debug'} =~ m/On|Yes/i ) {
+	$debug = 1;
+	#webhinweis("ENV{faq_debug} ON: $ENV{'faq_debug'}");
+} else {
+	#webhinweis("ENV{faq_debug} OFF: $ENV{'faq_debug'}");
+}
+if( -f 'D:/temp/faq_debug' ) {
+	$debug = 1;
+	webhinweis("'d:/temp/faq_debug' EXIST");
+} else {
+	#webhinweis("'d:/temp/faq_debug' DON'T EXIST");
+}
+#webhinweis("ENV{PATH}: $ENV{PATH}");
 
 $aktkat = 1;
 $input="";
@@ -57,15 +74,19 @@ if (ReadParse(*input)) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
 	}
+	if( !defined( $input{"hashtags"} ) ) { $input{"hashtags"} = ''; }
 	if ( $input{'hashtags'} =~ m/on/i ) {
 		$hashtags = 'on';
 	}
+	if( !defined( $input{"hashcloud"} ) ) { $input{"hashcloud"} = ''; }
 	if ( $input{'hashcloud'} =~ m/on/i ) {
 		$hashcloud = 'on';
 	}
+	if( !defined( $input{"hashcloudsmall"} ) ) { $input{"hashcloudsmall"} = ''; }
 	if ( $input{'hashcloudsmall'} =~ m/on/i ) {
 		$hashcloudsmall = 'on';
 	}
+	if( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
 }
 #$input{'kat'}='alle';
 #$aktkat = $input{'kat'};
@@ -149,7 +170,9 @@ if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 
 my ( %hashtag, @hashtags );
 if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
+	#webhinweis("Was mit HASH: tags: $hashtags -- cloud: $hashcloud -- cloudsmall: $hashcloudsmall") if $debug;
 	%hashtag = gethashtags( \%finh ) ;
+	#webhinweis("Was mit HASH ***ENDE*** tags: $hashtags -- cloud: $hashcloud -- cloudsmall: $hashcloudsmall") if $debug;
 	@hashtags = keys( %hashtag );
 }
 
@@ -157,9 +180,10 @@ if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
 $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
-$fueredit = undef;
-$input{'fueredit'} = $fueredit;
+#$input{'fueredit'} = $fueredit;
+	#webfehler("ausgabekat Before") if $debug;
 ausgabekat($aktkat, $fueredit, %fkat);
+	#webfehler("ausgabekat ***ENDE***") if $debug;
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
 delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## take away the false kat
@@ -167,7 +191,9 @@ delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## ta
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
 #webhinweis( "aktkat vor ausgabefaq: [$aktkat]" );
+	#webfehler("ausgabefaq Before") if $debug;
 ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+	#webfehler("ausgabefaq ***ENDE***") if $debug;
 
 
 print "</html>\n";

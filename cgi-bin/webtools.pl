@@ -1,5 +1,5 @@
-#!D:/xampp/perl/bin/perl
-#!/usr/bin/perl
+#!D:/xampp/perl/bin/perl -w
+#!/usr/bin/perl -w
 #######################################################
 ## webtools.pl
 ## Thomas Hofmann Sep 2005
@@ -725,6 +725,7 @@ sub ausgabekat {
 	my ( $aktkat, $isedit, %ka ) = @_;
 	my ( $k, $v, @ke, $t );
 	my $aktkatsic = $aktkat;
+#webhinweis("<b>IN</b> ausgabekat") if $debug;
 	
 	my ( $hasharray, @hasharray ) = ( undef, undef );
 	my $hashcloud = undef;
@@ -754,7 +755,10 @@ sub ausgabekat {
 	}
 	if ( !$searchstring ) { $searchstring = ''; }
 
+#webhinweis("<b>sort keys \%ka</b> before") if $debug;
 	@ke = sort{$a <=> $b} (keys (%ka) );
+#webhinweis("<b>sort keys \%ka</b> after") if $debug;
+
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
@@ -766,6 +770,7 @@ sub ausgabekat {
 	#print webtag("blah");
 	print webtag("ol", "type=1", "#EMPTY#");
 
+#webhinweis("<b>foreach \$k</b> before") if $debug;
 	foreach $k (@ke) {
 		if ($aktkat eq $k) {
 			#$t = webtag("b", &weblink("$ka{$k}", "faq.pl?kat=$k"));
@@ -778,11 +783,13 @@ sub ausgabekat {
 		    }
 		}
 	}
+#webhinweis("<b>foreach \$k</b> after") if $debug;
 
 	print webtag("ol", "", "#ENDETAG#");
 
 	#if (($aktkat eq "") || !defined($aktkat)) { $aktkatsic = 'alle'; }
 	ausgabesearchbox( $aktkatsic, '', $searchstring );
+#webhinweis("<b>ausgabesearchbox</b> after") if $debug;
 	
 	#webhinweis( "\$0: $0" );
 	my $scriptname = getfilename( $0 );
@@ -790,6 +797,7 @@ sub ausgabekat {
 	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
 	if ( !$fueredit ) { $fueredit = ''; }
 	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
+#webhinweis( "<b>if ! \$hash...</b> before" ) if $debug;
 	if ( !$hasharray || !$hashcloud || !$hashcloudsmall ) {
 		my $sicsearchstring = $searchstring; if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
 		$sicsearchstring =~ s/\#/\%23/i;
@@ -801,11 +809,23 @@ sub ausgabekat {
 		print weblink( "HashcloudSmall","$scriptname?kat=$aktkat\&hashcloudsmall=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hashcloudsmall;
 		print            webtag( "small", '#ENDETAG#' );
 	}
+#webhinweis( "<b>if ! \$hash...</b> after" ) if $debug;
+
+#webhinweis( "<b>gethashtagsblock</b> before" ) if $debug;
 	print gethashtagsblock( $hasharray );
+#webhinweis( "<b>gethashtagsblock</b> after" ) if $debug;
+
+#webhinweis( "<b>gethashtagcloud</b> before" ) if $debug;
 	print gethashtagcloud( $hashcloud );
+#webhinweis( "<b>gethashtagcloud</b> after" ) if $debug;
+
+#webhinweis( "<b>gethashtagcloudsmall</b> before" ) if $debug;
 	print gethashtagcloudsmall( $hashcloudsmall );
+#webhinweis( "<b>gethashtagcloudsmall</b> after" ) if $debug;
 	
 	print webtag("div", "", "#ENDETAG#");  ## of class=katwahl
+#webhinweis("<b>IN</b> ausgabekat <b>ENDE</b>") if $debug;
+
 }
 
 #---Ausgabe der Fragen der aktuellen Kategorie-------------------------------------------
@@ -1768,10 +1788,31 @@ sub gethashtags {
 		#@faqhash = ( $$faqinh{ $ikey } =~ /(?:^|[^a-zA-Z_&?\-])(\#\w+)(?:[^a-zA-Z0-9;_\-\]]|$)/g );
 		@faqhash = ( $$faqinh{ $ikey } =~ /(\#\w+)(?:[^a-zA-Z0-9;_\-\]]|$)/g );
 		foreach $fhash ( @faqhash ) {
-			if ( !defined( $hashtag{ $fhash } ) && ( $fhash !~ /\#\d{8}/ ) ) {
-				$hashtag{ $fhash } = 1;
-			} elsif ( ($hashtag{ $fhash } >= 1) && ( $fhash !~ /\#\d{8}/ ) ) {
-				$hashtag{ $fhash }++;
+			#if( !defined(%hashtag) ) { webhinweis("!defined(\%hashtag)"); }
+			#if( !defined($fhash) ) { webhinweis("!defined(\$fhash)"); }
+			#if( !defined($hashtag{ $fhash }) ) { webhinweis("!defined(\$hashtag{ \$fhash })"); }
+			
+			#if( !defined($hashtag{ $fhash }) ) { $hashtag{ $fhash } = 0; }
+			
+			#if( $fhash =~ /\#?\d{8}/ ) {
+			#	if($fhash !~ /\#\d{8}/) {
+			#		webhinweis("fhash: $fhash - NOT match \\d{8}"); 
+			#	} else {
+			#		webhinweis("fhash: $fhash - DOES  match \\d{8}"); 
+			#	}
+			#	exit;
+			#}
+			if ( $fhash !~ /\#\d{8}/ ) {
+				#webhinweis("fhash: $fhash - NOT match \\d{8}"); 
+				if ( 
+							!defined( $hashtag{ $fhash } ) 
+				   ) {
+					$hashtag{ $fhash } = 1;
+				} elsif ( 
+							($hashtag{ $fhash } >= 1) 
+					    ) {
+					$hashtag{ $fhash }++;
+				}
 			}
 		}
 	}
@@ -1782,6 +1823,7 @@ sub gethashtags {
 sub gethashtagsblock {
 	# gethashtagsblock( $hasharray ); ## where $hasharray = \@hasharray;
 	my ( $arref , @rest ) = @_;
+#webhinweis("<b>IN gethastagsblock</b> ...") if $debug;
 	
 	my $hashblock = '';
 	if ( !$arref ) {
@@ -1792,10 +1834,41 @@ sub gethashtagsblock {
 	
 	# faqsearch.pl?searchstring=#hashtag
 	my $hashcount = @{ $arref };
+webhinweis("<b>hashcount:</b>  $hashcount") if $debug;
 	#webhinweis( "IN gethashtagsblock - hashcount: $hashcount" );
-	foreach my $hashtag ( sort( @{ $arref } ) ) {
-			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
+#print "</ol>\n</td></tr>\n</table>\n" if $debug;
+print "\n</div>\n" if $debug;
+#webhinweis("<b>IN gethastagsblock</b> - <b>foreach \$hashtag</b> before") if $debug;
+#exit;
+
+print "<p>\n" if $debug;
+print join( ' ~ ', sort( @{ $arref } ) ) if $debug;
+print "\n</p>\n" if $debug;
+print "\n<hr>\n" if $debug;
+
+print "<p>\n" if $debug;
+	my @hasharraysort = sort( @{ $arref } );
+	my $hashtag = '';
+	my $hindex = 0;
+	
+	eachhashtagshow:
+	for( $hindex = 0; $hindex <= $#hasharraysort; $hindex++ ) {
+			$hashtag = $hasharraysort[$hindex];
+			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - \n";
+			print "$hindex (".length($hashblock)."): ".substr($hashtag,1)." - " if $debug;
+			if( $debug1 ) {
+				last eachhashtagshow if ($hindex >= 450);
+			}
 	}
+
+#	foreach $hashtag ( sort( @{ $arref } ) ) {
+#			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
+#			print "".substr($hashtag,1)." - " if $debug;
+#	}
+
+print "\n</p>\n" if $debug;
+webhinweis("<b>IN gethastagsblock</b> - <b>foreach \$hashtag</b> after") if $debug;
+#exit if $debug;
 	
 	$hashblock .= "</div>\n";
 	

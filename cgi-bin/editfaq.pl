@@ -51,12 +51,15 @@ if (&ReadParse(*input)) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
 	}
+	if( !defined( $input{"hashtags"} ) ) { $input{"hashtags"} = ''; }
 	if ( $input{'hashtags'} =~ m/on/i ) {
 		$hashtags = 'on';
 	}
+	if( !defined( $input{"hashcloud"} ) ) { $input{"hashcloud"} = ''; }
 	if ( $input{'hashcloud'} =~ m/on/i ) {
 		$hashcloud = 'on';
 	}
+	if( !defined( $input{"hashcloudsmall"} ) ) { $input{"hashcloudsmall"} = ''; }
 	if ( $input{'hashcloudsmall'} =~ m/on/i ) {
 		$hashcloudsmall = 'on';
 	}
