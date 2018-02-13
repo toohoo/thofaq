@@ -864,7 +864,7 @@ sub ausgabefaq {
 	}
 	if ($#aktfaq < 0) {
 		if ($isedit) {
-			print webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]");
+			print webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", "[neue Frage]");
 		}
 		webhinweis("Keine FAQ in dieser Kategorie");
 	}
@@ -876,7 +876,7 @@ sub ausgabefaq {
 	if ($#aktfaq >= 0) {
 		print webtag("div", "class=faqantworten", "#EMPTY#");
 		if ($isedit) {
-		    print webtag("h3", "class=editfaqanttit", "Antworten " . webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]"));
+		    print webtag("h3", "class=editfaqanttit", "Antworten " . webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", "[neue Frage]"));
 		} else {
 		    print webtag("h3", "class=faqanttit", "Antworten");
 		}
@@ -1337,11 +1337,19 @@ PSEUDOHINWEISENDE
 		} else {
 			if ($i == $nrkat{$nr}) {
 				push(@katvorh, "$i $kat{$i}\=$i\=selected");
+			} elsif ( $nr eq 'neu' && $i == $aktkat ) {
+				push(@katvorh, "$i $kat{$i}\=$i\=selected");
 			} else {
 				push(@katvorh, "$i $kat{$i}\=$i");
 			}
 		}
 	}
+	## ----------- debug
+	## es wird bei "neu" anscheinend gar kein selected gesetzt => in diesem Fall auf aktkat setzen
+#	my $katvorh = join( "\n", @katvorh );
+#	$katvorh =~ s/</\&lt;/g;
+#	print webtag( "textarea", "rows=6\tcols=60", $katvorh );
+	## ----------- /debug
 	$katneuende = $katmax + 1;
 	## hier geht es nur um @katvorh
 	push(@katfrei,"anfügen=$katneuende");

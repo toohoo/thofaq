@@ -84,6 +84,9 @@ $faqnr = 0;
 ## wurde was uebergeben?
 ## wenn nicht dann Fehler, es muss die Nr. uebergeben werden
 if (&ReadParse(*input)) {
+	if ($input{'kat'}) {
+		$aktkat = $input{'kat'};
+	}
 	if ($input{'fnr'}) {
 		$faqnr = $input{'fnr'};
 	}

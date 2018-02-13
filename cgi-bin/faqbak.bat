@@ -107,6 +107,8 @@ REM pause
 
 
 :check_O_dir
+REM @echo on
+%FAQBAK_O_DRIVE%
 if not exist %FAQBAK_O_DIR%. goto dir_O_notfound
 echo ___ Yippieh! Verzeichnis %FAQBAK_O_DIR% gefunden _____________________________
 

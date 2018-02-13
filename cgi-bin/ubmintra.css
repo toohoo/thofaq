@@ -379,7 +379,7 @@ legend {
 b > code, code > b {
 	font-weight: 900;
 	/*font-style: italic;*/
-	font-size: 1.1em;
+	font-size: 1.2em;
 }
 
 .foundterm {
@@ -439,7 +439,7 @@ b > code, code > b {
 }
 
 blockquote {
-  background: #f9f9f9;
+  background: #f9f9e9;
   border-left: 10px solid #ccc;
   margin: 1.5em 10px;
   padding: 0.5em 10px;
