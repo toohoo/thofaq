@@ -17,13 +17,17 @@ Would be nice if someone does find errors and tell me.
 Have fun.  
 
 **Attention**  
+
 For use immediately on Windows there is set  
 a shebang for correctly work with XAMPP on Windows. The  
 assumed prerequest is XAMPP on drive D and perl in  
+
 `/xampp/perl/bin/perl`  
+
 To run it on Linux/Unix just remove the first line at  
 the perl scripts.  
 The app is tested under Linux/Windows/Raspbian (RaspberryPi).  
+
 ---  
 after doing commit  
 f96c1eaeed5c495662c83001b954b3ec542f3a91
