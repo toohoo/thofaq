@@ -412,8 +412,8 @@ sub getglobals {
 #	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
 local %meine = (
 	"admin",	"Thomas Hofmann",
-	"admintel",	"146",
-	"adminmail",	"hofmann.thomas\@draexlmaier.de",
+	"admintel",	"1573",
+	"adminmail",	"thomas.hofmann\@draexlmaier.com",
 	"parsdir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\sgmls",
 	"dtddir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd",
 	"dtdhome",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd\\home",
@@ -429,6 +429,8 @@ local %meine = (
 	"breitfeld" ,   "75",
 	"hoch"      ,   "10",
 	"breittiny" ,   "18",
+	"i18n_conf" ,   "faq_i18n.conf",
+	"i18n_lang" ,	"DE",
 	);
 $meine{"adminmes"} = "Bitte informieren Sie $meine{'admin'} (Tel. $meine{'admintel'}).";
 
@@ -653,6 +655,63 @@ sub sichereSGM {
 	}
 
 	return ($sgm);
+}
+
+#---Holen der Spracheinstellungen-------------------------------------------
+sub getI18n {
+	my (*lang, *conf, @rest) = @_;
+	# 3 things to do:
+	# 	a) get language from i18n_conf
+	# 	b) get words from i18n_lang_{lang}
+	# 	c) get the other languages as list from the i18n_lang_{lang} files
+
+	# 	a) get language from i18n_conf
+	if ( !(-f $conf) ) {
+		webabbruch ("Spracheinstellungs-Datei nicht gefunden [$conf]. $globals{'adminmes'}");
+	}
+	if ( !(open (LANGCONF, $conf) ) ) {
+		webabbruch ("Kann Spracheinstellungs-Datei nicht lesen [$conf]. $globals{'adminmes'}");
+	}
+	@f = %f = ();
+		@f = <LANGCONF>;
+		close (LANGCONF);
+	$lang = $f[0];
+	chomp( $lang );
+
+	# 	b) get words from i18n_lang_{lang}
+	my $lang_name = $conf;
+	$lang_name =~ s/(\.conf)$/-$lang$1/
+	if ( !(-f $lang_name) ) {
+		webabbruch ("Sprach-Datei nicht gefunden [$lang_name]. $globals{'adminmes'}");
+	}
+	if ( !(open (LANGDICT, $lang_name) ) ) {
+		webabbruch ("Kann Sprach-Datei nicht lesen [$lang_name]. $globals{'adminmes'}");
+	}
+	@f = %f = ();
+
+		@f = <LANGDICT>;
+		close (LANGDICT);
+		everylinelang:
+		foreach $z (@f) {
+			chomp( $z );
+			if ($z =~ m/^[ \t]*#/i) { next everylinelang; }
+			$z =~ s/\\=/~equals~/g;
+			if ($z !~ m/^.+=.+$/i) { next everylinelang; }
+			( $k, $v ) = split( /=/, $z, 2 );
+			$f{$k} = $v;
+		}
+		
+		$count = keys( %f );
+		if ( $count == 0 ) {
+			&webabbruch ("Sprach-Datei ist leer [$lang_name]. $globals{'adminmes'}");
+		}
+
+		@lang = @f;
+		%lang = %f;
+
+	# 	c) get the other languages as list from the i18n_lang_{lang} files
+
+	return(1);
 }
 
 #---Holen der Daten der FAQ-------------------------------------------

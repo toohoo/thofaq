@@ -170,6 +170,13 @@ if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 }
 #webhinweis( "faq.pl - NACH holfaq" );
 
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+if (! getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch ("Fehler beim Holen der Spracheinstellungen. $globals{'adminmes'}.");
+}
+
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
