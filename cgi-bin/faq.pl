@@ -14,6 +14,8 @@
 ## Parameter: evtl. zu zeigende Kategorie
 ##
 #######################################################
+
+#print "Content-type: text/html\n\n";
     
 ##-- Einleitung ---------------------------------------
 #$scriptname = $ENV{ 'PATH_TRANSLATED' };
@@ -29,7 +31,10 @@ $fueredit = undef;
 #print "<p>scriptname=[$scriptname]</p>\n";
 #print "<p>PATH_TRANSLATED=[$ENV{ 'PATH_TRANSLATED' }]</p>\n";
 
-push (@INC, $aktdir);
+if( $aktdir ne '' ) { push (@INC, $aktdir);} else { push(@INC, '.'); }
+#push (@INC, '.');
+#print "<p>\$aktdir: $aktdir </p>\n";
+#print "<p>\@INC: ", join( ';',@INC), " </p>\n";
 require "thpl.pl";
 require "cgi-lib.pl";
 chdir ($aktdir);

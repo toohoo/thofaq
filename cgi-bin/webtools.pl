@@ -1557,6 +1557,13 @@ sub HTMLdropdown {
 sub faq2htm {
 ## siehe input2faq, ABER: Ausnahmen/Erweiterungen unten
 	local ($text) = $_[0];
+	
+	## backup vars temporarily
+	my $fuereditbak	= $input{'fueredit'};
+	my $katbak 		= $input{'kat'};
+	if( !defined( $input{'fueredit'} ) )	{ $input{'fueredit'} = ''; }
+	if( !defined( $input{'kat'} ) )			{ $input{'kat'} = ''; }
+	
 	## siehe auch blockel in: webtag
 	local ($blockel) = "P|H1|H2|H3|H4|H5|H6|UL|OL|PRE|DL|DIV|NOSCRIPT|BLOCKQUOTE|FORM|HR|TABLE|FIELDSET|ADDRESS|TR|TD|TH|FRAME|FRAMESET|NOFRAMES|LI|DD|DT|SELECT|OPTION";
 	if ( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
