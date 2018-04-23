@@ -45,9 +45,6 @@ require "webtools.pl";
 #require "globals.pl";
 %globals = getglobals();
 
-## nur global festlegen
-#%opt = ();
-
 @i18n_lang = %i18n_lang = ();
 $i18n_lang = $globals{ 'i18n_lang' };
 $i18n_conf = $globals{ 'i18n_conf' };
@@ -55,6 +52,9 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
 }
 
+
+## nur global festlegen
+#%opt = ();
 
 print PrintHeader();
 $head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)

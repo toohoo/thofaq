@@ -32,11 +32,19 @@ require "webtools.pl";
 #require "globals.pl";
 %globals = &getglobals;
 
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+}
+
+
 ## nur global festlegen
 #%opt = ();
 
 print &PrintHeader();
-$head = &UbmCgiHead("FAQ - Edit Fragen");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head = &UbmCgiHead(trans("FAQ - Edit Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 print $head;
 
 $aktkat = 1;
@@ -77,7 +85,7 @@ if (&ReadParse(*input)) {
 
 ## 	d.h. arbeiten mit Referenzen
 if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+	webabbruch (trans("Fehler beim Holen der Daten. ")."$globals{'adminmes'}.");
 }
 
 ## Kommentare holen, keine Fehlermeldung noetig
