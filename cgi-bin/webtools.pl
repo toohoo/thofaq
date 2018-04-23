@@ -659,7 +659,7 @@ sub sichereSGM {
 
 #---Holen der Spracheinstellungen-------------------------------------------
 sub getI18n {
-	my (*lang, *conf, @rest) = @_;
+	local (*lang, *conf, @rest) = @_;
 	# 3 things to do:
 	# 	a) get language from i18n_conf
 	# 	b) get words from i18n_lang_{lang}
@@ -680,7 +680,9 @@ sub getI18n {
 
 	# 	b) get words from i18n_lang_{lang}
 	my $lang_name = $conf;
-	$lang_name =~ s/(\.conf)$/-$lang$1/
+	$lang_name =~ s/(\.conf)$/-$lang$1/;
+	#webhinweis("\$lang: $lang -- \$lang_name: $lang_name");
+
 	if ( !(-f $lang_name) ) {
 		webabbruch ("Sprach-Datei nicht gefunden [$lang_name]. $globals{'adminmes'}");
 	}
@@ -688,6 +690,7 @@ sub getI18n {
 		webabbruch ("Kann Sprach-Datei nicht lesen [$lang_name]. $globals{'adminmes'}");
 	}
 	@f = %f = ();
+	my @fdest =();  ## array for extra saving keys in right followship
 
 		@f = <LANGDICT>;
 		close (LANGDICT);
@@ -698,18 +701,40 @@ sub getI18n {
 			$z =~ s/\\=/~equals~/g;
 			if ($z !~ m/^.+=.+$/i) { next everylinelang; }
 			( $k, $v ) = split( /=/, $z, 2 );
+			$k =~ s/~equals~/=/g
+			$v =~ s/~equals~/=/g
+			push( @fdest, $k );  ## saving keys in right followship in extra array
 			$f{$k} = $v;
 		}
 		
 		$count = keys( %f );
+		if ( $count == 0 && $lang eq "DE" ) {
+			$count++;
+			%f = { 'FAQ' => 'EffEiKju' };
+		}
 		if ( $count == 0 ) {
 			&webabbruch ("Sprach-Datei ist leer [$lang_name]. $globals{'adminmes'}");
 		}
 
-		@lang = @f;
+		@lang = @fdest;
 		%lang = %f;
 
 	# 	c) get the other languages as list from the i18n_lang_{lang} files
+	my $lang_dir = '.';
+	opendir( DIR, $lang_dir ) || &webabbruch ("Kann Konfigurationsverzeichnis nicht lesen. [$lang_dir]. $globals{'adminmes'}");
+	my @dirent = readdir( DIR );
+	closedir( DIR );
+	@langs = ();
+	my $lang_name_pos = index( $globals{ 'i18n_conf' }, '.conf' );
+	my $lang_name_begin = substr( $globals{ 'i18n_conf' }, 0, $lang_name_pos );
+	#webhinweis("\$lang_name_begin: $lang_name_begin -- \$globals{ 'i18n_conf' }: $globals{'i18n_conf'}");
+	foreach my $dirent ( @dirent ) {
+		chomp( $dirent );
+		if ( $dirent =~ m/$lang_name_begin\-([^\.]+)\.conf/ ) {
+			push( @langs, $1 );
+		}
+	}
+	#webhinweis("\@langs: " . join( '--', @langs ) );
 
 	return(1);
 }
@@ -781,7 +806,7 @@ sub holfaq {
 
 #---Ausgabe der Kategorien der FAQ-------------------------------------------
 sub ausgabekat {
-	my ( $aktkat, $isedit, %ka ) = @_;
+	local ( $aktkat, $isedit, %ka ) = @_;
 	my ( $k, $v, @ke, $t );
 	my $aktkatsic = $aktkat;
 #webhinweis("<b>IN</b> ausgabekat") if $debug;
@@ -821,9 +846,9 @@ sub ausgabekat {
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
-	    print webtag("h3", "class=katwahltit", "Kategorien <br>" . webtag("small",weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat")) );
+	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat")) );
 	} else {  ## normal nicht edit
-	    print webtag("h3", "class=katwahltit", "Kategorien <br>" . webtag("small",weblink("[EDIT]","editfaqkat.pl")) );
+	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink("[EDIT]","editfaqkat.pl")) );
 	}
 	#print webtag("p", weblink("[EDIT]","editfaqkat.pl"));
 	#print webtag("blah");
@@ -2071,6 +2096,14 @@ sub getfilename {
         return ($nurdat);
 }
 
+sub trans {
+	my ( $text, @rest ) = @_;
+#	foreach my $src ( keys( %i18n_lang ) ) {
+	foreach my $src ( @i18n_lang ) {  ## should be the keys
+		$text =~ s/$src/$i18n_lang{'$src'}/g;
+	}
+	return( $text );
+}
 
 #--- ENDE Alles ------------------------------------
 1;
