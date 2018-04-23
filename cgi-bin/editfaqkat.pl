@@ -35,6 +35,13 @@ require "checkdate.pl";
 #require "globals.pl";
 %globals = &getglobals;
 
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+}
+
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
@@ -42,9 +49,9 @@ require "checkdate.pl";
 #%opt = ();
 
 print &PrintHeader();
-$head = &UbmCgiHead("FAQ - Edit Kategorien" );  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head = &UbmCgiHead(trans("FAQ - Edit Kategorien") );  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 print $head;
-print &webtag(&weblink("[zurück zu den FAQ]","faq.pl") . " " . &weblink("[Start FAQ-Edit Kategorien]","editfaqkat.pl") );
+print &webtag(&weblink(trans("[zurück zu den FAQ]"),"faq.pl") . " " . &weblink(trans("[Start FAQ-Edit Kategorien]"),"editfaqkat.pl") );
 
 
 ## sind die Dateien da?
@@ -60,7 +67,7 @@ print &webtag(&weblink("[zurück zu den FAQ]","faq.pl") . " " . &weblink("[Start 
 #%fnrkat = ();
 
 if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	&webabbruch ("Fehlen beim Holen der Daten. $globals{'adminmes'}.");
+	&webabbruch (trans("Fehler beim Holen der Daten") . ". $globals{'adminmes'}.");
 }
 
 $keft = "";
@@ -104,8 +111,9 @@ if (&ReadParse(*input)) {
 	
 	$wer = $input{"wer"};
 	$womit = $input{"womit"};
+#	webhinweis("\$input{aktion}: $input{aktion}");
 	if ($input{"aktion"}) {
-		if (!(&isrightdate($wer,$womit))) { &webabbruch("Falscher Nutzer oder Paßwort" . " [$wer|$womit]"); }
+		if (!(&isrightdate($wer,$womit))) { &webabbruch(trans("Falscher Nutzer oder Paßwort") . " [$wer|$womit]"); }
 		$aktion = $input{"aktion"};
 	    ##--- eigentlich eingerueckt, aber hier ausgerueckt -------------------------------
 	    ## 	momentan nur "alles" weiterentwickelt, 
@@ -152,65 +160,66 @@ if (&ReadParse(*input)) {
     	    ##--- ELSE eigentlich eingerueckt, aber hier ausgerueckt -------------------------------
 	    ## 	momentan nur "alles" weiterentwickelt, 
 	    ## 		d.h. Variable nicht umstellen, bevor nicht zu Ende programmiert
-		if ($aktion eq "Neu") {
+		if ($aktion =~ m/Neu|New/) {
 			## Uebergabe (notwendig): neunr und kattit
-			if (!($input{"neunr"})) { &webabbruch("Fehlende neunr"); }
-			if (!($input{"kattit"})) { &webabbruch("Fehlendes kattit"); }
-			if ($input{"kattit"} eq "") { &webabbruch("Parameter kattit leer"); }
-			if ($input{"neunr"} eq "") { &webabbruch("Parameter neunr leer"); }
-			if ($input{"neunr"} <= 0) { &webabbruch("Parameter neunr <= 0"); }
+			if (!($input{"neunr"})) { &webabbruch(trans("Fehlende neunr")); }
+			if (!($input{"kattit"})) { &webabbruch(trans("Fehlendes kattit")); }
+			if ($input{"kattit"} eq "") { &webabbruch(trans("Parameter kattit leer")); }
+			if ($input{"neunr"} eq "") { &webabbruch(trans("Parameter neunr leer")); }
+			if ($input{"neunr"} <= 0) { &webabbruch(trans("Parameter neunr") . " <= 0"); }
 			$neunr = $input{"neunr"};
 			$kattit = $input{"kattit"};
 			## muss ich neunr nochmal pruefen, ob sie auch frei ist?
-			if ($neunr !~ m/^[0-9]+$/i) { &webabbruch("Parameter neunr ist keine Zahl [$neunr]"); }
-			if ($fkat{$neunr}) { &webabbruch("Kategorie Nr ist bereits vergeben [$neunr]"); }
-			&webhinweis ("Neue Kategorie Nr [$neunr] mit Titel [$kattit] anlegen." );
+			if ($neunr !~ m/^[0-9]+$/i) { &webabbruch(trans("Parameter neunr ist keine Zahl") . " [$neunr]"); }
+			if ($fkat{$neunr}) { &webabbruch(trans("Kategorie Nr ist bereits vergeben") . " [$neunr]"); }
+			&webhinweis (trans("Neue Kategorie Nr") . " [$neunr]" . trans(" mit Titel ") . "[$kattit]" . trans(" anlegen.") );
 			$fkat{$neunr} = $kattit;
-		} elsif ($aktion =~ /^Ändern ([0-9]+)$/) {
+		} elsif ($aktion =~ m/^(Ändern|Change) ([0-9]+)$/) {
 			## Uebergabe (notwendig): katnr und kattit
-			$katnr = $1;
-			if (!($input{"kattit_$katnr"})) { &webabbruch("Fehlendes kattit"); }
-			if ($input{"kattit_$katnr"} eq "") { &webabbruch("Parameter kattit leer"); }
+			$katnr = $2;
+			if (!($input{"kattit_$katnr"})) { &webabbruch(trans("Fehlendes kattit")); }
+			if ($input{"kattit_$katnr"} eq "") { &webabbruch(trans("Parameter kattit leer")); }
 			$kattit = $input{"kattit_$katnr"};
 			## muss ich katnr nochmal pruefen, ob sie auch vorhanden ist?
-			if (!($fkat{$katnr})) { &webabbruch("Kategorie Nr ist nicht vorhanden [$katnr]"); }
-			&webhinweis ("Kategorie Nr [$katnr] mit altem Titel [$fkat{$katnr}] ändern in [$kattit]." );
+			if (!($fkat{$katnr})) { &webabbruch(trans("Kategorie Nr ist nicht vorhanden") . " [$katnr]"); }
+			&webhinweis (trans("Kategorie Nr") . " [$katnr] " . trans("mit altem Titel ") . "[$fkat{$katnr}]" . trans(" ändern in ") . "[$kattit]." );
 			$fkat{$katnr} = $kattit;
-		} elsif ($aktion =~ /^Löschen ([0-9]+)$/) {
+		} elsif ($aktion =~ /^(Löschen|Delete|Remove) ([0-9]+)$/) {
 			## Uebergabe (notwendig): katnr
 			## 	Kategorie 1 darf man nicht loeschen
-			$katnr = $1;
+			$katnr = $2;
 			## muss ich katnr nochmal pruefen, ob sie auch vorhanden ist?
-			if (!($fkat{$katnr})) { &webabbruch("Kategorie Nr ist nicht vorhanden [$katnr]"); }
-			if ($katnr == 1) { &webabbruch("Kategorie Nr 1 darf man nicht loeschen"); }
+			if (!($fkat{$katnr})) { &webabbruch(trans("Kategorie Nr ist nicht vorhanden") . " [$katnr]"); }
+			if ($katnr == 1) { &webabbruch(trans("Kategorie Nr 1 darf man nicht loeschen")); }
 			## muss ich katnr nochmal pruefen, ob auch keine Fragen dazu da sind? 
 			## 	Die würden sonst in der Luft haengen
 			foreach (keys(%fnrkat)) {
-				if ($fnrkat{$_} eq $katnr ) { &webabbruch("Zu Kategorie Nr sind noch Fragen vorhanden, kann nicht löschen. [$katnr]"); }
+				if ($fnrkat{$_} eq $katnr ) { &webabbruch(trans("Zu Kategorie Nr sind noch Fragen vorhanden, kann nicht löschen") . ". [$katnr]"); }
 			}
-			&webhinweis ("Kategorie Nr [$katnr] mit Titel [$fkat{$katnr}] löschen." );
+			&webhinweis (trans("Kategorie Nr") . " [$katnr] " . trans("mit Titel") . " [$fkat{$katnr}]" . trans(" löschen.") );
 			delete ($fkat{$katnr});
-		} elsif ($aktion eq "Logout") {
+		} elsif ($aktion =~ m/Logout|Logout/) {  ## german and english the same phrase in translation?
 			&killdating(&whoamip);
 		} else {
-			&webabbruch("Falsche Aktion [$aktion]");
+			&webabbruch(trans("Falsche Aktion") . " [$aktion]");
 		}
 	    }
 	    ##--- ENDE eigentlich eingerueckt, aber hier ausgerueckt -------------------------------
-		if ($aktion ne "Logout") {
+		if ($aktion !~ m/Logout|Logout/) {  ## german and english the same phrase in translation?
 			## hier kommt nichts mehr, oder?
 			if ( !( &schreibfaq (*fkat, *ftit, *finh, *fnrkat) ) ) {
-				&webabbruch("FAQ schreiben ist fehlgeschlagen");
+				&webabbruch(trans("FAQ schreiben ist fehlgeschlagen"));
 			}
 		}
 	} elsif ($aktion eq "") {
-			&webabbruch("Aktion leer");
+			&webabbruch(trans("Aktion leer"));
 	}
 }
 
 
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
+#webhinweis("\$input{aktion}: $input{aktion}");
 &ausgabekatedit(*fkat);
 
 

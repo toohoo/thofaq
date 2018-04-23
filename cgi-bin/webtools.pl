@@ -12,14 +12,22 @@
 sub webfehler {
 	## Uebergabe: Nachricht
 	local ( $message, @rest) = @_;
-	print "\n<p class='webfehler'><strong class='fehltit'>Fehler:</strong> $message</p>\n";
+	if ( defined(%i18n_lang) ) {
+		print "\n<p class='webfehler'><strong class='fehltit'>".trans("Fehler:")."</strong> $message</p>\n";
+	} else {
+		print "\n<p class='webfehler'><strong class='fehltit'>Fehler:</strong> $message</p>\n";
+	}
 }
 
 #---Fehlerausgabe in HTML-Seite und Abbruch------------------------------------
 sub webabbruch {
 	## Uebergabe: Nachricht
 	local ( $message, @rest ) = @_;
-	print "\n<p class='webfehler'><strong class='fehltit'>Abbruch, Fehler:</strong> $message</p>\n";
+	if ( defined(%i18n_lang) ) {
+		print "\n<p class='webfehler'><strong class='fehltit'>".trans("Abbruch, Fehler:")."</strong> $message</p>\n";
+	} else {
+		print "\n<p class='webfehler'><strong class='fehltit'>Abbruch, Fehler:</strong> $message</p>\n";
+	}
 	exit;
 }
 
@@ -27,7 +35,11 @@ sub webabbruch {
 sub webhinweis {
 	## Uebergabe: Nachricht
 	local ( $message, @rest) = @_;
-	print "\n<p class='webhinweis'><strong class='hinwtit'>Hinweis:</strong> $message</p>\n";
+	if ( defined(%i18n_lang) ) {
+		print "\n<p class='webhinweis'><strong class='hinwtit'>".trans("Hinweis:")."</strong> $message</p>\n";
+	} else {
+		print "\n<p class='webhinweis'><strong class='hinwtit'>Hinweis:</strong> $message</p>\n";
+	}
 }
 
 #---Hinweisausgabe in HTML-Seite mit Link --------------------------
@@ -1218,7 +1230,7 @@ sub ausgabekatedit {
 	## 	sonst muss es ohne Benutzer arbeiten, dann Kontrollzeile in editfaqkat.pl ausREMen
 	## Noch ein Problem:
 	## 	bei Passwortabfrage muss ich form auf method=post setzen, sonst ist es gleich umsonst, s.o.
-	print &webtag("h3", "class=kateditchecktit", "Benutzer");
+	print &webtag("h3", "class=kateditchecktit", trans("Benutzer"));
 	print &webtag("div", "class=kateditcheck", "#EMPTY#");
 	        print &webtag("p","","#EMPTY#");
 	        ## hier koennte man pruefen ob schon eingeloggt
@@ -1227,17 +1239,17 @@ sub ausgabekatedit {
 	        ## 	das geht weiter zu &isrightdate, 
 	        ## 	dort koennte man auch eingeloggte Benutzer hinterlegen
 		if ($who = &isdating(&whoamip)) {
-			print "Name: " , &rofeld("wer", $who, $breit), " ist eingeloggt \&nbsp; ";
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Logout", "#EMPTY#" );
+			print trans("Name: ") , &rofeld("wer", $who, $breit), trans(" ist eingeloggt \&nbsp; ");
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Logout"), "#EMPTY#" );
 			#return($who);
 		} else {
-			print "Name: " , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
-			print " \&nbsp; Parole: " , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
+			print trans("Name: ") , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
+			print trans(" \&nbsp; Parole: ") , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
 		}
 	        print &webtag("p","","#ENDETAG#");
 	print &webtag("div", "", "#ENDETAG#");  ## kateditcheck
 
-	print &webtag("h3", "class=katedittit", "Kategorien");
+	print &webtag("h3", "class=katedittit", trans("Kategorien"));
 	print &webtag("ol", "type=1", "#EMPTY#");
 
 	foreach $k (@katnr) {
@@ -1245,19 +1257,19 @@ sub ausgabekatedit {
 		if ($keft eq "alles") {
 			print &webtag("input", "type=text\tname=kattit_$k\tvalue=$ka{$k}\tsize=$breitlang", "#EMPTY#" );
 			#print &webtag("input", "type=hidden\tname=katnr\tvalue=$k", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Ändern $k", "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern $k"), "#EMPTY#" );
 			## dann ein Link zum Loeschen
 			## 	ausser bei Kategorie 1, die darf man nicht loeschen
 			if ($k != 1) {
-				print &webtag("input", "type=submit\tname=aktion\tvalue=Löschen $k", "#EMPTY#" );
+				print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen $k"), "#EMPTY#" );
 			}
 		} else {  ## keft eq 'einzeln'
 			## erst ein form zum Aendern des Titels der Kat.
 			print &webtag("form", "aktion=editfaqkat.pl", "#EMPTY#" );
 			print &webtag("input", "type=text\tname=kattit\tvalue=$ka{$k}\tsize=$breitlang", "#EMPTY#" );
 			print &webtag("input", "type=hidden\tname=katnr\tvalue=$k", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Ändern", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Löschen", "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern"), "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen"), "#EMPTY#" );
 			print &webtag("form", "", "#ENDETAG#" );
 		}
 		print &webtag("li", "", "#ENDETAG#" );
@@ -1266,9 +1278,9 @@ sub ausgabekatedit {
 	print &webtag("ol", "", "#ENDETAG#");
 
 	## dann ein Form zum Anlegen einer neuen Kat gleich mit Auswahl
-	print &webtag("h3", "class=kateditneutit", "neue Kategorie");
+	print &webtag("h3", "class=kateditneutit", trans("neue Kategorie"));
 	print &webtag("div", "class=kateditneu", "#EMPTY#");
-	if ($keft eq "einzeln") {  ## != alles
+	if ($keft =~ m/einzeln|single/) {  ## != alles
 		print &webtag("form", "aktion=editfaqkat.pl", "#EMPTY#" );
 	}
 	print &webtag("select", "name=neunr", "#EMPTY#" );
@@ -1276,12 +1288,12 @@ sub ausgabekatedit {
 		if ($v ne "anfügen") {
 			print &webtag("option", "", $v );
 		} else {
-			print &webtag("option", "value=$katneuende", $v );
+			print &webtag("option", "value=$katneuende", trans($v) );
 		}
 	}
 	print &webtag("select", "", "#ENDETAG#" );
 	print &webtag("input", "type=text\tname=kattit\tsize=$breitlang", "#EMPTY#" );
-	print &webtag("input", "type=submit\tname=aktion\tvalue=Neu", "#EMPTY#" );
+	print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Neu"), "#EMPTY#" );
 	if ($keft eq "einzeln") {  ## != alles
 		print &webtag("form", "", "#ENDETAG#" );
 	}
@@ -1344,7 +1356,7 @@ sub schreibfaq {
 		close (DAT);
 		
 	}
-	&webhinweis ("FAQ gesichert.");
+	&webhinweis (trans("FAQ gesichert."));
 	return(1);
 }
 
@@ -1395,7 +1407,7 @@ sub ausgabefaqedit {
 [code]abc[/code] (->festbreitenschrift) - 
 [quote]abc[/quote] (->blockquote)
 PSEUDOHINWEISENDE
-	
+	$phinweis = trans($phinweis);	
 
 	## welche Kategorie-Nummern sind frei?
 	## frei sind auch alle oberhalb der hoechsten Nummer
@@ -1479,7 +1491,7 @@ PSEUDOHINWEISENDE
 	## 	sonst muss es ohne Benutzer arbeiten, dann Kontrollzeile in editfaqkat.pl ausREMen
 	## Noch ein Problem:
 	## 	bei Passwortabfrage muss ich form auf method=post setzen, sonst ist es gleich umsonst, s.o.
-	print &webtag("h3", "class=faqeditchecktit", "Benutzer");
+	print &webtag("h3", "class=faqeditchecktit", trans("Benutzer"));
 	print &webtag("div", "class=faqeditcheck", "#EMPTY#");
 	        print &webtag("p","","#EMPTY#");
 	        ## hier koennte man pruefen ob schon eingeloggt
@@ -1488,35 +1500,35 @@ PSEUDOHINWEISENDE
 	        ## 	das geht weiter zu &isrightdate, 
 	        ## 	dort koennte man auch eingeloggte Benutzer hinterlegen
 		if ($who = &isdating(&whoamip)) {
-			print "Name: " , &rofeld("wer", $who, $breit), " ist eingeloggt \&nbsp; ";
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Logout", "#EMPTY#" );
+			print trans("Name: ") , &rofeld("wer", $who, $breit), trans(" ist eingeloggt \&nbsp; ");
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Logout"), "#EMPTY#" );
 			#return($who);
 		} else {
-			print "Name: " , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
-			print "\n \&nbsp; Parole: " , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
+			print trans("Name: ") , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
+			print trans("\n \&nbsp; Parole: ") , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
 		}
 	        print &webtag("p","","#ENDETAG#");
 	print &webtag("div", "", "#ENDETAG#");  ## faqeditcheck
 
 	## Unterschied: 	neu oder vorhanden
 	## Ausgabe: 		Nr. (fest bei vorh. und dropdown bei neu), Kategorie (dropdown), Titel, Text
-	print &webtag("h3", "class=faqedittit", "Frage " . &webtag("small", &webtag("a", "href=faq.pl?kat=5#faq7\ttarget=_blank\tname=phinweis\ttitle=$phinweis", "(Bearbeitungs-Hinweise)")) );
-	if ($nr eq "neu") {
+	print &webtag("h3", "class=faqedittit", "Frage " . &webtag("small", &webtag("a", "href=faq.pl?kat=5#faq7\ttarget=_blank\tname=phinweis\ttitle=$phinweis", trans("(Bearbeitungs-Hinweise)"))) );
+	if ($nr =~ m/neu|new/) {
 		## (name, selected, feld) ## selected kann auch im feld ueber "=selected" erkannt werden
 		print &webtag("p","","#EMPTY#");
-		print "\nneue Frage<br>";
-		print "\nFAQ-Nr.: ", &HTMLdropdown("nr","", @faqfrei), " \&nbsp; ";
-		print "\nKategorie-Nr.: ", &HTMLdropdown("kat","", @katvorh), " <br><br>";
-		print "\nFrage: <br>", &inputfeld("tit", "", $breitfeld), " <br>";
-		print "\nText: <br>", &inputarea("text", "", $breitfeld, $hoch), " <br>";
-		print &webtag("input", "type=submit\tname=aktion\tvalue=Anlegen", "#EMPTY#");
+		print trans("\nneue Frage<br>");
+		print trans("\nFAQ-Nr.: "), &HTMLdropdown("nr","", @faqfrei), " \&nbsp; ";
+		print trans("\nKategorie-Nr.: "), &HTMLdropdown("kat","", @katvorh), " <br><br>";
+		print trans("\nFrage: <br>"), &inputfeld("tit", "", $breitfeld), " <br>";
+		print trans("\nText: <br>"), &inputarea("text", "", $breitfeld, $hoch), " <br>";
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Anlegen"), "#EMPTY#");
 		print &webtag("p","","#ENDETAG#");
 	} else {
-		if (!($nrkat{$nr})) { &webabbruch ("FAQ-Nr. existiert nicht [$nr]."); }
+		if (!($nrkat{$nr})) { &webabbruch (trans("FAQ-Nr. existiert nicht [$nr].")); }
 		print &webtag("p","","#EMPTY#");
-		print "\nFAQ-Nr.: ", &rofeld("nr", $nr, $breitkurz), " \&nbsp; ";
-		print "\nKategorie-Nr.: ", &HTMLdropdown("kat","", @katvorh), " <br><br>";
-		print "\nFrage: <br>", &inputfeld("tit", $tit{$nr}, $breitfeld), " <br>";
+		print trans("\nFAQ-Nr.: "), &rofeld("nr", $nr, $breitkurz), " \&nbsp; ";
+		print trans("\nKategorie-Nr.: "), &HTMLdropdown("kat","", @katvorh), " <br><br>";
+		print trans("\nFrage: <br>"), &inputfeld("tit", $tit{$nr}, $breitfeld), " <br>";
 		$inh{$nr} =~ s/\x02/\n/ig;
 		## Achtung: Probleme mit Entities. 
 		## 	Wenn Entities vorhanden sind, werden sie in der Bearbeitung als das jeweilige Zeichen ausgegeben.
@@ -1525,9 +1537,9 @@ PSEUDOHINWEISENDE
 		## 	Aber dennoch die Variable im uebergebenen Hash nicht veraendern
 		$tempstring = $inh{$nr};
 		$tempstring =~ s/\&/\&amp;/ig;
-		print "\nText: <br>", &inputarea("text", $tempstring, $breitfeld, $hoch), " <br>\n";
-		print &webtag("input", "type=submit\tname=aktion\tvalue=Ändern", "#EMPTY#");
-		print &webtag("input", "type=submit\tname=aktion\tvalue=Löschen", "#EMPTY#");
+		print trans("\nText: <br>"), &inputarea("text", $tempstring, $breitfeld, $hoch), " <br>\n";
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern"), "#EMPTY#");
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen"), "#EMPTY#");
 		print &webtag("p","","#ENDETAG#");
 	}
 
