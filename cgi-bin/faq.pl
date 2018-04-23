@@ -48,8 +48,16 @@ require "webtools.pl";
 ## nur global festlegen
 #%opt = ();
 
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+}
+
+
 print PrintHeader();
-$head = UbmCgiHead("FAQ - Hilfe: häufig gestellte Fragen");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)
 print $head;
 if( !defined( $ENV{'faq_debug'} ) ) {
 	#webhinweis("ENV{faq_debug} OFF: $ENV{'faq_debug'}");
@@ -166,16 +174,10 @@ if (ReadParse(*input)) {
 #%fnrkat = ();
 
 if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+	webabbruch (trans("Fehler beim Holen der Daten") . ". $globals{'adminmes'}.");
 }
 #webhinweis( "faq.pl - NACH holfaq" );
 
-@i18n_lang = %i18n_lang = ();
-$i18n_lang = $globals{ 'i18n_lang' };
-$i18n_conf = $globals{ 'i18n_conf' };
-if ( !getI18n(*i18n_lang, *i18n_conf) ) {
-	webabbruch ("Fehler beim Holen der Spracheinstellungen. $globals{'adminmes'}.");
-}
 
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
