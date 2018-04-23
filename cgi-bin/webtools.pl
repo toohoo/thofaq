@@ -1433,7 +1433,7 @@ PSEUDOHINWEISENDE
 		} else {
 			if ($i == $nrkat{$nr}) {
 				push(@katvorh, "$i $kat{$i}\=$i\=selected");
-			} elsif ( $nr eq 'neu' && $i == $aktkat ) {
+			} elsif ( $nr =~ m/neu|new/ && $i == $aktkat ) {
 				push(@katvorh, "$i $kat{$i}\=$i\=selected");
 			} else {
 				push(@katvorh, "$i $kat{$i}\=$i");

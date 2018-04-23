@@ -31,20 +31,28 @@ require "checkdate.pl";
 
 %globals = &getglobals;
 
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+}
+
+
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
 print &PrintHeader();
-$head = &UbmCgiHead("FAQ - Edit FAQ Frage sichern" );  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head = &UbmCgiHead(trans("FAQ - Edit FAQ Frage sichern") );  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 print $head;
-print &webtag(&weblink("[zurück zu Edit Fragen]","editfaq.pl") );
+print &webtag(&weblink(trans("[zurück zu Edit Fragen]"),"editfaq.pl") );
 
 
 ($fkat, $ftit, $finh) = ($globals{"faq-kat"},$globals{"faq-tit"},$globals{"faq-inh"});
 
 
 if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	&webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+	&webabbruch (trans("Fehler beim Holen der Daten. ")."$globals{'adminmes'}.");
 }
 
 
@@ -66,15 +74,15 @@ if (&ReadParse(*input)) {
 	if (defined($input{"aktion"})) {
 		$aktion = $input{"aktion"};
 	} else {
-		&webabbruch("Fehlende Aktion.");
+		&webabbruch(trans("Fehlende Aktion."));
 	}
 	if ($aktion eq "") {
-		&webabbruch("Aktion leer.");
+		&webabbruch(trans("Aktion leer."));
 	}
-	if (!(&isrightdate($wer,$womit))) { &webabbruch("Falscher Nutzer oder Paßwort"); }
+	if (!(&isrightdate($wer,$womit))) { &webabbruch(trans("Falscher Nutzer oder Paßwort")); }
 
     ##---eigentlich eingerueckt----------------------------------------------------
-    if ($aktion =~ m/^(Ändern|Anlegen)$/i) {
+    if ($aktion =~ m/^(Ändern|Anlegen|Change|Create)$/i) {
 	
 	if (
 		!$input{"nr"} &&
@@ -83,7 +91,7 @@ if (&ReadParse(*input)) {
 		!$input{"text"} 
 	) {
 		&PrintVariables(%input);
-		&webabbruch("Fehlende Daten, Daten nicht vollständig (FAQ-Nr, Kategorie-Nr, Frage, Antwort).");
+		&webabbruch(trans("Fehlende Daten, Daten nicht vollständig") . trans(" (FAQ-Nr, Kategorie-Nr, Frage, Antwort)."));
 	}
 
 	$nr = $input{"nr"};
@@ -91,7 +99,7 @@ if (&ReadParse(*input)) {
 	$tit = $input{"tit"};
 	$inh = $input{"text"};
 
-	print &webtag(&weblink("[zurück zu Edit Fragen in Kategorie $kat]","editfaq.pl?kat=$kat") );
+	print &webtag(&weblink(trans("[zurück zu Edit Fragen in Kategorie $kat]"),"editfaq.pl?kat=$kat") );
 	
 	## Schutz bei Titel und Inhalt vornehmen
 	## 	titel: Umbrueche, Tabs, Markup raus
@@ -119,7 +127,7 @@ if (&ReadParse(*input)) {
 	
 	print &webtag("dl", "", "#ENDETAG#");
 	print &webtag("div", "", "#ENDETAG#");
-    } elsif ($aktion eq "Löschen") {
+    } elsif ($aktion =~ m/Löschen|Delete/) {
     ##---ELSIF eigentlich eingerueckt----------------------------------------------------
     	## erst schauen, ob es Nr 1 ist. Nr. 1 darf nicht geloescht werden.
     	## am Ende ausgeben
@@ -170,7 +178,7 @@ if (&ReadParse(*input)) {
     	&killdating(&whoamip);
     } else {
     ##---ELSE eigentlich eingerueckt----------------------------------------------------
-    	&webabbruch("Falsche Aktion [$aktion].");
+    	&webabbruch(trans("Falsche Aktion") . " [$aktion].");
     }
     ##---ENDE eigentlich eingerueckt----------------------------------------------------
 
