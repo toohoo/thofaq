@@ -21,7 +21,7 @@ Have fun.
 **I18n / multi-language**  
 
 The app is multi language able. It was originally written in  
-German. A language-file for english is included. For other 
+German. A language-file for english is included. For other    
 languages the app is extensible.
 
 **Attention**  
