@@ -18,6 +18,12 @@ only from registered users.
 Would be nice if someone does find errors and tell me.  
 Have fun.  
 
+**I18n / multi-language**  
+
+The app is multi language able. It was originally written in  
+German. A language-file for english is included. For other 
+languages the app is extensible.
+
 **Attention**  
 
 For use immediately on Windows there is set  
