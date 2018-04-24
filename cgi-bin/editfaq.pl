@@ -45,6 +45,8 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 
 print &PrintHeader();
 $head = &UbmCgiHead(trans("FAQ - Edit Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
+$head =~ s|(</h1>)|$langLinks$1|i;
 print $head;
 
 $aktkat = 1;

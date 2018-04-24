@@ -58,7 +58,11 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 
 print PrintHeader();
 $head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)
+$langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
+$head =~ s|(</h1>)|$langLinks$1|i;
 print $head;
+#print "<textarea cols=\"80\" rows=\"10\">$head</textarea>\n";
+#print "<textarea cols=\"80\" rows=\"10\">$langLinks</textarea>\n";
 if( !defined( $ENV{'faq_debug'} ) ) {
 	#webhinweis("ENV{faq_debug} OFF: $ENV{'faq_debug'}");
 } elsif( $ENV{'faq_debug'} =~ m/On|Yes/i ) {
@@ -82,6 +86,7 @@ $input="";
 my $hashtags = 'off';  ## or simply '' but NOT 'on'
 my $hashcloud = 'off';  ## or simply '' but NOT 'on'
 my $hashcloudsmall = 'off';  ## or simply '' but NOT 'on'
+my $lang = "DE";
 ## wurde was uebergeben?
 if (ReadParse(*input)) {
 	if ($input{'kat'}) {
@@ -100,6 +105,10 @@ if (ReadParse(*input)) {
 		$hashcloudsmall = 'on';
 	}
 	if( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
+	if( defined( $input{"lang"} ) ) {
+		$lang = $input{"lang"};
+		setLang( $lang );
+	}
 }
 #$input{'kat'}='alle';
 #$aktkat = $input{'kat'};

@@ -39,11 +39,21 @@ require "webtools.pl";
 #require "globals.pl";
 %globals = getglobals();
 
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+}
+
+
 ## nur global festlegen
 #%opt = ();
 
 print PrintHeader();
-$head = UbmCgiHead("FAQ - Suche");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head = UbmCgiHead(trans("FAQ - Suche"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
+$head =~ s|(</h1>)|$langLinks$1|i;
 print $head;
 
 $aktkat 		= 1;
@@ -153,7 +163,7 @@ if ( ReadParse( *input ) ) {
 #%fnrkat = ();
 
 if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+	webabbruch (trans("Fehler beim Holen der Daten.") . " $globals{'adminmes'}.");
 }
 
 ## Kommentare holen, keine Fehlermeldung noetig

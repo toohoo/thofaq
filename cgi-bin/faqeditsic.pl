@@ -112,14 +112,14 @@ if (&ReadParse(*input)) {
 	$finh{$nr} = $inh;
 
 	if ( !( &schreibfaq (*fkat, *ftit, *finh, *fnrkat) ) ) {
-		&webabbruch("FAQ schreiben ist fehlgeschlagen.");
+		&webabbruch(trans("FAQ schreiben ist fehlgeschlagen."));
 	}
 	## der Hinweis kommt schon aus der Routine selbst
 	#&webhinweis("FAQ Frage gesichert.");
 	
 	print &webtag("div", "class=faqantworten", "#EMPTY#");
-	print &webtag("h3", "class=faqanttit", "Antworten");
-	print &webtag("Kategorie Nr.: $kat");
+	print &webtag("h3", "class=faqanttit", trans("Antworten"));
+	print &webtag(trans("Kategorie Nr.: $kat"));
 	print &webtag("dl", "", "#EMPTY#");
 
 	print &webtag("dt", &webtag("a","name=faq$nr", "$nr\. $ftit{$nr}") );
@@ -140,7 +140,7 @@ if (&ReadParse(*input)) {
 		!$input{"text"} 
 	) {
 		&PrintVariables(%input);
-		&webabbruch("Fehlende Daten, Daten nicht vollständig (FAQ-Nr, Kategorie-Nr, Frage, Antwort).");
+		&webabbruch(trans("Fehlende Daten, Daten nicht vollständig ") . trans("(FAQ-Nr, Kategorie-Nr, Frage, Antwort)."));
 	}
 
 	$nr = $input{"nr"};
@@ -148,10 +148,10 @@ if (&ReadParse(*input)) {
 	$tit = $input{"tit"};
 	$inh = $input{"text"};
 
-	print &webtag(&weblink("[zurück zu Edit Fragen in Kategorie $kat]","editfaq.pl?kat=$kat") );
+	print &webtag(&weblink(trans("[zurück zu Edit Fragen in Kategorie $kat]"),"editfaq.pl?kat=$kat") );
 
 	if ($nr == 1) {
-		&webabbruch("Frage Nr. 1 darf nicht geloescht werden.");
+		&webabbruch(trans("Frage Nr. 1 darf nicht geloescht werden."));
 	}
 	## was muss ich loeschen?
 	## 	&holfaq(*fkat, *ftit, *finh, *fnrkat)
@@ -161,11 +161,11 @@ if (&ReadParse(*input)) {
 	delete $fnrkat{$nr};
 
 	if ( !( &schreibfaq (*fkat, *ftit, *finh, *fnrkat) ) ) {
-		&webabbruch("FAQ schreiben ist fehlgeschlagen.");
+		&webabbruch(trans("FAQ schreiben ist fehlgeschlagen."));
 	}
 
-	print &webtag("h3", "class=faqdeletetit", "gelöschte FAQ");
-	print &webtag("Kategorie Nr.: $kat");
+	print &webtag("h3", "class=faqdeletetit", trans("gelöschte FAQ"));
+	print &webtag(trans("Kategorie Nr.: $kat"));
 	print &webtag("dl", "", "#EMPTY#");
 
 	print &webtag("dt", &webtag("a","name=faq$nr", "$nr\. $tit") );
@@ -173,18 +173,18 @@ if (&ReadParse(*input)) {
 	
 	print &webtag("dl", "", "#ENDETAG#");
     	
-    } elsif ($aktion eq "Logout") {
+    } elsif ($aktion =~ m/Logout|Logout/) {  ## further may be othet translation in english
     ##---ELSIF eigentlich eingerueckt----------------------------------------------------
     	&killdating(&whoamip);
     } else {
     ##---ELSE eigentlich eingerueckt----------------------------------------------------
-    	&webabbruch(trans("Falsche Aktion") . " [$aktion].");
+    	&webabbruch(trans(trans("Falsche Aktion")) . " [$aktion].");
     }
     ##---ENDE eigentlich eingerueckt----------------------------------------------------
 
 } else {
 	&PrintVariables(%input);
-	&webabbruch("Fehlende Daten, Daten nicht vollständig (FAQ-Nr, Kategorie-Nr, Frage, Antwort).");
+	&webabbruch(trans("Fehlende Daten, Daten nicht vollständig ") . trans("(FAQ-Nr, Kategorie-Nr, Frage, Antwort)."));
 }
 
 
