@@ -38,6 +38,7 @@ Neu=New
 Ändern=Change
 Löschen=Delete
 anfügen=append
+Anlegen=Create
 ```
 
 **Attention**  
