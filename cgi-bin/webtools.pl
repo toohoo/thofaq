@@ -1229,7 +1229,7 @@ sub ausgabekatedit {
 	}
 	#print &webtag("katmax nach Schleife: $katmax");
 	$katneuende = $katmax + 1;
-	push(@katfrei,"anfügen");
+	push(@katfrei,trans("anfügen"));
 
 	## besser ein form ueber alles
 	if ($keft eq "alles") {
@@ -1299,7 +1299,7 @@ sub ausgabekatedit {
 	}
 	print &webtag("select", "name=neunr", "#EMPTY#" );
 	foreach $v (@katfrei) {
-		if ($v ne "anfügen") {
+		if ($v !~ m/anfügen|append/) {
 			print &webtag("option", "", $v );
 		} else {
 			print &webtag("option", "value=$katneuende", trans($v) );
@@ -1462,7 +1462,7 @@ PSEUDOHINWEISENDE
 	## ----------- /debug
 	$katneuende = $katmax + 1;
 	## hier geht es nur um @katvorh
-	push(@katfrei,"anfügen=$katneuende");
+	push(@katfrei,trans("anfügen=$katneuende"));
 
 
 	## welche FAQ-Nummern sind frei?
@@ -1494,7 +1494,7 @@ PSEUDOHINWEISENDE
 		}
 	}
 	$faqneuende = $faqmax + 1;
-	push(@faqfrei,"anfügen=$faqneuende");
+	push(@faqfrei,trans("anfügen=$faqneuende"));
 
 
 	print &webtag("form", "action=faqeditsic.pl\tmethod=post", "#EMPTY#" );
