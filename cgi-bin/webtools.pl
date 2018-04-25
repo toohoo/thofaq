@@ -703,6 +703,7 @@ sub getI18n {
 		webabbruch ("Kann Sprach-Datei nicht lesen [$lang_name]. $globals{'adminmes'}");
 	}
 	@f = %f = ();
+	$isUTF8 = '';
 
 	if( $lang =~ m/^DE$/i ) { $f{'FAQ'} = 'FAQ'; }  ## avoid a error message in case of lang == DE
 	my @fdest =();  ## array for extra saving keys in right followship
@@ -714,7 +715,7 @@ sub getI18n {
 			# Attention: if the file is UTF-8 then in begins with the 3 chars for xEFxBBxBF 
 			
 			chomp( $z );
-			if ( $z =~ m/^\xEF\xBB\xBF/ ) { $z = substr( $z, 3 ); }
+			if ( $z =~ m/^\xEF\xBB\xBF/ ) { $z = substr( $z, 3 ); $isUTF8 = 1; }
 			if ($z =~ m/^[ \t]*#/i) { next everylinelang; }
 			$z =~ s/\\=/__equals__/g;
 			if ($z !~ m/^.+=.+$/i) { next everylinelang; }
@@ -755,6 +756,7 @@ sub getI18n {
 	#webhinweis("\@langs: " . join( '--', @langs ) );
 
 	# 	d) set encoding from lang-file
+	if( $isUTF8 ) { $encoding = 'UTF-8'; }
 	if( $lang{'__encoding__'} ) { $encoding = $lang{'__encoding__'}; }
 #	print "\n<p> __encoding__ <input type=\"text\" readonly=\"readonly\" value=\"$encoding\" />\n";
 #	print "\n<p> lang{__encoding__} <input type=\"text\" readonly=\"readonly\" value=\"". $lang{'__encoding__'} ."\" />\n";

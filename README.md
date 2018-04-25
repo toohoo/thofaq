@@ -22,7 +22,24 @@ Have fun.
 
 The app is multi language able. It was originally written in  
 German. A language-file for english is included. For other    
-languages the app is extensible.
+languages the app is extensible. Language files also can be  
+stored in **UTF-8**. In this case include a key for that
+in language file:
+
+`__encoding__=UTF-8`
+
+The encoding then is set in the application pages. For  
+button text use at least the english translation, otherwise  
+the application will not work proper. Or the application  
+will have be to extended.
+
+```
+Neu=New
+Ändern=Change
+Löschen=Delete
+anfügen=append
+Anlegen=Create
+```
 
 **Attention**  
 
