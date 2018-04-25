@@ -676,6 +676,7 @@ sub getI18n {
 	# 	a) get language from i18n_conf
 	# 	b) get words from i18n_lang_{lang}
 	# 	c) get the other languages as list from the i18n_lang_{lang} files
+	# 	d) set encoding from lang-file
 
 	# 	a) get language from i18n_conf
 	if ( !(-f $conf) ) {
@@ -710,13 +711,16 @@ sub getI18n {
 		close (LANGDICT);
 		everylinelang:
 		foreach $z (@f) {
+			# Attention: if the file is UTF-8 then in begins with the 3 chars for xEFxBBxBF 
+			
 			chomp( $z );
+			if ( $z =~ m/^\xEF\xBB\xBF/ ) { $z = substr( $z, 3 ); }
 			if ($z =~ m/^[ \t]*#/i) { next everylinelang; }
-			$z =~ s/\\=/~equals~/g;
+			$z =~ s/\\=/__equals__/g;
 			if ($z !~ m/^.+=.+$/i) { next everylinelang; }
 			( $k, $v ) = split( /=/, $z, 2 );
-			$k =~ s/~equals~/=/g;
-			$v =~ s/~equals~/=/g;
+			$k =~ s/__equals__/=/g;
+			$v =~ s/__equals__/=/g;
 			push( @fdest, $k );  ## saving keys in right followship in extra array
 			$f{$k} = $v;
 		}
@@ -724,7 +728,7 @@ sub getI18n {
 		$count = keys( %f );
 		if ( $count == 0 && $lang eq "DE" ) {
 			$count++;
-			%f = { 'FAQ' => 'EffEiKju' };
+			%f = { 'FAQ' => 'Faq' };
 		}
 		if ( $count == 0 ) {
 			&webabbruch ("Sprach-Datei ist leer [$lang_name]. $globals{'adminmes'}");
@@ -749,6 +753,14 @@ sub getI18n {
 		}
 	}
 	#webhinweis("\@langs: " . join( '--', @langs ) );
+
+	# 	d) set encoding from lang-file
+	if( $lang{'__encoding__'} ) { $encoding = $lang{'__encoding__'}; }
+#	print "\n<p> __encoding__ <input type=\"text\" readonly=\"readonly\" value=\"$encoding\" />\n";
+#	print "\n<p> lang{__encoding__} <input type=\"text\" readonly=\"readonly\" value=\"". $lang{'__encoding__'} ."\" />\n";
+#	print "\n<pre>\n";
+#	printHash( %lang );
+#	print "\n</pre>\n";
 
 	return(1);
 }
@@ -2171,6 +2183,71 @@ sub setLang {
 #	return( join( ' ', @langLinks ) );
 	return 1;
 }
+
+#---Ausdruck einer Liste-----------------#pl#
+
+sub printListe {
+
+	local($z,$za,$c,$c2,$code,$zbs);
+	$zbs=25;
+	$z=1;$za=1;
+
+print "\nAnzahl: ".@_."\n";
+allevonprintListe:
+foreach (@_) {
+#       tr/\//\\/;
+# war im Hauptprogramm gedacht zum Ersetzen von "/" durch "\" in DIRs
+	if ($page && ($z >= ($zbs - 3))) {
+		print "\nENTER = naechste Seite  ".
+			"oder  'a' = Abbruch Liste ".
+			"oder  'e' = Ende Programm: ";
+		$c=<STDIN>;
+		#$code=unpack("c",$c); #geht auch ord()?
+		chop($c2=$c);
+		if ($c ne "\n") {
+			if ("e" eq $c2) { exit(0)};
+			if ("a" eq $c2) { last(allevonprintListe)};
+		}
+		print "\n\n";
+		$z=1;
+	}
+	print $za++ . "\t"; $z++;
+	print $_."\n"
+};
+print "\nAnzahl: ".@_."\n";
+};
+
+#---Ausdruck eines Hash-----------------#ph#
+
+sub printHash {
+
+	local(%h)=@_;
+	local($z,$za,$c,$c2,$code,$zbs,$temp);
+	$zbs=25;
+	$z=1;$za=1;
+$temp=keys(%h);
+print "Anzahl: $temp\n";
+allevonprintHash:
+foreach (keys %h) {
+	if ($page && ($z >= ($zbs - 3))) {
+		print "\nENTER = naechste Seite  ".
+			"oder  'a' = Abbruch Liste ".
+			"oder  'e' = Ende Programm: ";
+		$c=<STDIN>;
+		#$code=unpack("c",$c); #geht auch ord()?
+		chop($c2=$c);
+		if ($c ne "\n") {
+			if ("e" eq $c2) { exit(0)};
+			if ("a" eq $c2) { last(allevonprintHash)};
+		}
+		print "\n\n";
+		$z=1;
+	}
+	print $za++ , ": $_\t\t$h{$_}\n"; $z++;
+};
+$za--;
+print "\nAnzahl: $za\n";
+};
 
 #--- ENDE Alles ------------------------------------
 1;

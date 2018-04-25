@@ -44,10 +44,12 @@ require "webtools.pl";
 ## packe ich bei webtools mit rein
 #require "globals.pl";
 %globals = getglobals();
+print PrintHeader();
 
 @i18n_lang = %i18n_lang = ();
 $i18n_lang = $globals{ 'i18n_lang' };
 $i18n_conf = $globals{ 'i18n_conf' };
+$encoding  = 'ISO-8859-1';
 if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
 }
@@ -56,12 +58,13 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 ## nur global festlegen
 #%opt = ();
 
-print PrintHeader();
 $head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
+if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
 print $head;
-#print "<textarea cols=\"80\" rows=\"10\">$head</textarea>\n";
+#print "\n<textarea cols=\"80\" rows=\"10\">$head</textarea>\n";
+#print "\n<input type=\"text\" readonly=\"readonly\" value=\"$encoding\" />\n";
 #print "<textarea cols=\"80\" rows=\"10\">$langLinks</textarea>\n";
 if( !defined( $ENV{'faq_debug'} ) ) {
 	#webhinweis("ENV{faq_debug} OFF: $ENV{'faq_debug'}");

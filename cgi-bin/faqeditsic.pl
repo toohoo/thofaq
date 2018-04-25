@@ -30,6 +30,7 @@ require "webtools.pl";
 require "checkdate.pl";
 
 %globals = &getglobals;
+print &PrintHeader();
 
 @i18n_lang = %i18n_lang = ();
 $i18n_lang = $globals{ 'i18n_lang' };
@@ -42,8 +43,10 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
-print &PrintHeader();
 $head = &UbmCgiHead(trans("FAQ - Edit FAQ Frage sichern") );  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
+$head =~ s|(</h1>)|$langLinks$1|i;
+if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
 print $head;
 print &webtag(&weblink(trans("[zurück zu Edit Fragen]"),"editfaq.pl") );
 

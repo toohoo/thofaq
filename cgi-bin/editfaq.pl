@@ -31,6 +31,7 @@ require "webtools.pl";
 ## packe ich bei webtools mit rein
 #require "globals.pl";
 %globals = &getglobals;
+print &PrintHeader();
 
 @i18n_lang = %i18n_lang = ();
 $i18n_lang = $globals{ 'i18n_lang' };
@@ -43,10 +44,10 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 ## nur global festlegen
 #%opt = ();
 
-print &PrintHeader();
 $head = &UbmCgiHead(trans("FAQ - Edit Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
+if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
 print $head;
 
 $aktkat = 1;
