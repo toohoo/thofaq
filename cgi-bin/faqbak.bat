@@ -19,15 +19,17 @@ set FAQBAK_ZIP=FAQBAK-%DATE%.zip
 set FAQBAK_ZIP_SMALL=F%DATE%.zip
 set FAQBAK_IMG_ZIP=FAQBAK-IMG-%DATE%.zip
 set FAQBAK_CGI_ZIP=FAQBAK-CGI.zip
-set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_DOKNAME% %FAQBAK_IMG_ZIP% %FAQBAK_CGI_ZIP%
-set FAQBAK_LIST_SMALL=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_CGI_ZIP%
+set FAQBAK_LIST_CONF=faq_i18n.conf faq_i18n-*.conf
+set FAQBAK_LIST=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_DOKNAME% %FAQBAK_IMG_ZIP% %FAQBAK_CGI_ZIP% %FAQBAK_LIST_CONF%
+set FAQBAK_LIST_SMALL=faq-inh.dat faq-kat.dat faq-tit.dat index.php %FAQBAK_BATNAME% %FAQBAK_CGI_ZIP% %FAQBAK_LIST_CONF%
 set FAQBAK_H_DRIVE=H:
 set FAQBAK_H_ROOT=%FAQBAK_H_DRIVE%\work\
 set FAQBAK_H_DIR=%FAQBAK_H_ROOT%faq\
 set FAQBAK_H_ZIP_DIR=%FAQBAK_H_DIR%zip\
 set FAQBAK_O_DRIVE=O:
 set FAQBAK_O_ROOT=%FAQBAK_O_DRIVE%\DRXTransfer\
-set FAQBAK_O_PARENT=ie1
+set FAQBAK_O_ROOT=%FAQBAK_O_DRIVE%\_DRXGroup\I\006_SW_Dev\300_SW_Development\312_Build_QA_Rollout\_Orga\Team\
+set FAQBAK_O_PARENT=HofmannThomas
 set FAQBAK_O_DIR=%FAQBAK_O_ROOT%%FAQBAK_O_PARENT%\faq\
 set ZIP="C:\Program Files\7-Zip\7z.exe"
 set FAQBAK_BAT=D:\temp\%FAQBAK_BATNAME%
@@ -165,7 +167,8 @@ echo Verzeichnis %FAQBAK_O_DIR% wirklich nicht gefunden, Abbruch
 goto ende
 
 :dir_O_notfound
-echo Verzeichnis %FAQBAK_O_DIR% nicht gefunden, suche FAQ_O_PARENT
+REM @echo on
+@echo Verzeichnis %FAQBAK_O_DIR% nicht gefunden, suche FAQ_O_PARENT
 if not exist %FAQBAK_O_ROOT%%FAQBAK_O_PARENT%\. goto FAQ_O_PARENTnotfound
 md %FAQBAK_O_DIR%
 if not exist %FAQBAK_O_DIR%. goto dir_O_reallynotfound
