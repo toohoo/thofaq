@@ -2171,7 +2171,8 @@ sub setLang {
 	if( open( LANGCONF, ">$i18n_conf" ) ) {
 		print LANGCONF "$lang\n";
 		close(LANGCONF );
-		webhinweis(trans("Sprach-Konfiguration gesichert [$i18n_conf]"));
+		## basically at this point, but then in false language, so better put it down
+#		webhinweis(trans("Sprach-Konfiguration gesichert [$i18n_conf]"));  
 	} else {
 		webfehler(trans("Kann Sprach-Konfiguration nicht ändern [$i18n_conf]"));
 		return(0);
@@ -2181,6 +2182,8 @@ sub setLang {
 	if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 		webfehler (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
 	}
+	## basically at the point above, but then in false language, so better put it here
+	webhinweis(trans("Sprach-Konfiguration gesichert [$i18n_conf]"));
 
 #	return( join( ' ', @langLinks ) );
 	return 1;
