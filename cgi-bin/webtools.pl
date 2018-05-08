@@ -2142,15 +2142,25 @@ sub linkLang {
 		return( trans("[Keine alternative Sprache vorhanden]") );
 	}
 	my $foundLang = 0;
-	my ( $langLinks, @langLinks );
+	my ( $langLinks, @langLinks, @langOptions );
 	foreach my $langPresent (@langs) {
 #		if ( $lang eq $langPresent ) { $foundLang = 1; }
+		## als einfache Links
 		push ( @langLinks, "<a href=\"faq.pl?lang=$langPresent\">[$langPresent]</a>"  );
+		## als select (DropDown)
+		if ( $i18n_lang eq $langPresent ) {
+			push ( @langOptions, "<option selected=\"selected\">$langPresent</option>"  );
+		} else {
+			push ( @langOptions, "<option>$langPresent</option>"  );
+		}
 	}
 #	if ( !$foundLang ) {
 #		return( trans("[Gewählte Sprache nicht gefunden ")."($lang)]") ;
 #	}
-	return( join( ' ', @langLinks ) );
+	## als einfache Links
+#	return( join( ' ', @langLinks ) );
+	## als select (DropDown)
+	return( "\n\t<form action=\"faq.pl\">\n\t<select name=\"lang\">\n\t\t" . join( "\n\t\t", @langOptions ) . "\n\t</select>\n\t <input type=\"submit\" value=\" &gt; \">\n\t</form>\n" );
 }
 sub setLang {
 	my ( $lang, @rest ) = @_;
