@@ -18,6 +18,29 @@ only from registered users.
 Would be nice if someone does find errors and tell me.  
 Have fun.  
 
+**I18n / multi-language**  
+
+The app is multi language able. It was originally written in  
+German. A language-file for english is included. For other    
+languages the app is extensible. Language files also can be  
+stored in **UTF-8**. In this case include a key for that
+in language file:
+
+`__encoding__=UTF-8`
+
+The encoding then is set in the application pages. For  
+button text use at least the english translation, otherwise  
+the application will not work proper. Or the application  
+will have be to extended.
+
+```
+Neu=New
+Ändern=Change
+Löschen=Delete
+anfügen=append
+Anlegen=Create
+```
+
 **Attention**  
 
 For use immediately on Windows there is set  
@@ -29,6 +52,11 @@ assumed prerequest is XAMPP on drive D and perl in
 To run it on Linux/Unix just remove the first line at  
 the perl scripts.  
 The app is tested under Linux/Windows/Raspbian (RaspberryPi).  
+
+**Credits**
+
+Thanks to Gabriel (Gabi) Grigorescu for working on the
+Romanian language file.
 
 ---  
 after doing commit  

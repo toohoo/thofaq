@@ -64,15 +64,26 @@ require "checkdate.pl";
 ## packe ich bei webtools mit rein
 #require "globals.pl";
 %globals = &getglobals;
+print &PrintHeader();
+
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+}
+
 
 ## nur global festlegen
 #%opt = ();
 
-print &PrintHeader();
-$head = &UbmCgiHead("FAQ - Edit FAQ Frage");  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$head = &UbmCgiHead(trans("FAQ - Edit FAQ Frage"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+$langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
+$head =~ s|(</h1>)|$langLinks$1|i;
+if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
 print $head;
 
-print &webtag( &weblink("[zurück zu Edit Fragen]", "editfaq.pl") );
+print &webtag( &weblink(trans("[zurück zu Edit Fragen]"), "editfaq.pl") );
 
 #print "<p>_____faqedit.pl_____</p>\n";
 
@@ -91,7 +102,7 @@ if (&ReadParse(*input)) {
 		$faqnr = $input{'fnr'};
 	}
 } else {
-	&webabbruch("Keine Nr. zum Bearbeiten uebergeben."); 
+	&webabbruch(trans("Keine Nr. zum Bearbeiten uebergeben.")); 
 }
 
 ($fkat, $ftit, $finh) = ($globals{"faq-kat"},$globals{"faq-tit"},$globals{"faq-inh"});
@@ -100,7 +111,7 @@ if (&ReadParse(*input)) {
 #%fkat = %ftit = %finh = ();
 #%fnrkat = ();
 if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	&webabbruch ("Fehler beim Holen der Daten. $globals{'adminmes'}.");
+	&webabbruch (trans("Fehler beim Holen der Daten. ")."$globals{'adminmes'}.");
 }
 
 ## Kommentare holen, keine Fehlermeldung noetig
@@ -110,12 +121,12 @@ if (! &holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 
 ## jetzt kann ich Link zum Bearbeiten der Fragen in der richtigen Kategogie ausgeben
 ## 	ausser es ist "neu"
-if ($faqnr eq "neu") {
+if ($faqnr =~ m/neu|new/) {
 	&ausgabefaqedit($faqnr, *fkat, *ftit, *finh, *fnrkat);
 } else {
-	if (!($fnrkat{$faqnr})) { &webabbruch ("FAQ-Nr. existiert nicht [$faqnr]."); }
+	if (!($fnrkat{$faqnr})) { &webabbruch (trans("FAQ-Nr. existiert nicht [$faqnr].")); }
 	$kat = $fnrkat{$faqnr};
-	print &webtag( &weblink("[zurück zu Edit Fragen in Kategorie $kat]", "editfaq.pl?kat=$kat") );
+	print &webtag( &weblink(trans("[zurück zu Edit Fragen in Kategorie $kat]"), "editfaq.pl?kat=$kat") );
 	&ausgabefaqedit($faqnr, *fkat, *ftit, *finh, *fnrkat);
 }
 

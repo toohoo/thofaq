@@ -12,14 +12,22 @@
 sub webfehler {
 	## Uebergabe: Nachricht
 	local ( $message, @rest) = @_;
-	print "\n<p class='webfehler'><strong class='fehltit'>Fehler:</strong> $message</p>\n";
+	if ( defined(%i18n_lang) ) {
+		print "\n<p class='webfehler'><strong class='fehltit'>".trans("Fehler:")."</strong> $message</p>\n";
+	} else {
+		print "\n<p class='webfehler'><strong class='fehltit'>Fehler:</strong> $message</p>\n";
+	}
 }
 
 #---Fehlerausgabe in HTML-Seite und Abbruch------------------------------------
 sub webabbruch {
 	## Uebergabe: Nachricht
 	local ( $message, @rest ) = @_;
-	print "\n<p class='webfehler'><strong class='fehltit'>Abbruch, Fehler:</strong> $message</p>\n";
+	if ( defined(%i18n_lang) ) {
+		print "\n<p class='webfehler'><strong class='fehltit'>".trans("Abbruch, Fehler:")."</strong> $message</p>\n";
+	} else {
+		print "\n<p class='webfehler'><strong class='fehltit'>Abbruch, Fehler:</strong> $message</p>\n";
+	}
 	exit;
 }
 
@@ -27,7 +35,11 @@ sub webabbruch {
 sub webhinweis {
 	## Uebergabe: Nachricht
 	local ( $message, @rest) = @_;
-	print "\n<p class='webhinweis'><strong class='hinwtit'>Hinweis:</strong> $message</p>\n";
+	if ( defined(%i18n_lang) ) {
+		print "\n<p class='webhinweis'><strong class='hinwtit'>".trans("Hinweis:")."</strong> $message</p>\n";
+	} else {
+		print "\n<p class='webhinweis'><strong class='hinwtit'>Hinweis:</strong> $message</p>\n";
+	}
 }
 
 #---Hinweisausgabe in HTML-Seite mit Link --------------------------
@@ -412,8 +424,8 @@ sub getglobals {
 #	if ($globals{"hoch"     }) { $hoch      = $globals{"hoch"     }; }
 local %meine = (
 	"admin",	"Thomas Hofmann",
-	"admintel",	"146",
-	"adminmail",	"hofmann.thomas\@draexlmaier.de",
+	"admintel",	"1573",
+	"adminmail",	"thomas.hofmann\@draexlmaier.com",
 	"parsdir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\sgmls",
 	"dtddir",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd",
 	"dtdhome",	"D:\\Inetpub\\wwwroot\\sich\\markup\\opt\\dtd\\home",
@@ -429,6 +441,8 @@ local %meine = (
 	"breitfeld" ,   "75",
 	"hoch"      ,   "10",
 	"breittiny" ,   "18",
+	"i18n_conf" ,   "faq_i18n.conf",
+	"i18n_lang" ,	"DE",
 	);
 $meine{"adminmes"} = "Bitte informieren Sie $meine{'admin'} (Tel. $meine{'admintel'}).";
 
@@ -655,6 +669,104 @@ sub sichereSGM {
 	return ($sgm);
 }
 
+#---Holen der Spracheinstellungen-------------------------------------------
+sub getI18n {
+	local (*lang, *conf, @rest) = @_;
+	# 3 things to do:
+	# 	a) get language from i18n_conf
+	# 	b) get words from i18n_lang_{lang}
+	# 	c) get the other languages as list from the i18n_lang_{lang} files
+	# 	d) set encoding from lang-file
+
+	# 	a) get language from i18n_conf
+	if ( !(-f $conf) ) {
+		webabbruch ("Spracheinstellungs-Datei nicht gefunden [$conf]. $globals{'adminmes'}");
+	}
+	if ( !(open (LANGCONF, $conf) ) ) {
+		webabbruch ("Kann Spracheinstellungs-Datei nicht lesen [$conf]. $globals{'adminmes'}");
+	}
+	@f = %f = ();
+		@f = <LANGCONF>;
+		close (LANGCONF);
+	$lang = $f[0];
+	chomp( $lang );
+
+	# 	b) get words from i18n_lang_{lang}
+	my $lang_name = $conf;
+	$lang_name =~ s/(\.conf)$/-$lang$1/;
+	#webhinweis("\$lang: $lang -- \$lang_name: $lang_name");
+
+	if ( !(-f $lang_name) ) {
+		webabbruch ("Sprach-Datei nicht gefunden [$lang_name]. $globals{'adminmes'}");
+	}
+	if ( !(open (LANGDICT, $lang_name) ) ) {
+		webabbruch ("Kann Sprach-Datei nicht lesen [$lang_name]. $globals{'adminmes'}");
+	}
+	@f = %f = ();
+	$isUTF8 = '';
+
+	if( $lang =~ m/^DE$/i ) { $f{'FAQ'} = 'FAQ'; }  ## avoid a error message in case of lang == DE
+	my @fdest =();  ## array for extra saving keys in right followship
+
+		@f = <LANGDICT>;
+		close (LANGDICT);
+		everylinelang:
+		foreach $z (@f) {
+			# Attention: if the file is UTF-8 then in begins with the 3 chars for xEFxBBxBF 
+			
+			chomp( $z );
+			if ( $z =~ m/^\xEF\xBB\xBF/ ) { $z = substr( $z, 3 ); $isUTF8 = 1; }
+			if ($z =~ m/^[ \t]*#/i) { next everylinelang; }
+			$z =~ s/\\=/__equals__/g;
+			if ($z !~ m/^.+=.+$/i) { next everylinelang; }
+			( $k, $v ) = split( /=/, $z, 2 );
+			$k =~ s/__equals__/=/g;
+			$v =~ s/__equals__/=/g;
+			push( @fdest, $k );  ## saving keys in right followship in extra array
+			$f{$k} = $v;
+		}
+		
+		$count = keys( %f );
+		if ( $count == 0 && $lang eq "DE" ) {
+			$count++;
+			%f = { 'FAQ' => 'Faq' };
+		}
+		if ( $count == 0 ) {
+			&webabbruch ("Sprach-Datei ist leer [$lang_name]. $globals{'adminmes'}");
+		}
+
+		@lang = @fdest;
+		%lang = %f;
+
+	# 	c) get the other languages as list from the i18n_lang_{lang} files
+	my $lang_dir = '.';
+	opendir( DIR, $lang_dir ) || &webabbruch ("Kann Konfigurationsverzeichnis nicht lesen. [$lang_dir]. $globals{'adminmes'}");
+	my @dirent = readdir( DIR );
+	closedir( DIR );
+	@langs = ();
+	my $lang_name_pos = index( $globals{ 'i18n_conf' }, '.conf' );
+	my $lang_name_begin = substr( $globals{ 'i18n_conf' }, 0, $lang_name_pos );
+	#webhinweis("\$lang_name_begin: $lang_name_begin -- \$globals{ 'i18n_conf' }: $globals{'i18n_conf'}");
+	foreach my $dirent ( @dirent ) {
+		chomp( $dirent );
+		if ( $dirent =~ m/$lang_name_begin\-([^\.]+)\.conf/ ) {
+			push( @langs, $1 );
+		}
+	}
+	#webhinweis("\@langs: " . join( '--', @langs ) );
+
+	# 	d) set encoding from lang-file
+	if( $isUTF8 ) { $encoding = 'UTF-8'; }
+	if( $lang{'__encoding__'} ) { $encoding = $lang{'__encoding__'}; }
+#	print "\n<p> __encoding__ <input type=\"text\" readonly=\"readonly\" value=\"$encoding\" />\n";
+#	print "\n<p> lang{__encoding__} <input type=\"text\" readonly=\"readonly\" value=\"". $lang{'__encoding__'} ."\" />\n";
+#	print "\n<pre>\n";
+#	printHash( %lang );
+#	print "\n</pre>\n";
+
+	return(1);
+}
+
 #---Holen der Daten der FAQ-------------------------------------------
 sub holfaq {
 	local (*kat, *tit, *inh, *nrkat) = @_;
@@ -722,7 +834,7 @@ sub holfaq {
 
 #---Ausgabe der Kategorien der FAQ-------------------------------------------
 sub ausgabekat {
-	my ( $aktkat, $isedit, %ka ) = @_;
+	local ( $aktkat, $isedit, %ka ) = @_;
 	my ( $k, $v, @ke, $t );
 	my $aktkatsic = $aktkat;
 #webhinweis("<b>IN</b> ausgabekat") if $debug;
@@ -762,9 +874,9 @@ sub ausgabekat {
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
-	    print webtag("h3", "class=katwahltit", "Kategorien <br>" . webtag("small",weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat")) );
+	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat")) );
 	} else {  ## normal nicht edit
-	    print webtag("h3", "class=katwahltit", "Kategorien <br>" . webtag("small",weblink("[EDIT]","editfaqkat.pl")) );
+	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[EDIT]"),"editfaqkat.pl")) );
 	}
 	#print webtag("p", weblink("[EDIT]","editfaqkat.pl"));
 	#print webtag("blah");
@@ -848,9 +960,9 @@ sub ausgabefaq {
 
 	print webtag("div", "class=faqfragen", "#EMPTY#");
 	if ($isedit) {
-	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen","Fragen") . " zum Thema: ''$kat{$aktkat}'' " . webtag("small",weblink("[zurück zu den FAQ]","faq.pl?kat=$aktkat"))  . " " . webtag("small",weblink("[alle Kategorien]","editfaq.pl?kat=alle")) );
+	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat"))  . " " . webtag("small",weblink(trans("[alle Kategorien]"),"editfaq.pl?kat=alle")) );
 	} else {  ## normal nicht edit
-	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen","Fragen") . " zum Thema: ''$kat{$aktkat}'' " . webtag("small",weblink("[EDIT]","editfaq.pl?kat=$aktkat")) . " " . webtag("small",weblink("[alle Kategorien]","faq.pl?kat=alle")) );
+	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[EDIT]"),"editfaq.pl?kat=$aktkat")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
 	}
 	print webtag("ol", "type=1", "#EMPTY#");
 	foreach $k (@fke) {
@@ -864,9 +976,9 @@ sub ausgabefaq {
 	}
 	if ($#aktfaq < 0) {
 		if ($isedit) {
-			print webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", "[neue Frage]");
+			print webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", trans("[neue Frage]"));
 		}
-		webhinweis("Keine FAQ in dieser Kategorie");
+		webhinweis(trans("Keine FAQ in dieser Kategorie"));
 	}
 	print webtag("ol", "", "#ENDETAG#");
 	print webtag("div", "", "#ENDETAG#");
@@ -876,9 +988,9 @@ sub ausgabefaq {
 	if ($#aktfaq >= 0) {
 		print webtag("div", "class=faqantworten", "#EMPTY#");
 		if ($isedit) {
-		    print webtag("h3", "class=editfaqanttit", "Antworten " . webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", "[neue Frage]"));
+		    print webtag("h3", "class=editfaqanttit", trans("Antworten ") . webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", trans("[neue Frage]")));
 		} else {
-		    print webtag("h3", "class=faqanttit", "Antworten");
+		    print webtag("h3", "class=faqanttit", trans("Antworten"));
 		}
 		print webtag("dl", "class=faqantwortencontent", "#EMPTY#");
 		foreach $k (@aktfaq) {
@@ -886,13 +998,13 @@ sub ausgabefaq {
 			    if ($akat eq "alle") { 
 			    	$temp = webtag("dt", 'class=faqantworthead' , webtag("a","name=faq$k", "$k\. $tit{$k} ") 
 			    		. webtag("small", " (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. ") . $nrkat{$k}, "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
 			    			. ") ") 
-			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") 
+			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", trans("[Edit]")) 
 			    	);
 			    } else {
 			    	$temp = webtag("dt", 'class=faqantworthead' , webtag("a","name=faq$k", "$k\. $tit{$k} ") 
-			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]"));
+			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", trans("[Edit]")));
 			    }
 			    print $temp;
 			} else {
@@ -900,7 +1012,7 @@ sub ausgabefaq {
 			    	$temp = webtag("dt", 'class=faqantworthead' , webtag("a","name=faq$k", "$k\. $tit{$k}") 
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. ") . $nrkat{$k}, "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    	);
@@ -909,7 +1021,7 @@ sub ausgabefaq {
 			    }
 			    print $temp;
 			}
-			print webtag("dd", faq2htm($inh{$k}) . "<br>" . webtag ("a", "href=#fragen\tclass=zufragen", "&uArr; zu den Fragen") );
+			print webtag("dd", faq2htm($inh{$k}) . "<br>" . webtag ("a", "href=#fragen\tclass=zufragen", trans("&uArr; zu den Fragen")) );
 		}
 		print webtag("dl", "", "#ENDETAG#");
 		print webtag("div", "", "#ENDETAG#");
@@ -944,27 +1056,27 @@ sub ausgabefaqfound {
 	print webtag( "div", "class=faqfragen", "#EMPTY#");
 	if ($isedit) {
 	    print webtag( "h3", "class=faqfragtit", 
-	    	webtag( "a","name=fragen", "Fragen") 
-    		. " zum Thema: ''$kat{$aktkat}'' " 
+	    	webtag( "a","name=fragen", trans("Fragen")) 
+    		. trans(" zum Thema:") . " ''$kat{$aktkat}'' " 
     		. webtag( "small",
-    			weblink( "[zurück zu den FAQ]","faq.pl?kat=$aktkat") ) 
+    			weblink( trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat") ) 
     		. " " 
     		. webtag( "small", 
-    			weblink( "[alle Kategorien]","editfaq.pl?kat=alle") ) 
+    			weblink( trans("[alle Kategorien]"),"editfaq.pl?kat=alle") ) 
 	    );
 	} else {  ## normal nicht edit
 	    print webtag( "h3", "class=faqfragtit", 
-	    	webtag( "a", "name=fragen", "Fragen") 
-	    	. " zum Thema: ''$kat{$aktkat}'' " 
+	    	webtag( "a", "name=fragen", trans("Fragen")) 
+	    	. trans(" zum Thema: ") . "''$kat{$aktkat}'' " 
 	    	. webtag( "small", 
-	    		weblink( "[EDIT]", "editfaq.pl?kat=$aktkat") ) 
+	    		weblink( trans("[EDIT]"), "editfaq.pl?kat=$aktkat") ) 
 	    	. " " 
 	    	. webtag( "small", 
-	    		weblink( "[alle Kategorien]","faq.pl?kat=alle") ) 
+	    		weblink( trans("[alle Kategorien]"),"faq.pl?kat=alle") ) 
 	    );
 	}
 
-	webhinweis( "In Kategorie: $akat - Suche: $searchstring" );
+	webhinweis( trans("In Kategorie: ") . $akat . trans(" - Suche: ") . $searchstring );
 	#webhinweis( "IN ausgabefaqfound; akat: [$akat]" );
 
 	print webtag( "ol", "type=1", "#EMPTY#" );
@@ -996,12 +1108,12 @@ sub ausgabefaqfound {
 	}
 	if ($#aktfaq < 0) {
 		if ($isedit) {
-			print webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]");
+			print webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", trans("[neue Frage]"));
 		}
-		webhinweis("Keine FAQ in dieser Kategorie");
+		webhinweis(trans("Keine FAQ in dieser Kategorie"));
 	}
 	print webtag("ol", "", "#ENDETAG#");
-	webhinweis( "Anzahl gefundene Eintr&auml;ge: $countfound" );
+	webhinweis( trans("Anzahl gefundene Eintr&auml;ge: $countfound") );
 	print webtag("div", "", "#ENDETAG#");
 
 	my $sicsearchstring = $searchstring; if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
@@ -1011,9 +1123,9 @@ sub ausgabefaqfound {
 	if ($#aktfaq >= 0) {
 		print webtag("div", "class=faqantworten", "#EMPTY#");
 		if ($isedit) {
-		    print webtag("h3", "class=editfaqanttit", "Antworten " . webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", "[neue Frage]"));
+		    print webtag("h3", "class=editfaqanttit", trans("Antworten ") . webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", trans("[neue Frage]")));
 		} else {
-		    print webtag("h3", "class=faqanttit", "Antworten");
+		    print webtag("h3", "class=faqanttit", trans("Antworten"));
 		}
 		print webtag("dl", "", "#EMPTY#");
 		foreach $k (@aktfaq) {
@@ -1023,17 +1135,17 @@ sub ausgabefaqfound {
 				$titout = $tit{$k};
 			}
 			if ($isedit) {
-			    if ($akat eq "alle") { 
+			    if ($akat =~ m/^alle|all$/) { 
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout ) 
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. $nrkat{$k}"), "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
-			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") );
+			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", trans("[Edit]")) );
 			    } else {
 			    	$temp = webtag("dt", &webtag("a","name=faq$k", "$k\. " . $titout ) 
-			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") );
+			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", trans("[Edit]")) );
 			    }
 			    print $temp;
 			} else {
@@ -1041,7 +1153,7 @@ sub ausgabefaqfound {
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout )  
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. $nrkat{$k}"), "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    	);
@@ -1054,7 +1166,7 @@ sub ausgabefaqfound {
 			if ( !($inhout = ismatch( $inhtemp, @searchwords )) ) {
 				$inhout = $inhtemp;
 			}
-			print webtag("dd", $inhout . "<br>" . webtag ("a", "href=#fragen\tclass=zufragen", "&uArr; zu den Fragen") );
+			print webtag("dd", $inhout . "<br>" . webtag ("a", "href=#fragen\tclass=zufragen", trans("&uArr; zu den Fragen")) );
 		}
 		print webtag("dl", "", "#ENDETAG#");
 		print webtag("div", "", "#ENDETAG#");
@@ -1119,7 +1231,7 @@ sub ausgabekatedit {
 	}
 	#print &webtag("katmax nach Schleife: $katmax");
 	$katneuende = $katmax + 1;
-	push(@katfrei,"anfügen");
+	push(@katfrei,trans("anfügen"));
 
 	## besser ein form ueber alles
 	if ($keft eq "alles") {
@@ -1134,7 +1246,7 @@ sub ausgabekatedit {
 	## 	sonst muss es ohne Benutzer arbeiten, dann Kontrollzeile in editfaqkat.pl ausREMen
 	## Noch ein Problem:
 	## 	bei Passwortabfrage muss ich form auf method=post setzen, sonst ist es gleich umsonst, s.o.
-	print &webtag("h3", "class=kateditchecktit", "Benutzer");
+	print &webtag("h3", "class=kateditchecktit", trans("Benutzer"));
 	print &webtag("div", "class=kateditcheck", "#EMPTY#");
 	        print &webtag("p","","#EMPTY#");
 	        ## hier koennte man pruefen ob schon eingeloggt
@@ -1143,17 +1255,17 @@ sub ausgabekatedit {
 	        ## 	das geht weiter zu &isrightdate, 
 	        ## 	dort koennte man auch eingeloggte Benutzer hinterlegen
 		if ($who = &isdating(&whoamip)) {
-			print "Name: " , &rofeld("wer", $who, $breit), " ist eingeloggt \&nbsp; ";
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Logout", "#EMPTY#" );
+			print trans("Name: ") , &rofeld("wer", $who, $breit), trans(" ist eingeloggt \&nbsp; ");
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Logout"), "#EMPTY#" );
 			#return($who);
 		} else {
-			print "Name: " , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
-			print " \&nbsp; Parole: " , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
+			print trans("Name: ") , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
+			print trans(" \&nbsp; Parole: ") , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
 		}
 	        print &webtag("p","","#ENDETAG#");
 	print &webtag("div", "", "#ENDETAG#");  ## kateditcheck
 
-	print &webtag("h3", "class=katedittit", "Kategorien");
+	print &webtag("h3", "class=katedittit", trans("Kategorien"));
 	print &webtag("ol", "type=1", "#EMPTY#");
 
 	foreach $k (@katnr) {
@@ -1161,19 +1273,19 @@ sub ausgabekatedit {
 		if ($keft eq "alles") {
 			print &webtag("input", "type=text\tname=kattit_$k\tvalue=$ka{$k}\tsize=$breitlang", "#EMPTY#" );
 			#print &webtag("input", "type=hidden\tname=katnr\tvalue=$k", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Ändern $k", "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern $k"), "#EMPTY#" );
 			## dann ein Link zum Loeschen
 			## 	ausser bei Kategorie 1, die darf man nicht loeschen
 			if ($k != 1) {
-				print &webtag("input", "type=submit\tname=aktion\tvalue=Löschen $k", "#EMPTY#" );
+				print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen $k"), "#EMPTY#" );
 			}
 		} else {  ## keft eq 'einzeln'
 			## erst ein form zum Aendern des Titels der Kat.
 			print &webtag("form", "aktion=editfaqkat.pl", "#EMPTY#" );
 			print &webtag("input", "type=text\tname=kattit\tvalue=$ka{$k}\tsize=$breitlang", "#EMPTY#" );
 			print &webtag("input", "type=hidden\tname=katnr\tvalue=$k", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Ändern", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Löschen", "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern"), "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen"), "#EMPTY#" );
 			print &webtag("form", "", "#ENDETAG#" );
 		}
 		print &webtag("li", "", "#ENDETAG#" );
@@ -1182,22 +1294,22 @@ sub ausgabekatedit {
 	print &webtag("ol", "", "#ENDETAG#");
 
 	## dann ein Form zum Anlegen einer neuen Kat gleich mit Auswahl
-	print &webtag("h3", "class=kateditneutit", "neue Kategorie");
+	print &webtag("h3", "class=kateditneutit", trans("neue Kategorie"));
 	print &webtag("div", "class=kateditneu", "#EMPTY#");
-	if ($keft eq "einzeln") {  ## != alles
+	if ($keft =~ m/einzeln|single/) {  ## != alles
 		print &webtag("form", "aktion=editfaqkat.pl", "#EMPTY#" );
 	}
 	print &webtag("select", "name=neunr", "#EMPTY#" );
 	foreach $v (@katfrei) {
-		if ($v ne "anfügen") {
+		if ($v !~ m/anfügen|append/) {
 			print &webtag("option", "", $v );
 		} else {
-			print &webtag("option", "value=$katneuende", $v );
+			print &webtag("option", "value=$katneuende", trans($v) );
 		}
 	}
 	print &webtag("select", "", "#ENDETAG#" );
 	print &webtag("input", "type=text\tname=kattit\tsize=$breitlang", "#EMPTY#" );
-	print &webtag("input", "type=submit\tname=aktion\tvalue=Neu", "#EMPTY#" );
+	print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Neu"), "#EMPTY#" );
 	if ($keft eq "einzeln") {  ## != alles
 		print &webtag("form", "", "#ENDETAG#" );
 	}
@@ -1260,7 +1372,7 @@ sub schreibfaq {
 		close (DAT);
 		
 	}
-	&webhinweis ("FAQ gesichert.");
+	&webhinweis (trans("FAQ gesichert."));
 	return(1);
 }
 
@@ -1311,7 +1423,7 @@ sub ausgabefaqedit {
 [code]abc[/code] (->festbreitenschrift) - 
 [quote]abc[/quote] (->blockquote)
 PSEUDOHINWEISENDE
-	
+	$phinweis = trans($phinweis);	
 
 	## welche Kategorie-Nummern sind frei?
 	## frei sind auch alle oberhalb der hoechsten Nummer
@@ -1337,7 +1449,7 @@ PSEUDOHINWEISENDE
 		} else {
 			if ($i == $nrkat{$nr}) {
 				push(@katvorh, "$i $kat{$i}\=$i\=selected");
-			} elsif ( $nr eq 'neu' && $i == $aktkat ) {
+			} elsif ( $nr =~ m/neu|new/ && $i == $aktkat ) {
 				push(@katvorh, "$i $kat{$i}\=$i\=selected");
 			} else {
 				push(@katvorh, "$i $kat{$i}\=$i");
@@ -1352,7 +1464,7 @@ PSEUDOHINWEISENDE
 	## ----------- /debug
 	$katneuende = $katmax + 1;
 	## hier geht es nur um @katvorh
-	push(@katfrei,"anfügen=$katneuende");
+	push(@katfrei,trans("anfügen=$katneuende"));
 
 
 	## welche FAQ-Nummern sind frei?
@@ -1384,7 +1496,7 @@ PSEUDOHINWEISENDE
 		}
 	}
 	$faqneuende = $faqmax + 1;
-	push(@faqfrei,"anfügen=$faqneuende");
+	push(@faqfrei,trans("anfügen=$faqneuende"));
 
 
 	print &webtag("form", "action=faqeditsic.pl\tmethod=post", "#EMPTY#" );
@@ -1395,7 +1507,7 @@ PSEUDOHINWEISENDE
 	## 	sonst muss es ohne Benutzer arbeiten, dann Kontrollzeile in editfaqkat.pl ausREMen
 	## Noch ein Problem:
 	## 	bei Passwortabfrage muss ich form auf method=post setzen, sonst ist es gleich umsonst, s.o.
-	print &webtag("h3", "class=faqeditchecktit", "Benutzer");
+	print &webtag("h3", "class=faqeditchecktit", trans("Benutzer"));
 	print &webtag("div", "class=faqeditcheck", "#EMPTY#");
 	        print &webtag("p","","#EMPTY#");
 	        ## hier koennte man pruefen ob schon eingeloggt
@@ -1404,35 +1516,35 @@ PSEUDOHINWEISENDE
 	        ## 	das geht weiter zu &isrightdate, 
 	        ## 	dort koennte man auch eingeloggte Benutzer hinterlegen
 		if ($who = &isdating(&whoamip)) {
-			print "Name: " , &rofeld("wer", $who, $breit), " ist eingeloggt \&nbsp; ";
-			print &webtag("input", "type=submit\tname=aktion\tvalue=Logout", "#EMPTY#" );
+			print trans("Name: ") , &rofeld("wer", $who, $breit), trans(" ist eingeloggt \&nbsp; ");
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Logout"), "#EMPTY#" );
 			#return($who);
 		} else {
-			print "Name: " , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
-			print "\n \&nbsp; Parole: " , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
+			print trans("Name: ") , &webtag("input", "type=text\tname=wer\tsize=$breit", "#EMPTY#" );
+			print trans("\n \&nbsp; Parole: ") , &webtag("input", "type=password\tname=womit\tsize=$breit", "#EMPTY#" );
 		}
 	        print &webtag("p","","#ENDETAG#");
 	print &webtag("div", "", "#ENDETAG#");  ## faqeditcheck
 
 	## Unterschied: 	neu oder vorhanden
 	## Ausgabe: 		Nr. (fest bei vorh. und dropdown bei neu), Kategorie (dropdown), Titel, Text
-	print &webtag("h3", "class=faqedittit", "Frage " . &webtag("small", &webtag("a", "href=faq.pl?kat=5#faq7\ttarget=_blank\tname=phinweis\ttitle=$phinweis", "(Bearbeitungs-Hinweise)")) );
-	if ($nr eq "neu") {
+	print &webtag("h3", "class=faqedittit", trans("Frage ") . &webtag("small", &webtag("a", "href=faq.pl?kat=5#faq7\ttarget=_blank\tname=phinweis\ttitle=$phinweis", trans("(Bearbeitungs-Hinweise)"))) );
+	if ($nr =~ m/neu|new/) {
 		## (name, selected, feld) ## selected kann auch im feld ueber "=selected" erkannt werden
 		print &webtag("p","","#EMPTY#");
-		print "\nneue Frage<br>";
-		print "\nFAQ-Nr.: ", &HTMLdropdown("nr","", @faqfrei), " \&nbsp; ";
-		print "\nKategorie-Nr.: ", &HTMLdropdown("kat","", @katvorh), " <br><br>";
-		print "\nFrage: <br>", &inputfeld("tit", "", $breitfeld), " <br>";
-		print "\nText: <br>", &inputarea("text", "", $breitfeld, $hoch), " <br>";
-		print &webtag("input", "type=submit\tname=aktion\tvalue=Anlegen", "#EMPTY#");
+		print trans("\nneue Frage<br>");
+		print trans("\nFAQ-Nr.: "), &HTMLdropdown("nr","", @faqfrei), " \&nbsp; ";
+		print trans("\nKategorie-Nr.: "), &HTMLdropdown("kat","", @katvorh), " <br><br>";
+		print trans("\nFrage: <br>"), &inputfeld("tit", "", $breitfeld), " <br>";
+		print trans("\nText: <br>"), &inputarea("text", "", $breitfeld, $hoch), " <br>";
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Anlegen"), "#EMPTY#");
 		print &webtag("p","","#ENDETAG#");
 	} else {
-		if (!($nrkat{$nr})) { &webabbruch ("FAQ-Nr. existiert nicht [$nr]."); }
+		if (!($nrkat{$nr})) { &webabbruch (trans("FAQ-Nr. existiert nicht [$nr].")); }
 		print &webtag("p","","#EMPTY#");
-		print "\nFAQ-Nr.: ", &rofeld("nr", $nr, $breitkurz), " \&nbsp; ";
-		print "\nKategorie-Nr.: ", &HTMLdropdown("kat","", @katvorh), " <br><br>";
-		print "\nFrage: <br>", &inputfeld("tit", $tit{$nr}, $breitfeld), " <br>";
+		print trans("\nFAQ-Nr.: "), &rofeld("nr", $nr, $breitkurz), " \&nbsp; ";
+		print trans("\nKategorie-Nr.: "), &HTMLdropdown("kat","", @katvorh), " <br><br>";
+		print trans("\nFrage: <br>"), &inputfeld("tit", $tit{$nr}, $breitfeld), " <br>";
 		$inh{$nr} =~ s/\x02/\n/ig;
 		## Achtung: Probleme mit Entities. 
 		## 	Wenn Entities vorhanden sind, werden sie in der Bearbeitung als das jeweilige Zeichen ausgegeben.
@@ -1441,9 +1553,9 @@ PSEUDOHINWEISENDE
 		## 	Aber dennoch die Variable im uebergebenen Hash nicht veraendern
 		$tempstring = $inh{$nr};
 		$tempstring =~ s/\&/\&amp;/ig;
-		print "\nText: <br>", &inputarea("text", $tempstring, $breitfeld, $hoch), " <br>\n";
-		print &webtag("input", "type=submit\tname=aktion\tvalue=Ändern", "#EMPTY#");
-		print &webtag("input", "type=submit\tname=aktion\tvalue=Löschen", "#EMPTY#");
+		print trans("\nText: <br>"), &inputarea("text", $tempstring, $breitfeld, $hoch), " <br>\n";
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern"), "#EMPTY#");
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen"), "#EMPTY#");
 		print &webtag("p","","#ENDETAG#");
 	}
 
@@ -1482,7 +1594,7 @@ sub ausgabesearchbox {
     Hashtag-Suche mit: #(hashtag),
     alles case-insensitive
 SEARCHHINWEIS
-	
+	$shinweis = trans($shinweis);	
 
 	print webtag("form", "action=faqsearch.pl\tmethod=post", "#EMPTY#" );
 
@@ -1517,10 +1629,10 @@ SEARCHHINWEIS
 			#print webtag("br","#ENDETAG#");
 			if ( !$prefix ) {
 				print webtag( "small", ' &nbsp;&nbsp;' . 
-				  webtag("a", "href=faq.pl?kat=$helpkat#faq$helpfaq\ttarget=_blank\tname=searchhinweis\ttitle=$shinweis", "nur gew&auml;hlte Kat.") . ' ' );
+				  webtag("a", "href=faq.pl?kat=$helpkat#faq$helpfaq\ttarget=_blank\tname=searchhinweis\ttitle=$shinweis", trans("nur gew\&auml;hlte Kat.")) . ' ' );
 				#print weblink( webtag("small"," &nbsp;&nbsp;nur gew&auml;hlte Kat. ") , "faq.pl?kat=$helpkat#faq$helpfaq" );
 			} else {
-				print webtag("small"," &nbsp;&nbsp;nur gew&auml;hlte Kat. ")
+				print webtag("small"," &nbsp;&nbsp;".trans("nur gew\&auml;hlte Kat."))
 			}
 			print webtag("input", "type=checkbox\tname=onlypickedkat\tvalue=1", "#EMPTY#" );
 		print webtag("span","","#ENDETAG#");
@@ -2012,6 +2124,145 @@ sub getfilename {
         return ($nurdat);
 }
 
+sub trans {
+	my ( $text, @rest ) = @_;
+#	foreach my $src ( keys( %i18n_lang ) ) {
+	my $dest;
+	foreach my $src ( @i18n_lang ) {  ## should be the keys
+		$dest = $i18n_lang{"$src"};
+#		webhinweis("\$text: $text -- \$src: $src -- \$i18n_lang{\"$src\"}: ". $i18n_lang{"$src"} . " -- \$dest: $dest");
+		$text =~ s/$src/$dest/g;
+	}
+	return( $text );
+}
+
+sub linkLang {
+#	my ( $lang, @rest ) = @_;
+	if ( $#langs < 1 ) {
+		return( trans("[Keine alternative Sprache vorhanden]") );
+	}
+	my $foundLang = 0;
+	my ( $langLinks, @langLinks, @langOptions );
+	foreach my $langPresent (@langs) {
+#		if ( $lang eq $langPresent ) { $foundLang = 1; }
+		## als einfache Links
+		push ( @langLinks, "<a href=\"faq.pl?lang=$langPresent\">[$langPresent]</a>"  );
+		## als select (DropDown)
+		if ( $i18n_lang eq $langPresent ) {
+			push ( @langOptions, "<option selected=\"selected\">$langPresent</option>"  );
+		} else {
+			push ( @langOptions, "<option>$langPresent</option>"  );
+		}
+	}
+#	if ( !$foundLang ) {
+#		return( trans("[Gewählte Sprache nicht gefunden ")."($lang)]") ;
+#	}
+	## als einfache Links
+#	return( join( ' ', @langLinks ) );
+	## als select (DropDown)
+	return( "\n\t<form action=\"faq.pl\">\n\t<select name=\"lang\">\n\t\t" . join( "\n\t\t", @langOptions ) . "\n\t</select>\n\t <input type=\"submit\" value=\" &gt; \">\n\t</form>\n" );
+}
+sub setLang {
+	my ( $lang, @rest ) = @_;
+	if ( $#langs < 1 ) {
+		return( trans("[Keine alternative Sprache vorhanden]") );
+	}
+	my $foundLang = 0;
+	my ( $langLinks, @langLinks );
+	foreach my $langPresent (@langs) {
+		if ( $lang eq $langPresent ) { $foundLang = 1; }
+		push ( @langLinks, "<a href=\"faq.pl?lang=$langPresent\">[$langPresent]</a>"  );
+	}
+	if ( !$foundLang ) {
+		return( trans("[Gewählte Sprache nicht gefunden ")."($lang)]") ;
+	}
+
+	# set the language in the conf-file
+	if( open( LANGCONF, ">$i18n_conf" ) ) {
+		print LANGCONF "$lang\n";
+		close(LANGCONF );
+		## basically at this point, but then in false language, so better put it down
+#		webhinweis(trans("Sprach-Konfiguration gesichert [$i18n_conf]"));  
+	} else {
+		webfehler(trans("Kann Sprach-Konfiguration nicht ändern [$i18n_conf]"));
+		return(0);
+	}
+	
+	# get the translations from lang-file
+	if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+		webfehler (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+	}
+	## basically at the point above, but then in false language, so better put it here
+	webhinweis(trans("Sprach-Konfiguration gesichert [$i18n_conf]"));
+
+#	return( join( ' ', @langLinks ) );
+	return 1;
+}
+
+#---Ausdruck einer Liste-----------------#pl#
+
+sub printListe {
+
+	local($z,$za,$c,$c2,$code,$zbs);
+	$zbs=25;
+	$z=1;$za=1;
+
+print "\nAnzahl: ".@_."\n";
+allevonprintListe:
+foreach (@_) {
+#       tr/\//\\/;
+# war im Hauptprogramm gedacht zum Ersetzen von "/" durch "\" in DIRs
+	if ($page && ($z >= ($zbs - 3))) {
+		print "\nENTER = naechste Seite  ".
+			"oder  'a' = Abbruch Liste ".
+			"oder  'e' = Ende Programm: ";
+		$c=<STDIN>;
+		#$code=unpack("c",$c); #geht auch ord()?
+		chop($c2=$c);
+		if ($c ne "\n") {
+			if ("e" eq $c2) { exit(0)};
+			if ("a" eq $c2) { last(allevonprintListe)};
+		}
+		print "\n\n";
+		$z=1;
+	}
+	print $za++ . "\t"; $z++;
+	print $_."\n"
+};
+print "\nAnzahl: ".@_."\n";
+};
+
+#---Ausdruck eines Hash-----------------#ph#
+
+sub printHash {
+
+	local(%h)=@_;
+	local($z,$za,$c,$c2,$code,$zbs,$temp);
+	$zbs=25;
+	$z=1;$za=1;
+$temp=keys(%h);
+print "Anzahl: $temp\n";
+allevonprintHash:
+foreach (keys %h) {
+	if ($page && ($z >= ($zbs - 3))) {
+		print "\nENTER = naechste Seite  ".
+			"oder  'a' = Abbruch Liste ".
+			"oder  'e' = Ende Programm: ";
+		$c=<STDIN>;
+		#$code=unpack("c",$c); #geht auch ord()?
+		chop($c2=$c);
+		if ($c ne "\n") {
+			if ("e" eq $c2) { exit(0)};
+			if ("a" eq $c2) { last(allevonprintHash)};
+		}
+		print "\n\n";
+		$z=1;
+	}
+	print $za++ , ": $_\t\t$h{$_}\n"; $z++;
+};
+$za--;
+print "\nAnzahl: $za\n";
+};
 
 #--- ENDE Alles ------------------------------------
 1;
