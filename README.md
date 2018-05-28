@@ -6,7 +6,8 @@
 
 ---  
   This should really be a very small FAQ app for someone  
-who wants to save some ideas. The app is runable on any  
+who wants to save some ideas. It's like a personally Knowledge 
+Management Tool. It doesn't need a DB. The app is runable on any  
 Webserver including a local installation on XAMPP on Windows  
 or similar. The development is not going continiously as  
 might be expected. The application includes an over all  
