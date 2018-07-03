@@ -22,6 +22,8 @@
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
 $aktdir = holpfad0($scriptname);
+if( $aktdir eq '' ) { $aktdir = '.'; }
+#print "\n<p>aktdir: $aktdir </p>\n";
 
 #print "Content-type: text/html\n\n";
 #print "<html>\n<head>\n<title>Test</title>\n</head>\n<body>\n";
@@ -66,6 +68,14 @@ $onlypickedkat	= undef;
 $hashtags = 'off';  ## or simply '' but NOT 'on'
 $hashcloud = 'off';  ## or simply '' but NOT 'on'
 $hashcloudsmall = 'off';  ## or simply '' but NOT 'on'
+
+## check if set params in system
+if ( $ENV{'FAQ_PRESET'} ) {
+	$ENV{'REQUEST_METHOD'} = 'GET';
+	$ENV{'QUERY_STRING'} = $ENV{'FAQ_PRESET'};
+	$ENV{'QUERY_STRING'} =~ s/\*/&/g;
+}
+
 ## wurde was uebergeben?
 if ( ReadParse( *input ) ) {
 	if ($input{'kat'}) {
