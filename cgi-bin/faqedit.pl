@@ -53,6 +53,7 @@
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
 $aktdir = &holpfad0($scriptname);
+if( $aktdir eq '' ) { $aktdir = '.'; }
 push (@INC, $aktdir);
 require "thpl.pl";
 require "cgi-lib.pl";
@@ -86,6 +87,13 @@ print $head;
 print &webtag( &weblink(trans("[zurück zu Edit Fragen]"), "editfaq.pl") );
 
 #print "<p>_____faqedit.pl_____</p>\n";
+
+## check if set params in system
+if ( $ENV{'FAQ_PRESET'} ) {
+	$ENV{'REQUEST_METHOD'} = 'GET';
+	$ENV{'QUERY_STRING'} = $ENV{'FAQ_PRESET'};
+	$ENV{'QUERY_STRING'} =~ s/\*/&/g;
+}
 
 $aktkat = 1;
 $input="";

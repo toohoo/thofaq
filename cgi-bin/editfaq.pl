@@ -21,6 +21,7 @@
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
 $aktdir = &holpfad0($scriptname);
+if( $aktdir eq '' ) { $aktdir = '.'; }
 push (@INC, $aktdir);
 require "thpl.pl";
 require "cgi-lib.pl";
@@ -57,6 +58,14 @@ $input="";
 my $hashtags = 'off';  ## or simply '' but NOT 'on'
 my $hashcloud = 'off';  ## or simply '' but NOT 'on'
 my $hashcloudsmall = 'off';  ## or simply '' but NOT 'on'
+
+## check if set params in system
+if ( $ENV{'FAQ_PRESET'} ) {
+	$ENV{'REQUEST_METHOD'} = 'GET';
+	$ENV{'QUERY_STRING'} = $ENV{'FAQ_PRESET'};
+	$ENV{'QUERY_STRING'} =~ s/\*/&/g;
+}
+
 ## wurde was uebergeben?
 if (&ReadParse(*input)) {
 	if ($input{'kat'}) {
