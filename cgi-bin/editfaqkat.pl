@@ -23,6 +23,7 @@ $| = 1;
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
 $aktdir = &holpfad0($scriptname);
+if( $aktdir eq '' ) { $aktdir = '.'; }
 push (@INC, $aktdir);
 require "thpl.pl";
 require "cgi-lib.pl";
@@ -82,6 +83,12 @@ if ($globals{"kateditformtype"}) {
 	#print &webtag("kateditformtype(standard)=$keft");
 }
 
+## check if set params in system
+if ( $ENV{'FAQ_PRESET'} ) {
+	$ENV{'REQUEST_METHOD'} = 'GET';
+	$ENV{'QUERY_STRING'} = $ENV{'FAQ_PRESET'};
+	$ENV{'QUERY_STRING'} =~ s/\*/&/g;
+}
 
 $input="";
 @input=();

@@ -12,7 +12,8 @@
 sub webfehler {
 	## Uebergabe: Nachricht
 	local ( $message, @rest) = @_;
-	if ( defined(%i18n_lang) ) {
+#	if ( defined( @{%i18n_lang} ) ) {
+	if ( %i18n_lang ) {
 		print "\n<p class='webfehler'><strong class='fehltit'>".trans("Fehler:")."</strong> $message</p>\n";
 	} else {
 		print "\n<p class='webfehler'><strong class='fehltit'>Fehler:</strong> $message</p>\n";
@@ -23,7 +24,8 @@ sub webfehler {
 sub webabbruch {
 	## Uebergabe: Nachricht
 	local ( $message, @rest ) = @_;
-	if ( defined(%i18n_lang) ) {
+#	if ( defined(%i18n_lang) ) {
+	if ( %i18n_lang ) {
 		print "\n<p class='webfehler'><strong class='fehltit'>".trans("Abbruch, Fehler:")."</strong> $message</p>\n";
 	} else {
 		print "\n<p class='webfehler'><strong class='fehltit'>Abbruch, Fehler:</strong> $message</p>\n";
@@ -35,7 +37,8 @@ sub webabbruch {
 sub webhinweis {
 	## Uebergabe: Nachricht
 	local ( $message, @rest) = @_;
-	if ( defined(%i18n_lang) ) {
+#	if ( defined(%i18n_lang) ) {
+	if ( %i18n_lang ) {
 		print "\n<p class='webhinweis'><strong class='hinwtit'>".trans("Hinweis:")."</strong> $message</p>\n";
 	} else {
 		print "\n<p class='webhinweis'><strong class='hinwtit'>Hinweis:</strong> $message</p>\n";
@@ -905,6 +908,8 @@ sub ausgabekat {
 	
 	#webhinweis( "\$0: $0" );
 	my $scriptname = getfilename( $0 );
+#	webhinweis( "\$0 : $0 " );
+#	webhinweis( "\$scriptname : $scriptname " );
 	#webhinweis( "scriptname: $scriptname" );
 	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
 	if ( !$fueredit ) { $fueredit = ''; }
@@ -1108,7 +1113,7 @@ sub ausgabefaqfound {
 	}
 	if ($#aktfaq < 0) {
 		if ($isedit) {
-			print webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", trans("[neue Frage]"));
+			print webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", trans("[neue Frage]"));
 		}
 		webhinweis(trans("Keine FAQ in dieser Kategorie"));
 	}
@@ -1123,7 +1128,7 @@ sub ausgabefaqfound {
 	if ($#aktfaq >= 0) {
 		print webtag("div", "class=faqantworten", "#EMPTY#");
 		if ($isedit) {
-		    print webtag("h3", "class=editfaqanttit", trans("Antworten ") . webtag("a", "href=faqedit.pl?fnr=neu\tclass=faqtitedit", trans("[neue Frage]")));
+		    print webtag("h3", "class=editfaqanttit", trans("Antworten ") . webtag("a", "href=faqedit.pl?fnr=neu\&kat=$aktkat\tclass=faqtitedit", trans("[neue Frage]")));
 		} else {
 		    print webtag("h3", "class=faqanttit", trans("Antworten"));
 		}
@@ -1162,7 +1167,7 @@ sub ausgabefaqfound {
 			    }
 			    print $temp;
 			}
-			$inhtemp = faq2htm($inh{$k});
+			$inhtemp = faq2htm($inh{$k}, $k);
 			if ( !($inhout = ismatch( $inhtemp, @searchwords )) ) {
 				$inhout = $inhtemp;
 			}
@@ -1669,6 +1674,7 @@ sub HTMLdropdown {
 sub faq2htm {
 ## siehe input2faq, ABER: Ausnahmen/Erweiterungen unten
 	local ($text) = $_[0];
+	local ($fnr) = $_[1];  ## only for reporting issues
 	
 	## backup vars temporarily
 	my $fuereditbak	= $input{'fueredit'};
@@ -1735,6 +1741,23 @@ sub faq2htm {
 	## Ausnahmen/Erweiterungen zu HTML-Input
 	## 	Namen/Linkziele
     	$text =~ s|\[name=([^\]]+)\](.*?)\[\/name\]|<a name="$1" id="$1">$2<\/a>|ig;
+
+	## any eval() expression?
+		my ( $evalidx, $evalcompletephrase, $evalfound );
+		transalleval:
+		while( $text =~ m/(eval\((.*?)\)eval)/ ) {
+			$evalcompletephrase = $1;
+			$evalfound = $2;
+#			webhinweis( "&gt;&gt;&gt; foundEval in FAQ Nr: $fnr --[$evalcompletephrase // $evalfound]-- " );
+			if ( $evalfound =~ m/eval\(/ ) {
+#				webfehler( "!!! foundEval in FAQ Nr: $fnr contains \"eval\(\" --[$evalcompletephrase // $evalfound]-- " );
+				last transalleval;
+			}
+			if ( ($evalidx = index( $text, $evalcompletephrase )) < 0 ) {
+				last transalleval;
+			}
+			substr( $text, $evalidx, length( $evalcompletephrase ) ) = eval( $2 );
+		}
 	
     	## das Umwandeln von \x02 in BR macht viele BR, wo sie nicht noetig sind, z.B. vor allen Blockelementen
     	$text =~ s/<BR>([ \t]*<\/?($blockel)[ >\t])/$1/ig;
@@ -2111,15 +2134,21 @@ sub getfilename {
 ## globale Variablen: nurpfad, nurdat, slash
 
         my ( $vpfad, @par ) = @_;
-        $vpfad =~ m/^(.+)([\\\/])([^\\\/]*)$/;
-        if (defined($1)) {
-                $nurpfad 	= $1;
-                $slash   	= $2;
-                $nurdat  	= $3;
+#        webhinweis( ">>> getfilename: vpfad : $vpfad" );
+#        $vpfad =~ m/^(.+)([\\\/])([^\\\/]*)$/;
+#        if (defined($1)) {
+        if ( $vpfad =~ m/^(.+)([\\\/])([^\\\/]*)$/ ) {
+        	( $nurpfad, $slash, $nurdat ) = ( $1, $2, $3 );
+#	        webhinweis( "\t+++ defined \$1 : [$nurpfad]" );
+#                $nurpfad 	= $1;
+#                $slash   	= $2;
+#                $nurdat  	= $3;
         } else {
-                $nurpfad 	= $vpfad;
-                $nurdat 	= '';
+#	        webhinweis( "\t!!! NOT defined \$1 : [$vpfad] " );
+                $nurdat 	= $vpfad;
+                $nurpfad 	= '';
         }
+#        webhinweis( "nurdat : $nurdat -- nurpfad : $nurpfad" );
         $nurdat =~ s/(\?.*)$//;
         return ($nurdat);
 }
