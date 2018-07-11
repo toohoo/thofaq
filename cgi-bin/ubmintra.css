@@ -459,3 +459,10 @@ blockquote:before {
 	font-Size: 0.5em;
 	float: right;
 }
+
+.button {
+	border: 3px outset darkgrey; /*darkblue*/
+	margin: 0 2px 0 2px;
+	padding: 0 2px 0 2px;
+	background: lightgrey;/*lightgreen*/
+}
