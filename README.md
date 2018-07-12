@@ -53,6 +53,11 @@ To run it on Linux/Unix just remove the first line at
 the perl scripts.  
 The app is tested under Linux/Windows/Raspbian (RaspberryPi).  
 
+**Credits**
+
+Thanks to Gabriel (Gabi) Grigorescu for working on the
+Romanian language file.
+
 ---  
 after doing commit  
 f96c1eaeed5c495662c83001b954b3ec542f3a91
