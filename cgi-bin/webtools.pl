@@ -674,7 +674,7 @@ sub sichereSGM {
 
 #---Holen der Spracheinstellungen-------------------------------------------
 sub getI18n {
-	local (*lang, *conf, @rest) = @_;
+	local (*lang, *conf, $mylang, @rest) = @_;
 	# 3 things to do:
 	# 	a) get language from i18n_conf
 	# 	b) get words from i18n_lang_{lang}
@@ -693,6 +693,7 @@ sub getI18n {
 		close (LANGCONF);
 	$lang = $f[0];
 	chomp( $lang );
+	if( $mylang ) { $lang = $mylang; }
 
 	# 	b) get words from i18n_lang_{lang}
 	my $lang_name = $conf;
@@ -700,10 +701,10 @@ sub getI18n {
 	#webhinweis("\$lang: $lang -- \$lang_name: $lang_name");
 
 	if ( !(-f $lang_name) ) {
-		webabbruch ("Sprach-Datei nicht gefunden [$lang_name]. $globals{'adminmes'}");
+		webabbruch ("Sprach-Datei nicht gefunden: [$lang_name]. $globals{'adminmes'}");
 	}
 	if ( !(open (LANGDICT, $lang_name) ) ) {
-		webabbruch ("Kann Sprach-Datei nicht lesen [$lang_name]. $globals{'adminmes'}");
+		webabbruch ("Kann Sprach-Datei nicht lesen: [$lang_name]. $globals{'adminmes'}");
 	}
 	@f = %f = ();
 	$isUTF8 = '';
@@ -877,9 +878,9 @@ sub ausgabekat {
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
-	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat")) );
+	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat\&session=$session")) );
 	} else {  ## normal nicht edit
-	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[EDIT]"),"editfaqkat.pl")) );
+	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[EDIT]"),"editfaqkat.pl?session=$session")) );
 	}
 	#print webtag("p", weblink("[EDIT]","editfaqkat.pl"));
 	#print webtag("blah");
@@ -892,9 +893,9 @@ sub ausgabekat {
 			print webtag("li", "value=$k", webtag("b", "*$ka{$k}*") );
 		} else {
 		    if ($isedit) {
-				print webtag("li", "value=$k", weblink("$ka{$k}", "editfaq.pl?kat=$k") );
+				print webtag("li", "value=$k", weblink("$ka{$k}", "editfaq.pl?kat=$k\&session=$session") );
 		    } else {  ## normal nicht edit
-				print webtag("li", "value=$k", weblink("$ka{$k}", "faq.pl?kat=$k") );
+				print webtag("li", "value=$k", weblink("$ka{$k}", "faq.pl?kat=$k\&session=$session") );
 		    }
 		}
 	}
@@ -919,11 +920,11 @@ sub ausgabekat {
 		my $sicsearchstring = $searchstring; if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
 		$sicsearchstring =~ s/\#/\%23/i;
 		print '&nbsp;' . webtag( "small", '#EMPTY#' );
-		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hasharray;
+		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&searchstring=$sicsearchstring\&fueredit=$fueredit\&session=$session" ) if !$hasharray;
 		print ' - ' if ( !$hasharray && !$hashcloud );
-		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hashcloud;
+		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&searchstring=$sicsearchstring\&fueredit=$fueredit\&session=$session" ) if !$hashcloud;
 		print ' - ' if ( ( !$hasharray || !$hashcloud ) && !$hashcloudsmall );
-		print weblink( "HashcloudSmall","$scriptname?kat=$aktkat\&hashcloudsmall=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hashcloudsmall;
+		print weblink( "HashcloudSmall","$scriptname?kat=$aktkat\&hashcloudsmall=on\&searchstring=$sicsearchstring\&fueredit=$fueredit\&session=$session" ) if !$hashcloudsmall;
 		print            webtag( "small", '#ENDETAG#' );
 	}
 #webhinweis( "<b>if ! \$hash...</b> after" ) if $debug;
@@ -2171,6 +2172,7 @@ sub linkLang {
 		return( trans("[Keine alternative Sprache vorhanden]") );
 	}
 	my $foundLang = 0;
+	my $sessinput;
 	my ( $langLinks, @langLinks, @langOptions );
 	foreach my $langPresent (@langs) {
 #		if ( $lang eq $langPresent ) { $foundLang = 1; }
@@ -2183,13 +2185,19 @@ sub linkLang {
 			push ( @langOptions, "<option>$langPresent</option>"  );
 		}
 	}
+	if( $session ) {
+		$sessinput = '<input type="hidden" name="session" value="'.$session.'">'
+	}
 #	if ( !$foundLang ) {
 #		return( trans("[Gewählte Sprache nicht gefunden ")."($lang)]") ;
 #	}
 	## als einfache Links
 #	return( join( ' ', @langLinks ) );
 	## als select (DropDown)
-	return( "\n\t<form action=\"faq.pl\">\n\t<select name=\"lang\">\n\t\t" . join( "\n\t\t", @langOptions ) . "\n\t</select>\n\t <input type=\"submit\" value=\" &gt; \">\n\t</form>\n" );
+	my $sessinputout = $sessinput;
+	$sessinputout =~ s/</&lt;/g;
+	webhinweis("session input: --[$sessinputout]--");
+	return( "\n\t<form action=\"faq.pl\">\n\t<select name=\"lang\">\n\t\t" . join( "\n\t\t", @langOptions ) . "\n\t</select>\n\t $sessinput \n\t <input type=\"submit\" value=\" &gt; \">\n\t</form>\n" );
 }
 sub setLang {
 	my ( $lang, @rest ) = @_;
@@ -2223,6 +2231,29 @@ sub setLang {
 	}
 	## basically at the point above, but then in false language, so better put it here
 	webhinweis(trans("Sprach-Konfiguration gesichert [$i18n_conf]"));
+
+#	return( join( ' ', @langLinks ) );
+	return 1;
+}
+sub setLangMy {
+	my ( $lang, @rest ) = @_;
+	if ( $#langs < 1 ) {
+		return( trans("[Keine alternative Sprache vorhanden.]") );
+	}
+	my $foundLang = 0;
+	my ( $langLinks, @langLinks );
+	foreach my $langPresent (@langs) {
+		if ( $lang eq $langPresent ) { $foundLang = 1; }
+		push ( @langLinks, "<a href=\"faq.pl?lang=$langPresent\">[$langPresent]</a>"  );
+	}
+	if ( !$foundLang ) {
+		return( trans("[Gewählte Sprache nicht gefunden : ")."($lang)]") ;
+	}
+
+	# get the translations from lang-file
+	if ( !getI18n(*i18n_lang, *i18n_conf, $lang) ) {
+		webfehler (trans("Fehler beim Holen der Spracheinstellungen") . ".. $globals{'adminmes'}.");
+	}
 
 #	return( join( ' ', @langLinks ) );
 	return 1;
@@ -2292,6 +2323,22 @@ foreach (keys %h) {
 $za--;
 print "\nAnzahl: $za\n";
 };
+
+#--- session ---------------------------------------
+sub getSession {
+	# now without low border different from 0
+	# Perl -V:randbits
+	# randbits='15'; => 2**15
+	# = 32768
+	my ( $from, $to, @rest ) = @_;
+	$to = 32768;
+#	$to = $_randto if !( $to );
+	my $digit1 = int( rand( $to ) );
+	my $digit2 = int( rand( $to ) );
+	my $digit = "$digit1$digit2";
+	return( $digit );
+}
+
 
 #--- ENDE Alles ------------------------------------
 1;

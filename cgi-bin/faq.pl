@@ -42,31 +42,8 @@ chdir ($aktdir);
 
 require "webtools.pl";
 
-## packe ich bei webtools mit rein
-#require "globals.pl";
-%globals = getglobals();
-print PrintHeader();
 
-@i18n_lang = %i18n_lang = ();
-$i18n_lang = $globals{ 'i18n_lang' };
-$i18n_conf = $globals{ 'i18n_conf' };
-$encoding  = 'ISO-8859-1';
-if ( !getI18n(*i18n_lang, *i18n_conf) ) {
-	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
-}
-
-
-## nur global festlegen
-#%opt = ();
-
-$head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)
-$langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
-$head =~ s|(</h1>)|$langLinks$1|i;
-if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
-print $head;
-#print "\n<textarea cols=\"80\" rows=\"10\">$head</textarea>\n";
-#print "\n<input type=\"text\" readonly=\"readonly\" value=\"$encoding\" />\n";
-#print "<textarea cols=\"80\" rows=\"10\">$langLinks</textarea>\n";
+## do we have debug?
 if( !defined( $ENV{'faq_debug'} ) ) {
 	#webhinweis("ENV{faq_debug} OFF: $ENV{'faq_debug'}");
 } elsif( $ENV{'faq_debug'} =~ m/On|Yes/i ) {
@@ -81,8 +58,9 @@ if( -f 'D:/temp/faq_debug' ) {
 } else {
 	#webhinweis("'d:/temp/faq_debug' DON'T EXIST");
 }
-#webhinweis("ENV{PATH}: $ENV{PATH}");
 
+
+## some variables / constants
 $aktkat = 1;
 $input="";
 @input=();
@@ -92,6 +70,21 @@ my $hashcloud = 'off';  ## or simply '' but NOT 'on'
 my $hashcloudsmall = 'off';  ## or simply '' but NOT 'on'
 my $lang = "DE";
 
+
+## packe ich bei webtools mit rein
+#require "globals.pl";
+%globals = getglobals();
+print PrintHeader();
+
+@i18n_lang = %i18n_lang = ();
+$i18n_lang = $globals{ 'i18n_lang' };
+$i18n_conf = $globals{ 'i18n_conf' };
+$encoding  = 'ISO-8859-1';
+if ( !getI18n(*i18n_lang, *i18n_conf) ) {
+	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+}
+
+
 ## check if set params in system
 if ( $ENV{'FAQ_PRESET'} ) {
 	$ENV{'REQUEST_METHOD'} = 'GET';
@@ -99,8 +92,10 @@ if ( $ENV{'FAQ_PRESET'} ) {
 	$ENV{'QUERY_STRING'} =~ s/\*/&/g;
 }
 
-## wurde was uebergeben?
+#webfehler("faq.pl--before ReadParse");
+## wurde was uebergeben? / we've got params?
 if (ReadParse(*input)) {
+	webfehler("faq.pl--IN ReadParse");
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
 	}
@@ -117,11 +112,58 @@ if (ReadParse(*input)) {
 		$hashcloudsmall = 'on';
 	}
 	if( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
+	if( !defined( $input{"session"} ) ) { $input{"session"} = ''; }
+	if( $input{"session"} eq '' ) {  ## session empty => get one
+		webfehler("faq.pl--Is ReadParse--No session");
+		$session = getSession();
+		webhinweis("faq.pl--Is ReadParse--getSession: --[$session]--");
+	} else {  ## session is present => process it
+		webfehler("faq.pl--session present");
+		$session = $input{'session'};
+	}
 	if( defined( $input{"lang"} ) ) {
 		$lang = $input{"lang"};
 		setLang( $lang );
 	}
+	if( defined( $input{"mylang"} ) ) {
+		$input{"mylang"} = upper($input{"mylang"});
+		$mylang = $input{"mylang"};
+		$globals{ 'i18n_lang' } = $input{"mylang"};
+		$i18n_lang = $globals{ 'i18n_lang' };
+		$lang = $input{"mylang"};
+		setLangMy( $lang );
+	} else {
+		$input{"mylang"} = '';
+		$mylang = '';
+	}
+} else {
+	webfehler("faq-pl--NO ReadParse");
+	if( !defined( $input{"session"} ) ) { $input{"session"} = ''; }
+	if( $input{"session"} eq '' ) {  ## session empty => get one
+		webfehler("faq.pl--No Readparse--No session");
+		$session = getSession();
+		webhinweis("faq.pl--No ReadParse--getSession: --[$session]--");
+	} else {  ## session is present => process it
+		webfehler("faq.pl--session present");
+		$session = $input{'session'};
+	}
 }
+
+
+## nur global festlegen
+#%opt = ();
+
+$head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)
+$langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
+$head =~ s|(</h1>)|$langLinks$1|i;
+if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
+print $head;
+#print "\n<textarea cols=\"80\" rows=\"10\">$head</textarea>\n";
+#print "\n<input type=\"text\" readonly=\"readonly\" value=\"$encoding\" />\n";
+#print "<textarea cols=\"80\" rows=\"10\">$langLinks</textarea>\n";
+#webhinweis("ENV{PATH}: $ENV{PATH}");
+
+
 #$input{'kat'}='alle';
 #$aktkat = $input{'kat'};
 #webhinweis( "aktkat nach Einlesen input: [$aktkat]" );
