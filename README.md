@@ -54,6 +54,10 @@ To run it on Linux/Unix just remove the first line at
 the perl scripts.  
 The app is tested under Linux/Windows/Raspbian (RaspberryPi).  
 
+**Backup/Extraction to HTML**
+
+For backup/extraction a tool in form of a perl script `faq2html.pl` wass added. Each FAQ category is saved automatically to one HTML page. The links between the categories in the Menu are changed to point to the HTML files.
+
 **Credits**
 
 Thanks to Gabriel (Gabi) Grigorescu for working on the
