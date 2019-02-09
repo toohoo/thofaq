@@ -19,6 +19,7 @@ body {
 
 body {
 	background-color: #333333;
+	background-image: url("got-muster-dark-grey.jpg");
 	color: #cccccc;
 }
 a{
@@ -257,7 +258,9 @@ legend {
 	box-shadow: 4px 6px 10px #555555;
 }
 
-
+.faqantworten dl {
+	background-image: url("got-muster-dark-grey.jpg");
+}
 .faqantworten dt {
 	color: #bbbbbb;
 	font-weight: bold;

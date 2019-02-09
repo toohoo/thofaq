@@ -5,7 +5,7 @@
 /* -------------------------------------------- */
 
 html {
-	background-color: #eeeeee;
+	background-color: #ccc;
 	font-family: Arial,Helvetica,Helv,sans-serif;
 }
 
@@ -16,8 +16,21 @@ body {
 }
 */
 
+body {
+	background-color: #ccc;
+	background-image: url("got-muster-light-grey.jpg");
+	color: #000;
+}
+/*
+a{
+	color: #c6c6c6;
+}
+a:visited {
+	color: #a8a8a8;
+}
+*/
 body > h1, body > form > h1 {
-	background: #f9f9f9;
+	background: #ccc; /*f9f9f9*/
 	text-align: center;
 	border-top: 2px solid #fff;
 	border-bottom: 2px solid #ddd;
@@ -57,7 +70,7 @@ margin: 1px 1px 1px 1px;
 font-style: normal;
 font-family: monospace;
 font-size: 9pt;
-background-color: #eeeeee;
+background-color: #ccccff;
 }
 
 fieldset {
@@ -250,7 +263,9 @@ legend {
 	box-shadow: 4px 6px 10px grey;
 }
 
-
+.faqantworten dl {
+	background-image: url("got-muster-light-grey.jpg");
+}
 .faqantworten dt {
 	font-weight: bold;
 	font-size: 1.3em;
@@ -277,6 +292,7 @@ legend {
 	padding-bottom: 0;
 	/*box-shadow: 0 2px 0px #a0a0a0;*/
 	padding-left: 4px;
+	background: #f9f9f9; 
 }
 
 .zufragen {
@@ -456,7 +472,7 @@ b > code, code > b {
 
 .foundterm {
 	font-weight: bold;
-	background-color: #dddddd; /*#aaaaaa;*/
+	background-color: #bbbbff; /*#aaaaaa;*/
 }
 
 .hashblock {
