@@ -1713,6 +1713,8 @@ sub faq2htm {
     	$text =~ s|\[code\]|<code>|ig;
     	$text =~ s|\[(\/)quote\]|<$1blockquote>|ig;
     	$text =~ s|\[quote\]|<blockquote>|ig;
+    	$text =~ s|\[(\/)pre\]|<$1pre>|ig;
+    	$text =~ s|\[pre\]|<pre>|ig;
     	
     ## hashtags verlinken
     my ( $sictext0, $sictext1, $sictext2 );
@@ -1761,6 +1763,18 @@ sub faq2htm {
 	
     	## das Umwandeln von \x02 in BR macht viele BR, wo sie nicht noetig sind, z.B. vor allen Blockelementen
     	$text =~ s/<BR>([ \t]*<\/?($blockel)[ >\t])/$1/ig;
+
+    	## OK, in pre take it out again
+	## 3 steps, find and mask PRE, take our BR, un-mask PRE
+	my( $foundcont, $foundpre, $prepos );
+	while( $text =~ m|<pre>((.*?)<BR>(.*?))<\/pre>|si ) {
+		$foundcont = $1; $foundpre = $&;
+		$prepos = index( $text, $foundpre );
+		$foundcont =~ s|<BR>||sig;
+		substr( $text, $prepos, length($foundpre) ) = '__pre__' . $foundcont . '__/pre__';
+	}
+	$text =~ s|__pre__|<pre>|sig;
+	$text =~ s|__/pre__|</pre>|sig;
 
 	return ($text);	
 
