@@ -88,13 +88,24 @@ if (&ReadParse(*input)) {
     if ($aktion =~ m/^(Ändern|Anlegen|Change|Create)$/i) {
 	
 	if (
-		!$input{"nr"} &&
-		!$input{"kat"} &&
-		!$input{"tit"} &&
-		!$input{"text"} 
+#		!$input{"nr"} &&
+#		!$input{"kat"} &&
+#		!$input{"tit"} &&
+#		!$input{"text"} 
+		!(
+		  $input{"nr"} &&
+		  $input{"kat"} &&
+		  $input{"tit"} &&
+		  $input{"text"} 
+		)
 	) {
-		&PrintVariables(%input);
-		&webabbruch(trans("Fehlende Daten, Daten nicht vollständig") . trans(" (FAQ-Nr, Kategorie-Nr, Frage, Antwort)."));
+		my $printvar = &PrintVariables(%input);
+		my $missingvar = '';
+		$missingvar .= " FAQ-Nr," if !$input{"nr"};
+		$missingvar .= " Kategorie-Nr," if !$input{"kat"};
+		$missingvar .= " Frage," if !$input{"tit"};
+		$missingvar .= " Antwort" if !$input{"text"};
+		&webabbruch(trans("Fehlende Daten, Daten nicht vollständig:") . trans($missingvar)); #  . $printvar  #  " (FAQ-Nr, Kategorie-Nr, Frage, Antwort)."
 	}
 
 	$nr = $input{"nr"};
