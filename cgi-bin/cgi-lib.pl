@@ -67,8 +67,8 @@ sub ReadParse {
     ($key, $val) = split(/=/,$in[$i],2); # splits on the first =.
 
     # Convert %XX from hex numbers to alphanumeric
-    $key =~ s/%(..)/pack("c",hex($1))/ge;
-    $val =~ s/%(..)/pack("c",hex($1))/ge;
+    $key =~ s/%(..)/pack("C",hex($1))/ge;
+    $val =~ s/%(..)/pack("C",hex($1))/ge;
 
     # Associate key and value
     $in{$key} .= "\0" if (defined($in{$key})); # \0 is the multiple separator

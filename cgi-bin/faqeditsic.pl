@@ -88,16 +88,10 @@ if (&ReadParse(*input)) {
     if ($aktion =~ m/^(Ändern|Anlegen|Change|Create)$/i) {
 	
 	if (
-#		!$input{"nr"} &&
-#		!$input{"kat"} &&
-#		!$input{"tit"} &&
-#		!$input{"text"} 
-		!(
-		  $input{"nr"} &&
-		  $input{"kat"} &&
-		  $input{"tit"} &&
-		  $input{"text"} 
-		)
+		!$input{"nr"} &&
+		!$input{"kat"} &&
+		!$input{"tit"} &&
+		!$input{"text"} 
 	) {
 		my $printvar = &PrintVariables(%input);
 		my $missingvar = '';

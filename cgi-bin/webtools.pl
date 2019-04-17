@@ -2203,7 +2203,8 @@ sub linkLang {
 	## als einfache Links
 #	return( join( ' ', @langLinks ) );
 	## als select (DropDown)
-	return( "\n\t<form action=\"faq.pl\">\n\t<select name=\"lang\">\n\t\t" . join( "\n\t\t", @langOptions ) . "\n\t</select>\n\t <input type=\"submit\" value=\" &gt; \">\n\t</form>\n" );
+#	return( "\n\t<form action=\"faq.pl\">\n\t<select name=\"lang\">\n\t\t" . join( "\n\t\t", @langOptions ) . "\n\t</select>\n\t <input type=\"submit\" value=\" &gt; \">\n\t</form>\n" );
+	return( "\n\t<select name=\"lang\">\n\t\t" . join( "\n\t\t", @langOptions ) . "\n\t</select>\n\t <input type=\"submit\" value=\" &gt; \">\n" );
 }
 sub setLang {
 	my ( $lang, @rest ) = @_;

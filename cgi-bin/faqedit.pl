@@ -79,9 +79,13 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 #%opt = ();
 
 $head = &UbmCgiHead(trans("FAQ - Edit FAQ Frage"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+my $headsave = $head;
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
+# put the FORM around the h1
+$head =~ s|(<h1([^>]*)>)|\n\t<form action="faq.pl">\n<h1 class="wholetitle" $2>|i;
+$head =~ s|(<\/h1>)|$1\n\t</form>\n|i;
 print $head;
 
 print &webtag( &weblink(trans("[zurück zu Edit Fragen]"), "editfaq.pl") );

@@ -60,13 +60,21 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 #%opt = ();
 
 $head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)
+my $headsave = $head;
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
+# put the FORM around the h1
+$head =~ s|(<h1([^>]*)>)|\n\t<form action="faq.pl">\n<h1 class="wholetitle" $2>|i;
+$head =~ s|(<\/h1>)|$1\n\t</form>\n|i;
 print $head;
-#print "\n<textarea cols=\"80\" rows=\"10\">$head</textarea>\n";
+
+#print "\n<textarea cols=\"80\" rows=\"10\">$headsave</textarea>\n";
 #print "\n<input type=\"text\" readonly=\"readonly\" value=\"$encoding\" />\n";
 #print "<textarea cols=\"80\" rows=\"10\">$langLinks</textarea>\n";
+#print "<br>\n";
+#print "\n<textarea cols=\"80\" rows=\"10\">$head</textarea>\n";
+
 if( !defined( $ENV{'faq_debug'} ) ) {
 	#webhinweis("ENV{faq_debug} OFF: $ENV{'faq_debug'}");
 } elsif( $ENV{'faq_debug'} =~ m/On|Yes/i ) {
