@@ -4,7 +4,12 @@
 ---  
   was uploaded on GitHub at 08.03.2016 by thomas@th-o.de  
 
----  
+---
+**Attention** 
+
+Some files are present with _shebang_ is on `#!C:/xampp/perl/bin/perl` - for the planed running location on drive `D:` it has to be corrected to `#!D:/xampp/perl/bin/perl`  
+
+---
   This should really be a very small FAQ app for someone  
 who wants to save some ideas. It's like a personally Knowledge  
 Management Tool. It doesn't need a DB. The app is runable on any  
