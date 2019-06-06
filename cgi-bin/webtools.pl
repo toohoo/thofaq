@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl -w
+#!C:/xampp/perl/bin/perl -w
 #!/usr/bin/perl -w
 #######################################################
 ## webtools.pl
@@ -955,6 +955,9 @@ sub ausgabefaq {
 
 	my $scriptname = getfilename( $0 );
 
+	## actions for spoiler
+	our $spoileridx = 1;
+
 	#webhinweis( "aktkat in ausgabefaq: [$aktkat]" );
 	#webhinweis( "scriptname in ausgabefaq: [$scriptname]" );
 	
@@ -1048,6 +1051,9 @@ sub ausgabefaqfound {
 	my $countfound = 0;
 
 	my $scriptname = getfilename( $0 );
+
+	## actions for spoiler
+	our $spoileridx = 1;
 
 	#webhinweis( "scriptname in ausgabefaq: [$scriptname]" );
 	#webhinweis( "searchstring in ausgabefaqfound: [$searchstring]" );
@@ -1760,9 +1766,24 @@ sub faq2htm {
 			}
 			substr( $text, $evalidx, length( $evalcompletephrase ) ) = eval( $2 );
 		}
+
+	my( $spoilcont, $foundspoil, $spoilpos );
+	while( $text =~ m|\[spoiler\](.*?)\[\/spoiler\]|si ) {
+		$spoilcont = $1; $foundspoil = $&;
+		$spoilpos = index( $text, $foundspoil );
+		#$foundcont =~ s|<BR>||sig;
+		substr( $text, $spoilpos, length($foundspoil) ) = 
+			"<button type=\"button\" value=\"Spoiler$spoileridx\_func\" id=\"Spoiler$spoileridx\_func\" onClick=\"OnOff('Spoiler$spoileridx');\">Spoiler$spoileridx\_On</button><br>\n" .
+#			"<blockquote id=\"Spoiler$spoileridx\" style=\"visibility: hidden;\" class=\"spoiler\">" . $spoilcont . '</blockquote>'
+			"<blockquote id=\"Spoiler$spoileridx\" style=\"display: none;\" class=\"spoiler\">" . $spoilcont . '</blockquote>'
+			;
+		$spoileridx++;
+	}
 	
     	## das Umwandeln von \x02 in BR macht viele BR, wo sie nicht noetig sind, z.B. vor allen Blockelementen
     	$text =~ s/<BR>([ \t]*<\/?($blockel)[ >\t])/$1/ig;
+    	## correct spoilers on first break
+    	$text =~ s/(<blockquote([ \t][^>])+?>)([ \t]*[\r\n]+[ \t]*<br>)/$1/ig;
 
     	## OK, in pre take it out again
 	## 3 steps, find and mask PRE, take our BR, un-mask PRE
@@ -1775,6 +1796,7 @@ sub faq2htm {
 	}
 	$text =~ s|__pre__|<pre>|sig;
 	$text =~ s|__/pre__|</pre>|sig;
+
 
 	return ($text);	
 
@@ -1930,6 +1952,15 @@ sub ismatch{
 	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
 	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
 	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   } while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	
+	} while $foundstring =~ m|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; } while $foundstring =~ m|(value=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; } while $foundstring =~ m|(class=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;	} while $foundstring =~ m|(type=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	## for searchstring "button" and: <button ..>
+	do { $foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)([ >\]])|$1$2$4$6|igs;} while $foundstring =~ m|([<\[])([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)([ >\]])|is;
+	## for searchstring "name" and: <a name ..>
+	do { $foundstring =~ s§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)§$1$2$4§igs;	} while $foundstring =~ m§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)§is;
 	
 	$foundstring =~ s|(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$3|igs;
 	
@@ -1937,6 +1968,16 @@ sub ismatch{
 	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;  	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	
+	} while $foundstring =~ m|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(value=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(class=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(type=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	## for searchstring "button" and: <button ..> | [button ..
+	do { $foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)([ >\]])|$1$2$4$6|igs;} while $foundstring =~ m|([<\[])([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)([ >\]])|is;
+	## for searchstring "name" and: <a name ..>
+	do { $foundstring =~ s§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)§$1$2$4§igs;  	} while $foundstring =~ m§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)§is;
+
 	return( $foundstring );
 }
 
@@ -2241,6 +2282,31 @@ sub setLang {
 
 #	return( join( ' ', @langLinks ) );
 	return 1;
+}
+
+
+sub getonoffscript {
+	my $scriptsrc = <<__ONOFF_SCRIPT__;
+__ONOFF_SCRIPT__
+
+	$scriptsrc = <<__ONOFF_2_SCRIPT__;
+ <script type="text/javascript">
+  function OnOff(theid){
+	var id = theid;
+	var obj = document.getElementById(id);
+	var button = document.getElementById( id + '_func' );
+   	if( obj.style.display == 'none' ) {
+		obj.style.display = 'block';
+		button.innerHTML = id + '_off';
+	} else {
+		obj.style.display = 'none';
+		button.innerHTML = id + '_on';
+	}
+  }
+ </script>
+
+__ONOFF_2_SCRIPT__
+	return( $scriptsrc );
 }
 
 #---Ausdruck einer Liste-----------------#pl#
