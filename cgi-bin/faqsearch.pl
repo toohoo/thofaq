@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl -w
+#!c:/xampp/perl/bin/perl -w
 #!/usr/bin/perl
 #######################################################
 ## faqsearch.pl
@@ -55,6 +55,10 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 
 $head = UbmCgiHead(trans("FAQ - Suche"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 my $headsave = $head;
+## actions to header for Spoiler-feature
+my $onoffscript = getonoffscript();
+$head =~ s|(</head>)|$onoffscript$1|is;
+
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
@@ -67,7 +71,7 @@ $aktkat 		= 1;
 $input 			= "";
 @input 			= ();
 %input 			= ();
-$searchstring 	= '';
+$sst 	= '';
 $onlypickedkat	= undef;
 $hashtags = 'off';  ## or simply '' but NOT 'on'
 $hashcloud = 'off';  ## or simply '' but NOT 'on'
@@ -85,8 +89,8 @@ if ( ReadParse( *input ) ) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
 	}
-	if ($input{'searchstring'}) {
-		$searchstring = $input{'searchstring'};
+	if ($input{'sst'}) {
+		$sst = $input{'sst'};
 	}
 	if ( $input{'onlypickedkat'}) {
 		$onlypickedkat = $input{'onlypickedkat'};
@@ -110,7 +114,7 @@ if ( ReadParse( *input ) ) {
 	}
 }
 
-#webhinweis( "searchstring in faqsearch.pl: [$searchstring]" );
+#webhinweis( "sst in faqsearch.pl: [$sst]" );
 #webhinweis( "IN faqsearch.pl; aktkat/onlypickedkat: [$aktkat/$onlypickedkat]" );
 
 ## sind die Dateien da?
@@ -196,18 +200,18 @@ $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it 
 $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
 #$fueredit = undef;  ## siehe oben
 #$input{'fueredit'} = $fueredit;  ## siehe oben
-## searchstring uebergeben
-$fkat{'searchstring'} = $searchstring;
+## sst uebergeben
+$fkat{'sst'} = $sst;
 ausgabekat($aktkat, $fueredit, %fkat);
-delete $fkat{'searchstring'} if defined( $fkat{'searchstring'} );
+delete $fkat{'sst'} if defined( $fkat{'sst'} );
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
 delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-#webhinweis( "searchstring vor ausgabefaqfound: [$searchstring]" );
-ausgabefaqfound($aktkat, $fueredit, $searchstring, *fkat, *ftit, *finh, *fnrkat);
+#webhinweis( "sst vor ausgabefaqfound: [$sst]" );
+ausgabefaqfound($aktkat, $fueredit, $sst, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";
