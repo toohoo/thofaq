@@ -1,4 +1,4 @@
-#!C:/xampp/perl/bin/perl -w
+#!d:/xampp/perl/bin/perl -w
 #!/usr/bin/perl
 #######################################################
 ## faqsearch.pl
@@ -71,7 +71,7 @@ $aktkat 		= 1;
 $input 			= "";
 @input 			= ();
 %input 			= ();
-$searchstring 	= '';
+$sst 	= '';
 $onlypickedkat	= undef;
 $hashtags = 'off';  ## or simply '' but NOT 'on'
 $hashcloud = 'off';  ## or simply '' but NOT 'on'
@@ -89,8 +89,8 @@ if ( ReadParse( *input ) ) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
 	}
-	if ($input{'searchstring'}) {
-		$searchstring = $input{'searchstring'};
+	if ($input{'sst'}) {
+		$sst = $input{'sst'};
 	}
 	if ( $input{'onlypickedkat'}) {
 		$onlypickedkat = $input{'onlypickedkat'};
@@ -114,7 +114,7 @@ if ( ReadParse( *input ) ) {
 	}
 }
 
-#webhinweis( "searchstring in faqsearch.pl: [$searchstring]" );
+#webhinweis( "sst in faqsearch.pl: [$sst]" );
 #webhinweis( "IN faqsearch.pl; aktkat/onlypickedkat: [$aktkat/$onlypickedkat]" );
 
 ## sind die Dateien da?
@@ -158,7 +158,7 @@ if ( ReadParse( *input ) ) {
 
 
 ##-- Sollte ich das Folgende auslagern in eine do "holfaq.pl" Routine? ---------------------------------
-## besser waere ein sub, nur wie soll ich die Felder übergeben?
+## besser waere ein sub, nur wie soll ich die Felder Ã¼bergeben?
 ## habe bei perl-archiv.de was gefunden:
 ## 	http://www.perl-archiv.de/sid1953062225218/perl/tutorial/references.shtml
 ##
@@ -200,18 +200,18 @@ $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it 
 $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
 #$fueredit = undef;  ## siehe oben
 #$input{'fueredit'} = $fueredit;  ## siehe oben
-## searchstring uebergeben
-$fkat{'searchstring'} = $searchstring;
+## sst uebergeben
+$fkat{'sst'} = $sst;
 ausgabekat($aktkat, $fueredit, %fkat);
-delete $fkat{'searchstring'} if defined( $fkat{'searchstring'} );
+delete $fkat{'sst'} if defined( $fkat{'sst'} );
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
 delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-#webhinweis( "searchstring vor ausgabefaqfound: [$searchstring]" );
-ausgabefaqfound($aktkat, $fueredit, $searchstring, *fkat, *ftit, *finh, *fnrkat);
+#webhinweis( "sst vor ausgabefaqfound: [$sst]" );
+ausgabefaqfound($aktkat, $fueredit, $sst, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";
