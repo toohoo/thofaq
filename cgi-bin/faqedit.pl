@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl
+#!C:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## FAQedit.pl
@@ -80,6 +80,10 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 
 $head = &UbmCgiHead(trans("FAQ - Edit FAQ Frage"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 my $headsave = $head;
+## actions to header for Spoiler-feature
+my $onoffscript = getonoffscript();
+$head =~ s|(</head>)|$onoffscript$1|is;
+
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }

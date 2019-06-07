@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl
+#!C:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## FAQeditSic.pl
@@ -39,11 +39,19 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
 }
 
+	## actions for spoiler
+	our $spoileridx = 1;
+
 
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
 $head = &UbmCgiHead(trans("FAQ - Edit FAQ Frage sichern") );  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
+my $headsave = $head;
+## actions to header for Spoiler-feature
+my $onoffscript = getonoffscript();
+$head =~ s|(</head>)|$onoffscript$1|is;
+
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
@@ -88,10 +96,16 @@ if (&ReadParse(*input)) {
     if ($aktion =~ m/^(Ändern|Anlegen|Change|Create)$/i) {
 	
 	if (
-		!$input{"nr"} &&
-		!$input{"kat"} &&
-		!$input{"tit"} &&
-		!$input{"text"} 
+#		!$input{"nr"} &&
+#		!$input{"kat"} &&
+#		!$input{"tit"} &&
+#		!$input{"text"} 
+		!(
+		  $input{"nr"} &&
+		  $input{"kat"} &&
+		  $input{"tit"} &&
+		  $input{"text"} 
+		)
 	) {
 		my $printvar = &PrintVariables(%input);
 		my $missingvar = '';

@@ -158,7 +158,7 @@ if ( ReadParse( *input ) ) {
 
 
 ##-- Sollte ich das Folgende auslagern in eine do "holfaq.pl" Routine? ---------------------------------
-## besser waere ein sub, nur wie soll ich die Felder übergeben?
+## besser waere ein sub, nur wie soll ich die Felder Ã¼bergeben?
 ## habe bei perl-archiv.de was gefunden:
 ## 	http://www.perl-archiv.de/sid1953062225218/perl/tutorial/references.shtml
 ##
