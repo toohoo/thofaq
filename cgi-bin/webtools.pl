@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl -w
+#!C:/xampp/perl/bin/perl -w
 #!/usr/bin/perl -w
 #######################################################
 ## webtools.pl
@@ -108,7 +108,7 @@ sub webtag {
 
 #---Optionen lesen-------------------------------------------
 #-- 21.09.2005
-## ist das gut hier? lieber Neuanlegen oder Löschung über Zuweisung des Ergebnisses der SUB (Hash)
+## ist das gut hier? lieber Neuanlegen oder Loeschung ueber Zuweisung des Ergebnisses der SUB (Hash)
 #undef(*opt);
 
 sub holopt {
@@ -863,12 +863,12 @@ sub ausgabekat {
 		%hashcloudsmall = %{ $hashcloudsmall };
 	}
 
-	my $searchstring = undef;
-	if ( defined( $ka{ 'searchstring' } ) ) {
-		$searchstring = $ka{ 'searchstring' };
-		delete $ka{ 'searchstring' };
+	my $sst = undef;
+	if ( defined( $ka{ 'sst' } ) ) {
+		$sst = $ka{ 'sst' };
+		delete $ka{ 'sst' };
 	}
-	if ( !$searchstring ) { $searchstring = ''; }
+	if ( !$sst ) { $sst = ''; }
 
 #webhinweis("<b>sort keys \%ka</b> before") if $debug;
 	@ke = sort{$a <=> $b} (keys (%ka) );
@@ -903,7 +903,7 @@ sub ausgabekat {
 	print webtag("ol", "", "#ENDETAG#");
 
 	#if (($aktkat eq "") || !defined($aktkat)) { $aktkatsic = 'alle'; }
-	ausgabesearchbox( $aktkatsic, '', $searchstring );
+	ausgabesearchbox( $aktkatsic, '', $sst );
 #webhinweis("<b>ausgabesearchbox</b> after") if $debug;
 	
 	#webhinweis( "\$0: $0" );
@@ -911,19 +911,19 @@ sub ausgabekat {
 #	webhinweis( "\$0 : $0 " );
 #	webhinweis( "\$scriptname : $scriptname " );
 	#webhinweis( "scriptname: $scriptname" );
-	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
-	if ( !$fueredit ) { $fueredit = ''; }
-	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
+	if ( !$toedit && $input{ 'toedit' } ) { $toedit = $input{ 'toedit' }; }
+	if ( !$toedit ) { $toedit = ''; }
+	#webhinweis( "toedit / input{toedit}: $toedit / $input{toedit}" );
 #webhinweis( "<b>if ! \$hash...</b> before" ) if $debug;
 	if ( !$hasharray || !$hashcloud || !$hashcloudsmall ) {
-		my $sicsearchstring = $searchstring; if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
-		$sicsearchstring =~ s/\#/\%23/i;
+		my $sicsst = $sst; if ( !defined( $sicsst ) ) { $sicsst = ''; }
+		$sicsst =~ s/\#/\%23/i;
 		print '&nbsp;' . webtag( "small", '#EMPTY#' );
-		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hasharray;
+		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&sst=$sicsst\&toedit=$toedit" ) if !$hasharray;
 		print ' - ' if ( !$hasharray && !$hashcloud );
-		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hashcloud;
+		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&sst=$sicsst\&toedit=$toedit" ) if !$hashcloud;
 		print ' - ' if ( ( !$hasharray || !$hashcloud ) && !$hashcloudsmall );
-		print weblink( "HashcloudSmall","$scriptname?kat=$aktkat\&hashcloudsmall=on\&searchstring=$sicsearchstring\&fueredit=$fueredit" ) if !$hashcloudsmall;
+		print weblink( "HashcloudSmall","$scriptname?kat=$aktkat\&hashcloudsmall=on\&sst=$sicsst\&toedit=$toedit" ) if !$hashcloudsmall;
 		print            webtag( "small", '#ENDETAG#' );
 	}
 #webhinweis( "<b>if ! \$hash...</b> after" ) if $debug;
@@ -954,6 +954,9 @@ sub ausgabefaq {
 	local ($k, $temp);
 
 	my $scriptname = getfilename( $0 );
+
+	## actions for spoiler
+	our $spoileridx = 1;
 
 	#webhinweis( "aktkat in ausgabefaq: [$aktkat]" );
 	#webhinweis( "scriptname in ausgabefaq: [$scriptname]" );
@@ -987,9 +990,9 @@ sub ausgabefaq {
 	}
 	print webtag("ol", "", "#ENDETAG#");
 	print webtag("div", "", "#ENDETAG#");
-	  if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
+	  if ( !defined( $sicsst ) ) { $sicsst = ''; }
 	  if ( !defined( $input{'hashtags'} ) ) { $input{'hashtags'} = ''; }
-	  if ( !defined( $fueredit ) ) { $fueredit = ''; }
+	  if ( !defined( $toedit ) ) { $toedit = ''; }
 	if ($#aktfaq >= 0) {
 		print webtag("div", "class=faqantworten", "#EMPTY#");
 		if ($isedit) {
@@ -1003,7 +1006,7 @@ sub ausgabefaq {
 			    if ($akat eq "alle") { 
 			    	$temp = webtag("dt", 'class=faqantworthead' , webtag("a","name=faq$k", "$k\. $tit{$k} ") 
 			    		. webtag("small", " (" 
-			    			. weblink( trans("Kat. ") . $nrkat{$k}, "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. ") . $nrkat{$k}, "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") ") 
 			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", trans("[Edit]")) 
 			    	);
@@ -1017,7 +1020,7 @@ sub ausgabefaq {
 			    	$temp = webtag("dt", 'class=faqantworthead' , webtag("a","name=faq$k", "$k\. $tit{$k}") 
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( trans("Kat. ") . $nrkat{$k}, "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. ") . $nrkat{$k}, "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    	);
@@ -1040,7 +1043,7 @@ sub ausgabefaq {
 #---Ausgabe der Suchergebnisse der Fragen der aktuellen/aller Kategorie-------------------------------------------
 #&ausgabefaq($aktkat, *fkat, *ftit, *finh, *fnrkat);
 sub ausgabefaqfound {
-	local ( $akat, $isedit, $searchstring, *kat, *tit, *inh, *nrkat ) = @_;
+	local ( $akat, $isedit, $sst, *kat, *tit, *inh, *nrkat ) = @_;
 	my ( @fke ) = sort{$a <=> $b}(keys(%nrkat));
 	my ( @aktfaq ) = ();
 	my ( $k, $temp );
@@ -1049,8 +1052,11 @@ sub ausgabefaqfound {
 
 	my $scriptname = getfilename( $0 );
 
+	## actions for spoiler
+	our $spoileridx = 1;
+
 	#webhinweis( "scriptname in ausgabefaq: [$scriptname]" );
-	#webhinweis( "searchstring in ausgabefaqfound: [$searchstring]" );
+	#webhinweis( "sst in ausgabefaqfound: [$sst]" );
 	#webhinweis( "IN ausgabefaqfound; akat: [$akat]" );
 	
 	## erst Liste der Fragen ausgeben mit Links zu den Fragen unten
@@ -1081,15 +1087,15 @@ sub ausgabefaqfound {
 	    );
 	}
 
-	webhinweis( trans("In Kategorie: ") . $akat . trans(" - Suche: ") . $searchstring );
+	webhinweis( trans("In Kategorie: ") . $akat . trans(" - Suche: ") . $sst );
 	#webhinweis( "IN ausgabefaqfound; akat: [$akat]" );
 
 	print webtag( "ol", "type=1", "#EMPTY#" );
 
 	## erstmal fundstellen finden
-	## dazu erstmal Parser des searchstring aufrufen
+	## dazu erstmal Parser des sst aufrufen
 	#webhinweis( "vor parsesearch" );
-	my @searchwords = parsesearch( $searchstring );
+	my @searchwords = parsesearch( $sst );
 	#webhinweis( "searchwords: [".join(' - ', @searchwords)."] anzahl: ".($#searchwords + 1) );
 
 	my $matched = undef;
@@ -1121,8 +1127,8 @@ sub ausgabefaqfound {
 	webhinweis( trans("Anzahl gefundene Eintr&auml;ge: $countfound") );
 	print webtag("div", "", "#ENDETAG#");
 
-	my $sicsearchstring = $searchstring; if ( !defined( $sicsearchstring ) ) { $sicsearchstring = ''; }
-	$sicsearchstring =~ s/\#/\%23/g;
+	my $sicsst = $sst; if ( !defined( $sicsst ) ) { $sicsst = ''; }
+	$sicsst =~ s/\#/\%23/g;
 
 	my ( $titout, $inhout ) = ( undef, undef );
 	if ($#aktfaq >= 0) {
@@ -1144,7 +1150,7 @@ sub ausgabefaqfound {
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout ) 
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( trans("Kat. $nrkat{$k}"), "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. $nrkat{$k}"), "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", trans("[Edit]")) );
@@ -1158,7 +1164,7 @@ sub ausgabefaqfound {
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout )  
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( trans("Kat. $nrkat{$k}"), "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&searchstring=$sicsearchstring\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( trans("Kat. $nrkat{$k}"), "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    	);
@@ -1571,8 +1577,8 @@ PSEUDOHINWEISENDE
 
 #---Ausgabe des Suchfeldes-------------------------------------------
 sub ausgabesearchbox {
-	# kat[0..|alle] prefix searchstring
-	my ($kat, $prefix, $searchval, @rest) = @_; ## , $searchstring - hab ich hier noch gar nicht
+	# kat[0..|alle] prefix sst
+	my ($kat, $prefix, $searchval, @rest) = @_; ## , $sst - hab ich hier noch gar nicht
 	#my ($k, $v, @ke, $t, $katmax, @katfrei, @katnr, $i, $katneuende, @katvorh);
 	#my ($faqmax, @faqfrei, @faqnr, $faqneuende, @faqvorh);
 	my ($tempstring) = "";
@@ -1624,7 +1630,7 @@ SEARCHHINWEIS
 
 	print webtag("span","class=searchinput","#EMPTY#");
 
-		print inputfeld("searchstring", "$searchval", $breittiny);
+		print inputfeld("sst", "$searchval", $breittiny);
 		print "&nbsp;";
 		print webtag("input", "type=hidden\tname=kat\tvalue=$kat", "#EMPTY#" );
 		print '&nbsp;';
@@ -1677,14 +1683,14 @@ sub faq2htm {
 	local ($fnr) = $_[1];  ## only for reporting issues
 	
 	## backup vars temporarily
-	my $fuereditbak	= $input{'fueredit'};
+	my $toeditbak	= $input{'toedit'};
 	my $katbak 		= $input{'kat'};
-	if( !defined( $input{'fueredit'} ) )	{ $input{'fueredit'} = ''; }
+	if( !defined( $input{'toedit'} ) )	{ $input{'toedit'} = ''; }
 	if( !defined( $input{'kat'} ) )			{ $input{'kat'} = ''; }
 	
 	## siehe auch blockel in: webtag
 	local ($blockel) = "P|H1|H2|H3|H4|H5|H6|UL|OL|PRE|DL|DIV|NOSCRIPT|BLOCKQUOTE|FORM|HR|TABLE|FIELDSET|ADDRESS|TR|TD|TH|FRAME|FRAMESET|NOFRAMES|LI|DD|DT|SELECT|OPTION";
-	if ( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
+	if ( !defined( $input{"toedit"} ) ) { $input{"toedit"} = ''; }
 	## ein \n vor BR rein, damit man den Quelltext verfolgen kann
     	$text =~ s|\x02|\n<BR>|ig;
 
@@ -1727,8 +1733,8 @@ sub faq2htm {
 	    	#$sictext1 = $text;
 	    	#$sictext1 =~ s/\</\&lt;/sg;
 	    	#$sictext1 =~ s/\>/\&gt;/sg;
-	    	$text =~ s/\#(\w+)([^a-zA-Z0-9;_\-\]]|$)/<a href=\"faqsearch.pl?searchstring=\%23$1\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" class=\"hashtag\">\#$1<\/a>$2 - /gs ;
-	    	#$text =~ s/<a href=\"[^. \t>\r\n?&].pl?searchstring=\%23(faq\d+)\&fueredit=[^. \t>\r\n?&]\&kat=[^. \t>\r\n?&]\" class=\"hashtag\">(\#faq\d+)<\/a>([^a-zA-Z0-9;_\-\]]|$) - /$2$3/igs ;
+	    	$text =~ s/\#(\w+)([^a-zA-Z0-9;_\-\]]|$)/<a href=\"faqsearch.pl?sst=\%23$1\&toedit=$input{'toedit'}\&kat=$input{'kat'}\" class=\"hashtag\">\#$1<\/a>$2 - /gs ;
+	    	#$text =~ s/<a href=\"[^. \t>\r\n?&].pl?sst=\%23(faq\d+)\&toedit=[^. \t>\r\n?&]\&kat=[^. \t>\r\n?&]\" class=\"hashtag\">(\#faq\d+)<\/a>([^a-zA-Z0-9;_\-\]]|$) - /$2$3/igs ;
 	    	$text =~ s/(<a href=\")([^\"#]+)\~\~\~/$1$2\#/igs;
 	    	$text =~ s/(\.pl\?kat=\d+)\~\~([^\x22>]+)([\x22>])~/$1\#$2$3/isg;
 	    	$text =~ s/\~(faq\d+)([^\d])/\#$1$2/isg;
@@ -1760,9 +1766,24 @@ sub faq2htm {
 			}
 			substr( $text, $evalidx, length( $evalcompletephrase ) ) = eval( $2 );
 		}
+
+	my( $spoilcont, $foundspoil, $spoilpos );
+	while( $text =~ m|\[spoiler\](.*?)\[\/spoiler\]|si ) {
+		$spoilcont = $1; $foundspoil = $&;
+		$spoilpos = index( $text, $foundspoil );
+		#$foundcont =~ s|<BR>||sig;
+		substr( $text, $spoilpos, length($foundspoil) ) = 
+			"<button type=\"button\" value=\"Spoiler$spoileridx\_func\" id=\"Spoiler$spoileridx\_func\" onClick=\"OnOff('Spoiler$spoileridx');\">Spoiler$spoileridx\_On</button><br>\n" .
+#			"<blockquote id=\"Spoiler$spoileridx\" style=\"visibility: hidden;\" class=\"spoiler\">" . $spoilcont . '</blockquote>'
+			"<blockquote id=\"Spoiler$spoileridx\" style=\"display: none;\" class=\"spoiler\">" . $spoilcont . '</blockquote>'
+			;
+		$spoileridx++;
+	}
 	
     	## das Umwandeln von \x02 in BR macht viele BR, wo sie nicht noetig sind, z.B. vor allen Blockelementen
     	$text =~ s/<BR>([ \t]*<\/?($blockel)[ >\t])/$1/ig;
+    	## correct spoilers on first break
+    	$text =~ s/(<blockquote([ \t][^>])+?>)([ \t]*[\r\n]+[ \t]*<br>)/$1/ig;
 
     	## OK, in pre take it out again
 	## 3 steps, find and mask PRE, take our BR, un-mask PRE
@@ -1775,6 +1796,7 @@ sub faq2htm {
 	}
 	$text =~ s|__pre__|<pre>|sig;
 	$text =~ s|__/pre__|</pre>|sig;
+
 
 	return ($text);	
 
@@ -1850,11 +1872,11 @@ sub whoamip {
 }
 
 sub parsesearch{
-	my ( $searchstring, @rest ) = @_;
+	my ( $sst, @rest ) = @_;
 	
-	#webhinweis( "IN parsesearch; searchstring: [$searchstring]" );
+	#webhinweis( "IN parsesearch; sst: [$sst]" );
 
-	#if ( $searchstring =~ /^[ \t\r\n]*$/ ) { return( undef ); }
+	#if ( $sst =~ /^[ \t\r\n]*$/ ) { return( undef ); }
 
 	## keine Phrasen (vorerst)
 	##   Anfuehrung loeschen
@@ -1863,7 +1885,7 @@ sub parsesearch{
 	## alles Andere ersetzen durch ' '
 	## Achtung, hier erstmal kein case insensitive (doppelt pruefung)
 	
-	my $searchnormalized = $searchstring;
+	my $searchnormalized = $sst;
 	#webhinweis( "searchnormalized vor substitute: [$searchnormalized]" );
 	$searchnormalized =~ s/[^a-zA-Z0-9_\xE4\xF6\xFC\xC4\xD6\xDC\xDF\#\-\.]+/ /gs;   ## Zeichen '#' ausnehmen
 	$searchnormalized =~ s/\#/\x23/gs;   ## Zeichen '#' maskieren, gilt sonst evtl. als Kommentar
@@ -1890,11 +1912,11 @@ sub ismatch{
 	my $foundstring = $text;
 	my $term = undef;
 	
-	my $searchstring = join( ' ', @searchterms );
+	my $sst = join( ' ', @searchterms );
 	my $dohint = undef;
-	if ( $searchstring =~ s/ sonder//is ) {
+	if ( $sst =~ s/ sonder//is ) {
 		$dohint = 1;
-		@searchterms = split( / /, $searchstring );
+		@searchterms = split( / /, $sst );
 	}
 
 	if ( $#searchterms < 0 ) {
@@ -1930,6 +1952,16 @@ sub ismatch{
 	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
 	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
 	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   } while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	
+	} while $foundstring =~ m|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; } while $foundstring =~ m|(value=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; } while $foundstring =~ m|(class=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	do { $foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;	} while $foundstring =~ m|(type=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
+	## for sst "button" and: <button ..>
+	do { $foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)([ >\]])|$1$2$4$6|igs;} while $foundstring =~ m|([<\[])([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)([ >\]])|is;
+	## for sst "name" and: <a name ..>
+
+	do { $foundstring =~ s§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)§$1$2$4§igs;	} while $foundstring =~ m§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)§is;
 	
 	$foundstring =~ s|(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$3|igs;
 	
@@ -1937,6 +1969,16 @@ sub ismatch{
 	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;  	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
 	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	
+	} while $foundstring =~ m|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(value=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(class=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	do { $foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(type=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	## for sst "button" and: <button ..> | [button ..
+	do { $foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)([ >\]])|$1$2$4$6|igs;} while $foundstring =~ m|([<\[])([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)([ >\]])|is;
+	## for sst "name" and: <a name ..>
+	do { $foundstring =~ s§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)§$1$2$4§igs;  	} while $foundstring =~ m§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)§is;
+
 	return( $foundstring );
 }
 
@@ -1996,7 +2038,7 @@ sub gethashtagsblock {
 	
 	$hashblock .= "<div class=\"hashblock\">\n";
 	
-	# faqsearch.pl?searchstring=#hashtag
+	# faqsearch.pl?sst=#hashtag
 	my $hashcount = @{ $arref };
 webhinweis("<b>hashcount:</b>  $hashcount") if $debug;
 	#webhinweis( "IN gethashtagsblock - hashcount: $hashcount" );
@@ -2018,7 +2060,7 @@ print "<p>\n" if $debug;
 	eachhashtagshow:
 	for( $hindex = 0; $hindex <= $#hasharraysort; $hindex++ ) {
 			$hashtag = $hasharraysort[$hindex];
-			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - \n";
+			$hashblock .= "<a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag</a> - \n";
 			print "$hindex (".length($hashblock)."): ".substr($hashtag,1)." - " if $debug;
 			if( $debug1 ) {
 				last eachhashtagshow if ($hindex >= 450);
@@ -2026,7 +2068,7 @@ print "<p>\n" if $debug;
 	}
 
 #	foreach $hashtag ( sort( @{ $arref } ) ) {
-#			$hashblock .= "<a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
+#			$hashblock .= "<a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
 #			print "".substr($hashtag,1)." - " if $debug;
 #	}
 
@@ -2050,7 +2092,7 @@ sub gethashtagcloud {
 	
 	$hashblock .= "<div class=\"hashblock\">\n";
 	
-	# faqsearch.pl?searchstring=#hashtag
+	# faqsearch.pl?sst=#hashtag
 	my $hashcount = keys( %{ $hashref } );
 	#webhinweis( "IN gethashtagcloud - hashcount: $hashcount" );
 	my ( $hashtag, $maxcloud, $lvl ) = ( undef, 0, 0 );
@@ -2072,8 +2114,8 @@ sub gethashtagcloud {
 				#webhinweis( "NOT hashref{$hashtag} > lvl[".($ilvl-1)."] * maxcloud(".($lvl[$ilvl-1] * $maxcloud).") - lvl($lvl)" );
 			}
 		}
-		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
-		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - ";
+		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
+		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - ";
 	}
 	#exit;
 	$hashblock .= "</div>\n";
@@ -2093,7 +2135,7 @@ sub gethashtagcloudsmall {
 	
 	$hashblock .= "<div class=\"hashblock\">\n";
 	
-	# faqsearch.pl?searchstring=#hashtag
+	# faqsearch.pl?sst=#hashtag
 	my $hashcount = keys( %{ $hashref } );
 	#webhinweis( "IN gethashtagcloud - hashcount: $hashcount" );
 	my ( $hashtag, $maxcloud, $lvl ) = ( undef, 0, 0 );
@@ -2115,8 +2157,8 @@ sub gethashtagcloudsmall {
 				#webhinweis( "NOT hashref{$hashtag} > lvl[".($ilvl-1)."] * maxcloud(".($lvl[$ilvl-1] * $maxcloud).") - lvl($lvl)" );
 			}
 		}
-		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
-		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?searchstring=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - " if $lvl > $lvl[0];
+		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
+		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - " if $lvl > $lvl[0];
 	}
 	#exit;
 	$hashblock .= "</div>\n";
@@ -2241,6 +2283,31 @@ sub setLang {
 
 #	return( join( ' ', @langLinks ) );
 	return 1;
+}
+
+
+sub getonoffscript {
+	my $scriptsrc = <<__ONOFF_SCRIPT__;
+__ONOFF_SCRIPT__
+
+	$scriptsrc = <<__ONOFF_2_SCRIPT__;
+ <script type="text/javascript">
+  function OnOff(theid){
+	var id = theid;
+	var obj = document.getElementById(id);
+	var button = document.getElementById( id + '_func' );
+   	if( obj.style.display == 'none' ) {
+		obj.style.display = 'block';
+		button.innerHTML = id + '_off';
+	} else {
+		obj.style.display = 'none';
+		button.innerHTML = id + '_on';
+	}
+  }
+ </script>
+
+__ONOFF_2_SCRIPT__
+	return( $scriptsrc );
 }
 
 #---Ausdruck einer Liste-----------------#pl#

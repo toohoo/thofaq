@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl
+#!C:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## FAQedit.pl
@@ -80,6 +80,10 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 
 $head = &UbmCgiHead(trans("FAQ - Edit FAQ Frage"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 my $headsave = $head;
+## actions to header for Spoiler-feature
+my $onoffscript = getonoffscript();
+$head =~ s|(</head>)|$onoffscript$1|is;
+
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
@@ -144,12 +148,12 @@ if ($faqnr =~ m/neu|new/) {
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------
 ## 	hier brauch ich neue Routine oder einen zusaetzlichen Parameter
-#$fueredit = 1;
-#&ausgabekat($aktkat, $fueredit, %fkat);
+#$toedit = 1;
+#&ausgabekat($aktkat, $toedit, %fkat);
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-#&ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+#&ausgabefaq($aktkat, $toedit, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";

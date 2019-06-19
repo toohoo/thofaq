@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl -w
+#!C:/xampp/perl/bin/perl -w
 #!/usr/bin/perl -w
 #######################################################
 ## FAQ.pl
@@ -25,7 +25,7 @@ $slash = "\\";
 $aktdir = holpfad0($scriptname);
 if( $aktdir eq '' ) { $aktdir = '.'; }
 $debug = 0;
-$fueredit = undef;
+$toedit = undef;
 
 #print "Content-type: text/html\n\n";
 #print "<html>\n<head>\n<title>Test</title>\n</head>\n<body>\n";
@@ -61,6 +61,10 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 
 $head = UbmCgiHead(trans("FAQ - Hilfe: häufig gestellte Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005  ##  first task for trans (i18n)
 my $headsave = $head;
+## actions to header for Spoiler-feature
+my $onoffscript = getonoffscript();
+$head =~ s|(</head>)|$onoffscript$1|is;
+
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
@@ -124,7 +128,7 @@ if (ReadParse(*input)) {
 	if ( $input{'hashcloudsmall'} =~ m/on/i ) {
 		$hashcloudsmall = 'on';
 	}
-	if( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
+	if( !defined( $input{"toedit"} ) ) { $input{"toedit"} = ''; }
 	if( defined( $input{"lang"} ) ) {
 		$lang = $input{"lang"};
 		setLang( $lang );
@@ -223,9 +227,9 @@ if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
 $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
-#$input{'fueredit'} = $fueredit;
+#$input{'toedit'} = $toedit;
 	#webfehler("ausgabekat Before") if $debug;
-ausgabekat($aktkat, $fueredit, %fkat);
+ausgabekat($aktkat, $toedit, %fkat);
 	#webfehler("ausgabekat ***ENDE***") if $debug;
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
@@ -235,7 +239,7 @@ delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## ta
 ## brauch ich hier die Kategorien zu uebergeben?
 #webhinweis( "aktkat vor ausgabefaq: [$aktkat]" );
 	#webfehler("ausgabefaq Before") if $debug;
-ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+ausgabefaq($aktkat, $toedit, *fkat, *ftit, *finh, *fnrkat);
 	#webfehler("ausgabefaq ***ENDE***") if $debug;
 
 

@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl -w
+#!C:/xampp/perl/bin/perl -w
 #!/usr/bin/perl
 #######################################################
 ## whoamip.pl
@@ -12,3 +12,5 @@ if ($remote_addr = $ENV{ 'REMOTE_ADDR' }) {
 } else {
 	die "Fehler: IP nicht gefunden.";
 }
+
+1;

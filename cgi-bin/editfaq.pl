@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl -w
+#!C:/xampp/perl/bin/perl -w
 #!/usr/bin/perl
 #######################################################
 ## editFAQ.pl
@@ -47,6 +47,10 @@ if ( !getI18n(*i18n_lang, *i18n_conf) ) {
 
 $head = &UbmCgiHead(trans("FAQ - Edit Fragen"));  ##  - Thomas Hofmann; Tel. 146 - T.H. Okt 2005
 my $headsave = $head;
+## actions to header for Spoiler-feature
+my $onoffscript = getonoffscript();
+$head =~ s|(</head>)|$onoffscript$1|is;
+
 $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
@@ -118,16 +122,16 @@ if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
 $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
-$fueredit = 1;
-$input{'fueredit'} = $fueredit;
-ausgabekat($aktkat, $fueredit, %fkat);
+$toedit = 1;
+$input{'toedit'} = $toedit;
+ausgabekat($aktkat, $toedit, %fkat);
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
 delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+ausgabefaq($aktkat, $toedit, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";
