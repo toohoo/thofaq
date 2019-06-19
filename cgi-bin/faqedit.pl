@@ -1,4 +1,4 @@
-#!C:/xampp/perl/bin/perl
+#!d:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## FAQedit.pl
