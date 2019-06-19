@@ -25,7 +25,7 @@ $slash = "\\";
 $aktdir = holpfad0($scriptname);
 if( $aktdir eq '' ) { $aktdir = '.'; }
 $debug = 0;
-$fueredit = undef;
+$toedit = undef;
 
 #print "Content-type: text/html\n\n";
 #print "<html>\n<head>\n<title>Test</title>\n</head>\n<body>\n";
@@ -128,7 +128,7 @@ if (ReadParse(*input)) {
 	if ( $input{'hashcloudsmall'} =~ m/on/i ) {
 		$hashcloudsmall = 'on';
 	}
-	if( !defined( $input{"fueredit"} ) ) { $input{"fueredit"} = ''; }
+	if( !defined( $input{"toedit"} ) ) { $input{"toedit"} = ''; }
 	if( defined( $input{"lang"} ) ) {
 		$lang = $input{"lang"};
 		setLang( $lang );
@@ -227,9 +227,9 @@ if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
 $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
-#$input{'fueredit'} = $fueredit;
+#$input{'toedit'} = $toedit;
 	#webfehler("ausgabekat Before") if $debug;
-ausgabekat($aktkat, $fueredit, %fkat);
+ausgabekat($aktkat, $toedit, %fkat);
 	#webfehler("ausgabekat ***ENDE***") if $debug;
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
@@ -239,7 +239,7 @@ delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## ta
 ## brauch ich hier die Kategorien zu uebergeben?
 #webhinweis( "aktkat vor ausgabefaq: [$aktkat]" );
 	#webfehler("ausgabefaq Before") if $debug;
-ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+ausgabefaq($aktkat, $toedit, *fkat, *ftit, *finh, *fnrkat);
 	#webfehler("ausgabefaq ***ENDE***") if $debug;
 
 

@@ -109,8 +109,8 @@ if ( ReadParse( *input ) ) {
 	if ( $input{'hashcloudsmall'} =~ m/on/i ) {
 		$hashcloudsmall = 'on';
 	}
-	if ($input{'fueredit'}) {
-		$fueredit = $input{'fueredit'};
+	if ($input{'toedit'}) {
+		$toedit = $input{'toedit'};
 	}
 }
 
@@ -158,7 +158,7 @@ if ( ReadParse( *input ) ) {
 
 
 ##-- Sollte ich das Folgende auslagern in eine do "holfaq.pl" Routine? ---------------------------------
-## besser waere ein sub, nur wie soll ich die Felder übergeben?
+## besser waere ein sub, nur wie soll ich die Felder uebergeben?
 ## habe bei perl-archiv.de was gefunden:
 ## 	http://www.perl-archiv.de/sid1953062225218/perl/tutorial/references.shtml
 ##
@@ -198,11 +198,11 @@ if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
 $fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
 $fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
 $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
-#$fueredit = undef;  ## siehe oben
-#$input{'fueredit'} = $fueredit;  ## siehe oben
+#$toedit = undef;  ## siehe oben
+#$input{'toedit'} = $toedit;  ## siehe oben
 ## sst uebergeben
 $fkat{'sst'} = $sst;
-ausgabekat($aktkat, $fueredit, %fkat);
+ausgabekat($aktkat, $toedit, %fkat);
 delete $fkat{'sst'} if defined( $fkat{'sst'} );
 delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
 delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
@@ -211,7 +211,7 @@ delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## ta
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
 #webhinweis( "sst vor ausgabefaqfound: [$sst]" );
-ausgabefaqfound($aktkat, $fueredit, $sst, *fkat, *ftit, *finh, *fnrkat);
+ausgabefaqfound($aktkat, $toedit, $sst, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";

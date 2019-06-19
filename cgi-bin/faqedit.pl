@@ -148,12 +148,12 @@ if ($faqnr =~ m/neu|new/) {
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------
 ## 	hier brauch ich neue Routine oder einen zusaetzlichen Parameter
-#$fueredit = 1;
-#&ausgabekat($aktkat, $fueredit, %fkat);
+#$toedit = 1;
+#&ausgabekat($aktkat, $toedit, %fkat);
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
-#&ausgabefaq($aktkat, $fueredit, *fkat, *ftit, *finh, *fnrkat);
+#&ausgabefaq($aktkat, $toedit, *fkat, *ftit, *finh, *fnrkat);
 
 
 print "</html>\n";
