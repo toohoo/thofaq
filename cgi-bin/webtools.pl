@@ -1948,36 +1948,51 @@ sub ismatch{
 				  $foundstring =~ s/^($term)$/<span class="foundterm">~~$1~~<\/span>/igs;
 		}
 	}
-	do { $foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(href=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   } while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	do { $foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	
-	} while $foundstring =~ m|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	do { $foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; } while $foundstring =~ m|(value=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	do { $foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; } while $foundstring =~ m|(class=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	do { $foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;	} while $foundstring =~ m|(type=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|is;
-	## for sst "button" and: <button ..>
-	do { $foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)([ >\]])|$1$2$4$6|igs;} while $foundstring =~ m|([<\[])([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)([ >\]])|is;
-	## for sst "name" and: <a name ..>
+	$foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;
+	$foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;
+	$foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;  
+	$foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs; 
+	$foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;   	
 
-	do { $foundstring =~ s§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)§$1$2$4§igs;	} while $foundstring =~ m§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)§is;
+	$foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;
+	$foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;
+	$foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$4|igs;
+	## for sst "button" and: <button ..>
+	$foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)([ >\]])|$1$2$4$6|igs;
+	## for sst "name" and: <a name ..>
+	## hide out the curly brackets
+	$foundstring =~ s|\{|#lcb#|igs;
+	$foundstring =~ s|\}|#rcb#|igs;
+
+	$foundstring =~ s{(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)}{$1$2$4}igs;
+
+	## bring the curly brackets back
+	$foundstring =~ s|#lcb#|\{|igs;
+	$foundstring =~ s|#rcb#|\}|igs;
 	
 	$foundstring =~ s|(<span class=\"foundterm\">)~~([^~]+)~~(</span>)|$1$2$3|igs;
 	
-	do { $foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(href=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
-	do { $foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;  	} while $foundstring =~ m|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
-	do { $foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
-	do { $foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
-	do { $foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	
-	} while $foundstring =~ m|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
-	do { $foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(value=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
-	do { $foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(class=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
-	do { $foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	} while $foundstring =~ m|(type=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|is;
+	$foundstring =~ s|(href=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;   
+	$foundstring =~ s|(name=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;  	
+	$foundstring =~ s|(id=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	
+	$foundstring =~ s|(src=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    
+	$foundstring =~ s|(onClick=\"OnOff\(')([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    	
+	
+	$foundstring =~ s|(value=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;   
+	$foundstring =~ s|(class=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;   
+	$foundstring =~ s|(type=\")([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)|$1$2$4|igs;    
 	## for sst "button" and: <button ..> | [button ..
-	do { $foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)([ >\]])|$1$2$4$6|igs;} while $foundstring =~ m|([<\[])([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)([ >\]])|is;
+	$foundstring =~ s|([<\[])([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)([ >\]])|$1$2$4$6|igs;
 	## for sst "name" and: <a name ..>
-	do { $foundstring =~ s§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)§$1$2$4§igs;  	} while $foundstring =~ m§(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)§is;
+	## hide out the curly brackets
+	$foundstring =~ s|\{|#lcb#|igs;
+	$foundstring =~ s|\}|#rcb#|igs;
+
+	$foundstring =~ s{(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)}{$1$2$4}igs;
+
+	## bring the curly brackets back
+	$foundstring =~ s|#lcb#|\{|igs;
+	$foundstring =~ s|#rcb#|\}|igs;
 
 	return( $foundstring );
 }
