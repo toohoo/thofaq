@@ -117,7 +117,7 @@ sub holopt {
 #--     errmes als globale Variable zuweisen? dann schon im Hauptprogramm festlegen?
 	local (@par) = @_;
 	local ($k,$v,%myopt);
-	## falls %opt schon außerhalb festgelegt war
+	## falls %opt schon ausserhalb festgelegt war
 	%myopt = %opt;
 
 	if ($#par < 0) {
@@ -229,7 +229,7 @@ sub ausgabeopt {
 		$rest = substr($k, 1);
 		print "<tr><td><u>\u$taste</u>$rest: </td>\n\t<td>", &webtag("input","type=text\tname=$k\tvalue=$myopt{$k}\tsize=40\taccesskey=$taste","#EMPTY#") , "</td>\n\t<td>&nbsp; $rem{$k}</td></tr>\n";
 	}
-	print "<tr><td> </td><td>", &webtag("input","type=submit\tvalue=Ändern","#EMPTY#") , "</td></tr>\n";
+	print "<tr><td> </td><td>", &webtag("input","type=submit\tvalue=\xC4ndern","#EMPTY#") , "</td></tr>\n";
 	print "</table>\n";
 	print "</fieldset>\n";
 	print "</form>\n";
@@ -245,7 +245,7 @@ sub holrem {
 #-- Rueckgabe: Kommentare (Hash)
 	local (@par) = @_;
 	local ($k,$v,%myrem);
-	## falls %rem schon außerhalb festgelegt war
+	## falls %rem schon ausserhalb festgelegt war
 	%myrem = %rem;
 
 	local $remdat = "rem.txt";
@@ -488,7 +488,7 @@ sub UbmCgiHead {
 ## Uebergabe: Zeichenkette fuer TITLE und H1
 	local ($head) = $_[0];
 	local ($temp);
-	if (! $head) { &webabbruch("UbmCgiHead: Kein Titel übergeben."); }
+	if (! $head) { &webabbruch("UbmCgiHead: Kein Titel \xFCbergeben."); }
 	$head = &HtmlTop($head);
 	## Markup im Title entfernen
 	if ( $head =~ m|<title>(.*?)<\/title>|i ) {
@@ -593,7 +593,7 @@ sub holeSGM {
 	## 	bei Holen im Pool Schreibschutz setzen
 	if (!(chmod ( 0444, $ziel))) {
 #	if (!(chmod ( 0744, "c:\\temp\\bloedsinn.txt"))) {
-		&webabbruch("Kann SGM-Datei im Pool nicht schützen: [" . &hinterlegt($ziel) . "]");
+		&webabbruch("Kann SGM-Datei im Pool nicht sch\xFCtzen: [" . &hinterlegt($ziel) . "]");
 	}
 
 	## 	holen (lesen und in bearb schreiben
@@ -666,7 +666,7 @@ sub sichereSGM {
 
 	## 	nach sichern in bearb loeschen
 	if (!(unlink ($bearb))) {
-		&webabbruch("Kann Kopie SGM-Datei in bearb nicht löschen: [" . &hinterlegt($bearb) . "]");
+		&webabbruch("Kann Kopie SGM-Datei in bearb nicht l\xF6schen: [" . &hinterlegt($bearb) . "]");
 	}
 
 	return ($sgm);
@@ -877,7 +877,7 @@ sub ausgabekat {
 	if (($aktkat eq "") || !defined($aktkat)) { $aktkat=1; }
 	print webtag("div", "class=katwahl", "#EMPTY#");
 	if ($isedit) {
-	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat")) );
+	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[zur\xFCck zu den FAQ]"),"faq.pl?kat=$aktkat")) );
 	} else {  ## normal nicht edit
 	    print webtag("h3", "class=katwahltit", trans("Kategorien") . " <br>" . webtag("small",weblink( trans("[EDIT]"),"editfaqkat.pl")) );
 	}
@@ -968,7 +968,7 @@ sub ausgabefaq {
 
 	print webtag("div", "class=faqfragen", "#EMPTY#");
 	if ($isedit) {
-	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat"))  . " " . webtag("small",weblink(trans("[alle Kategorien]"),"editfaq.pl?kat=alle")) );
+	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[zur\xFCck zu den FAQ]"),"faq.pl?kat=$aktkat"))  . " " . webtag("small",weblink(trans("[alle Kategorien]"),"editfaq.pl?kat=alle")) );
 	} else {  ## normal nicht edit
 	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[EDIT]"),"editfaq.pl?kat=$aktkat")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
 	}
@@ -1070,7 +1070,7 @@ sub ausgabefaqfound {
 	    	webtag( "a","name=fragen", trans("Fragen")) 
     		. trans(" zum Thema:") . " ''$kat{$aktkat}'' " 
     		. webtag( "small",
-    			weblink( trans("[zurück zu den FAQ]"),"faq.pl?kat=$aktkat") ) 
+    			weblink( trans("[zur\xFCck zu den FAQ]"),"faq.pl?kat=$aktkat") ) 
     		. " " 
     		. webtag( "small", 
     			weblink( trans("[alle Kategorien]"),"editfaq.pl?kat=alle") ) 
@@ -1242,7 +1242,7 @@ sub ausgabekatedit {
 	}
 	#print &webtag("katmax nach Schleife: $katmax");
 	$katneuende = $katmax + 1;
-	push(@katfrei,trans("anfügen"));
+	push(@katfrei,trans("anf\xFCgen"));
 
 	## besser ein form ueber alles
 	if ($keft eq "alles") {
@@ -1284,19 +1284,19 @@ sub ausgabekatedit {
 		if ($keft eq "alles") {
 			print &webtag("input", "type=text\tname=kattit_$k\tvalue=$ka{$k}\tsize=$breitlang", "#EMPTY#" );
 			#print &webtag("input", "type=hidden\tname=katnr\tvalue=$k", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern $k"), "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("\xC4ndern $k"), "#EMPTY#" );
 			## dann ein Link zum Loeschen
 			## 	ausser bei Kategorie 1, die darf man nicht loeschen
 			if ($k != 1) {
-				print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen $k"), "#EMPTY#" );
+				print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("L\xF6schen $k"), "#EMPTY#" );
 			}
 		} else {  ## keft eq 'einzeln'
 			## erst ein form zum Aendern des Titels der Kat.
 			print &webtag("form", "aktion=editfaqkat.pl", "#EMPTY#" );
 			print &webtag("input", "type=text\tname=kattit\tvalue=$ka{$k}\tsize=$breitlang", "#EMPTY#" );
 			print &webtag("input", "type=hidden\tname=katnr\tvalue=$k", "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern"), "#EMPTY#" );
-			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen"), "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("\xC4ndern"), "#EMPTY#" );
+			print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("L\xF6schen"), "#EMPTY#" );
 			print &webtag("form", "", "#ENDETAG#" );
 		}
 		print &webtag("li", "", "#ENDETAG#" );
@@ -1312,7 +1312,7 @@ sub ausgabekatedit {
 	}
 	print &webtag("select", "name=neunr", "#EMPTY#" );
 	foreach $v (@katfrei) {
-		if ($v !~ m/anfügen|append/) {
+		if ($v !~ m/anf\xFCgen|append/) {
 			print &webtag("option", "", $v );
 		} else {
 			print &webtag("option", "value=$katneuende", trans($v) );
@@ -1448,7 +1448,7 @@ PSEUDOHINWEISENDE
 	$katmax = $katnr[$#katnr];
 	#print &webtag( "p", "", "katmax: [$katmax]" );
 
-	## hier muß ich an den Zweck denken.
+	## hier muss ich an den Zweck denken.
 	# 	der Benutzer sollte im Dropdown auch erkennen, wie die Kategogie heisst
 	# 	also Titel der Kategorie dazu und mit value arbeiten
 
@@ -1475,7 +1475,7 @@ PSEUDOHINWEISENDE
 	## ----------- /debug
 	$katneuende = $katmax + 1;
 	## hier geht es nur um @katvorh
-	push(@katfrei,trans("anfügen=$katneuende"));
+	push(@katfrei,trans("anf\xFCgen=$katneuende"));
 
 
 	## welche FAQ-Nummern sind frei?
@@ -1507,7 +1507,7 @@ PSEUDOHINWEISENDE
 		}
 	}
 	$faqneuende = $faqmax + 1;
-	push(@faqfrei,trans("anfügen=$faqneuende"));
+	push(@faqfrei,trans("anf\xFCgen=$faqneuende"));
 
 
 	print &webtag("form", "action=faqeditsic.pl\tmethod=post", "#EMPTY#" );
@@ -1565,8 +1565,8 @@ PSEUDOHINWEISENDE
 		$tempstring = $inh{$nr};
 		$tempstring =~ s/\&/\&amp;/ig;
 		print trans("\nText: <br>"), &inputarea("text", $tempstring, $breitfeld, $hoch), " <br>\n";
-		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Ändern"), "#EMPTY#");
-		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("Löschen"), "#EMPTY#");
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("\xC4ndern"), "#EMPTY#");
+		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("L\xF6schen"), "#EMPTY#");
 		print &webtag("p","","#ENDETAG#");
 	}
 
@@ -1780,19 +1780,6 @@ sub faq2htm {
 		$spoileridx++;
 	}
 	
-	my( $spoilcont, $foundspoil, $spoilpos );
-	while( $text =~ m|\[spoiler\](.*?)\[\/spoiler\]|si ) {
-		$spoilcont = $1; $foundspoil = $&;
-		$spoilpos = index( $text, $foundspoil );
-		#$foundcont =~ s|<BR>||sig;
-		substr( $text, $spoilpos, length($foundspoil) ) = 
-			"<button type=\"button\" value=\"Spoiler$spoileridx\_func\" id=\"Spoiler$spoileridx\_func\" onClick=\"OnOff('Spoiler$spoileridx');\">Spoiler$spoileridx\_On</button><br>\n" .
-#			"<blockquote id=\"Spoiler$spoileridx\" style=\"visibility: hidden;\" class=\"spoiler\">" . $spoilcont . '</blockquote>'
-			"<blockquote id=\"Spoiler$spoileridx\" style=\"display: none;\" class=\"spoiler\">" . $spoilcont . '</blockquote>'
-			;
-		$spoileridx++;
-	}
-	
     	## das Umwandeln von \x02 in BR macht viele BR, wo sie nicht noetig sind, z.B. vor allen Blockelementen
     	$text =~ s/<BR>([ \t]*<\/?($blockel)[ >\t])/$1/ig;
     	## correct spoilers on first break
@@ -1894,7 +1881,7 @@ sub parsesearch{
 	## keine Phrasen (vorerst)
 	##   Anfuehrung loeschen
 	## Wortbestandteil Sonderzeichen kann sein: -_
-	##   und alle Umlaute äöüÄÖÜß
+	##   und alle Umlaute 
 	## alles Andere ersetzen durch ' '
 	## Achtung, hier erstmal kein case insensitive (doppelt pruefung)
 	
@@ -2253,7 +2240,7 @@ sub linkLang {
 		}
 	}
 #	if ( !$foundLang ) {
-#		return( trans("[Gewählte Sprache nicht gefunden ")."($lang)]") ;
+#		return( trans("[Gew\xE4hlte Sprache nicht gefunden ")."($lang)]") ;
 #	}
 	## als einfache Links
 #	return( join( ' ', @langLinks ) );
@@ -2273,7 +2260,7 @@ sub setLang {
 		push ( @langLinks, "<a href=\"faq.pl?lang=$langPresent\">[$langPresent]</a>"  );
 	}
 	if ( !$foundLang ) {
-		return( trans("[Gewählte Sprache nicht gefunden ")."($lang)]") ;
+		return( trans("[Gew\xE4hlte Sprache nicht gefunden ")."($lang)]") ;
 	}
 
 	# set the language in the conf-file
@@ -2283,7 +2270,7 @@ sub setLang {
 		## basically at this point, but then in false language, so better put it down
 #		webhinweis(trans("Sprach-Konfiguration gesichert [$i18n_conf]"));  
 	} else {
-		webfehler(trans("Kann Sprach-Konfiguration nicht ändern [$i18n_conf]"));
+		webfehler(trans("Kann Sprach-Konfiguration nicht \xE4ndern [$i18n_conf]"));
 		return(0);
 	}
 	
@@ -2390,4 +2377,3 @@ print "\nAnzahl: $za\n";
 
 #--- ENDE Alles ------------------------------------
 1;
-
