@@ -1797,7 +1797,6 @@ sub faq2htm {
 	$text =~ s|__pre__|<pre>|sig;
 	$text =~ s|__/pre__|</pre>|sig;
 
-
 	return ($text);	
 
 }
@@ -1964,7 +1963,9 @@ sub ismatch{
 	## hide out the curly brackets
 	$foundstring =~ s|\{|#lcb#|igs;
 	$foundstring =~ s|\}|#rcb#|igs;
+
 	do { $foundstring =~ s{(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)}{$1$2$4}igs;	} while $foundstring =~ m{(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)~~([^~]+)~~(</span>)}is;
+
 	## bring the curly brackets back
 	$foundstring =~ s|#lcb#|\{|igs;
 	$foundstring =~ s|#rcb#|\}|igs;
@@ -1987,7 +1988,9 @@ sub ismatch{
 	## hide out the curly brackets
 	$foundstring =~ s|\{|#lcb#|igs;
 	$foundstring =~ s|\}|#rcb#|igs;
+
 	do { $foundstring =~ s{(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)}{$1$2$4}igs;  	} while $foundstring =~ m{(<a |\[)([^<>\"]*)(<span class=\"foundterm\">)([^<]+)(</span>)}is;
+
 	## bring the curly brackets back
 	$foundstring =~ s|#lcb#|\{|igs;
 	$foundstring =~ s|#rcb#|\}|igs;
@@ -2127,8 +2130,8 @@ sub gethashtagcloud {
 				#webhinweis( "NOT hashref{$hashtag} > lvl[".($ilvl-1)."] * maxcloud(".($lvl[$ilvl-1] * $maxcloud).") - lvl($lvl)" );
 			}
 		}
-		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
-		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - ";
+		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
+		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - ";
 	}
 	#exit;
 	$hashblock .= "</div>\n";
@@ -2170,8 +2173,8 @@ sub gethashtagcloudsmall {
 				#webhinweis( "NOT hashref{$hashtag} > lvl[".($ilvl-1)."] * maxcloud(".($lvl[$ilvl-1] * $maxcloud).") - lvl($lvl)" );
 			}
 		}
-		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
-		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - " if $lvl > $lvl[0];
+		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
+		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - " if $lvl > $lvl[0];
 	}
 	#exit;
 	$hashblock .= "</div>\n";

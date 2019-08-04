@@ -307,9 +307,9 @@ legend {
 	/*font-size: x-small;*/
 	font-size: small;
 	margin-top: 10px;
-	margin-left: 0;
+	margin-left: 3px;
 	margin-right: auto;
-	margin-bottom: 0;
+	margin-bottom: 6px;
 	max-width: 110px;
 	padding-left: 5px;
 	padding-right: 3px;
@@ -544,6 +544,26 @@ blockquote:before {
   line-height: 0.1em;
   margin-right: 0.25em;
   vertical-align: -0.4em;
+}
+blockquote.spoiler {
+/*  background: #f3f3f3;*/
+  border-left: 10px solid #aaa;
+/*  margin: 1.5em 10px;*/
+/*  padding: 0.5em 10px;*/
+  quotes: "\00BB""\00AB""\203A""\2039";
+/*	box-shadow: 4px 6px 10px grey;*/
+  text-indent: 2em;
+/*  text-indent in test did work on :before but not on the text*/
+}
+blockquote.spoiler:before {
+  color: #999;
+/*  content: open-quote;*/
+/*  font-size: 4em;*/
+/*  line-height: 0.1em;*/
+/*  margin-right: 0.25em;*/
+/*  margin-top: -0.25em;*/
+  vertical-align: -0.4em;
+  text-indent: 0;
 }
 
 .langLinks {
