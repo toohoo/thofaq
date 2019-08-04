@@ -5,6 +5,7 @@
 ##########################################
 
 use lib "d:\\work\\perl";
+use lib "c:\\temp";
 use sniver;
 
 my $testxml = <<__TEST_XML__;

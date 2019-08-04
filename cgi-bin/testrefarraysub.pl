@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl
+#!c:/xampp/perl/bin/perl
 #!/usr/bin/perl
 # testrefarraysub.pl
 # Thomas Hofmann Okt 2005

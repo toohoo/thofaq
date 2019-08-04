@@ -1,4 +1,4 @@
-#!d:/xampp/perl/bin/perl
+#!c:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## FAQedit.pl
@@ -92,7 +92,7 @@ $head =~ s|(<h1([^>]*)>)|\n\t<form action="faq.pl">\n<h1 class="wholetitle" $2>|
 $head =~ s|(<\/h1>)|$1\n\t</form>\n|i;
 print $head;
 
-print &webtag( &weblink(trans("[zurück zu Edit Fragen]"), "editfaq.pl") );
+print &webtag( 'p', "class=faqeditblock",   &weblinkclass(trans("[zurück zu Edit Fragen]"), "editfaq.pl",'faqeditlink') );
 
 #print "<p>_____faqedit.pl_____</p>\n";
 
@@ -142,7 +142,7 @@ if ($faqnr =~ m/neu|new/) {
 } else {
 	if (!($fnrkat{$faqnr})) { &webabbruch (trans("FAQ-Nr. existiert nicht [$faqnr].")); }
 	$kat = $fnrkat{$faqnr};
-	print &webtag( &weblink(trans("[zurück zu Edit Fragen in Kategorie $kat]"), "editfaq.pl?kat=$kat") );
+	print &webtag( 'p', "class=faqeditblock",  &weblinkclass(trans("[zurück zu Edit Fragen in Kategorie $kat]"), "editfaq.pl?kat=$kat",'faqeditlink') );
 	&ausgabefaqedit($faqnr, *fkat, *ftit, *finh, *fnrkat);
 }
 

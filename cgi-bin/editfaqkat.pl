@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl
+#!c:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## editFAQ.pl
@@ -55,7 +55,7 @@ $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
 print $head;
-print &webtag(&weblink(trans("[zurück zu den FAQ]"),"faq.pl") . " " . &weblink(trans("[Start FAQ-Edit Kategorien]"),"editfaqkat.pl") );
+print &webtag('p', "class=editfaqkatblock", &weblinkclass(trans("[zurück zu den FAQ]"),"faq.pl",'editfaqkatlink') . " " . &weblinkclass(trans("[Start FAQ-Edit Kategorien]"),"editfaqkat.pl",'editfaqkatlink') );
 
 
 ## sind die Dateien da?

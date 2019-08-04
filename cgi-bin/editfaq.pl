@@ -1,4 +1,4 @@
-#!d:/xampp/perl/bin/perl -w
+#!c:/xampp/perl/bin/perl -w
 #!/usr/bin/perl
 #######################################################
 ## editFAQ.pl

@@ -1,4 +1,4 @@
-#!d:/xampp/perl/bin/perl -w
+#!c:/xampp/perl/bin/perl -w
 #!/usr/bin/perl -w
 #######################################################
 ## FAQ.pl
@@ -23,7 +23,18 @@
 $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
 $aktdir = holpfad0($scriptname);
-if( $aktdir eq '' ) { $aktdir = '.'; }
+if ($aktdir eq '') {$aktdir = '.';}
+if (!$ENV{ 'SCRIPT_FILENAME' }) {
+    if ($ENV{'PATH'} =~ m/\\/) {$aktdir = `cd`;}
+    else {$aktdir = `pwd`;}
+    chomp($aktdir);
+    if ($aktdir !~ m/cgi-bin.?$/) {$aktdir .= '/cgi-bin';}
+}
+chdir($aktdir);
+if ($ENV{'PATH'} =~ m/\\/) {$_aktdir = `cd`;}
+else {$_aktdir = `pwd`;}
+chomp($_aktdir);
+#print "<pre>dir after change: [$_aktdir]</pre>\n";
 $debug = 0;
 $toedit = undef;
 
@@ -32,13 +43,22 @@ $toedit = undef;
 #print "<p>scriptname=[$scriptname]</p>\n";
 #print "<p>PATH_TRANSLATED=[$ENV{ 'PATH_TRANSLATED' }]</p>\n";
 
-if( $aktdir ne '' ) { push (@INC, $aktdir);} else { push(@INC, '.'); }
+if ($aktdir ne '') {
+    push(@INC, $aktdir);
+    push(@INC, "$aktdir\/cgi-bin");
+}
+else {
+    push(@INC, '.');
+    push(@INC, './cgi-bin');
+}
 #push (@INC, '.');
 #print "<p>\$aktdir: $aktdir </p>\n";
 #print "<p>\@INC: ", join( ';',@INC), " </p>\n";
+#my $xpath = `cd`;
+#print "$xpath\n";
 require "thpl.pl";
 require "cgi-lib.pl";
-chdir ($aktdir);
+chdir($aktdir);
 
 require "webtools.pl";
 
@@ -51,8 +71,8 @@ print PrintHeader();
 $i18n_lang = $globals{ 'i18n_lang' };
 $i18n_conf = $globals{ 'i18n_conf' };
 $encoding  = 'ISO-8859-1';
-if ( !getI18n(*i18n_lang, *i18n_conf) ) {
-	webabbruch (trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
+if (!getI18n(*i18n_lang, *i18n_conf)) {
+    webabbruch(trans("Fehler beim Holen der Spracheinstellungen") . ". $globals{'adminmes'}.");
 }
 
 
@@ -96,16 +116,16 @@ if( -f 'D:/temp/faq_debug' ) {
 #webhinweis("ENV{PATH}: $ENV{PATH}");
 
 $aktkat = 1;
-$input="";
-@input=();
-%input=();
+$input = "";
+@input = ();
+%input = ();
 my $hashtags = 'off';  ## or simply '' but NOT 'on'
 my $hashcloud = 'off';  ## or simply '' but NOT 'on'
 my $hashcloudsmall = 'off';  ## or simply '' but NOT 'on'
 my $lang = "DE";
 
 ## check if set params in system
-if ( $ENV{'FAQ_PRESET'} ) {
+if ($ENV{'FAQ_PRESET'}) {
 	$ENV{'REQUEST_METHOD'} = 'GET';
 	$ENV{'QUERY_STRING'} = $ENV{'FAQ_PRESET'};
 	$ENV{'QUERY_STRING'} =~ s/\*/&/g;
@@ -116,20 +136,20 @@ if (ReadParse(*input)) {
 	if ($input{'kat'}) {
 		$aktkat = $input{'kat'};
 	}
-	if( !defined( $input{"hashtags"} ) ) { $input{"hashtags"} = ''; }
-	if ( $input{'hashtags'} =~ m/on/i ) {
+    if (!defined($input{"hashtags"})) {$input{"hashtags"} = '';}
+    if ($input{'hashtags'} =~ m/on/i) {
 		$hashtags = 'on';
 	}
-	if( !defined( $input{"hashcloud"} ) ) { $input{"hashcloud"} = ''; }
-	if ( $input{'hashcloud'} =~ m/on/i ) {
+    if (!defined($input{"hashcloud"})) {$input{"hashcloud"} = '';}
+    if ($input{'hashcloud'} =~ m/on/i) {
 		$hashcloud = 'on';
 	}
-	if( !defined( $input{"hashcloudsmall"} ) ) { $input{"hashcloudsmall"} = ''; }
-	if ( $input{'hashcloudsmall'} =~ m/on/i ) {
+    if (!defined($input{"hashcloudsmall"})) {$input{"hashcloudsmall"} = '';}
+    if ($input{'hashcloudsmall'} =~ m/on/i) {
 		$hashcloudsmall = 'on';
 	}
-	if( !defined( $input{"toedit"} ) ) { $input{"toedit"} = ''; }
-	if( defined( $input{"lang"} ) ) {
+    if (!defined($input{"toedit"})) {$input{"toedit"} = '';}
+    if (defined($input{"lang"})) {
 		$lang = $input{"lang"};
 		setLang( $lang );
 	}
@@ -199,15 +219,15 @@ if (ReadParse(*input)) {
 
 
 #webhinweis( "faq.pl - VOR Dateinamen Festlegung" );
-($fkat, $ftit, $finh) = ($globals{"faq-kat"},$globals{"faq-tit"},$globals{"faq-inh"});
+($fkat, $ftit, $finh) = ($globals{"faq-kat"}, $globals{"faq-tit"}, $globals{"faq-inh"});
 #webhinweis( "faq.pl - NACH Dateinamen Festlegung" );
 
 #@fkat = @ftit = @finh = ();
 #%fkat = %ftit = %finh = ();
 #%fnrkat = ();
 
-if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
-	webabbruch (trans("Fehler beim Holen der Daten") . ". $globals{'adminmes'}.");
+if (!holfaq(*fkat, *ftit, *finh, *fnrkat)) {
+    webabbruch(trans("Fehler beim Holen der Daten") . ". $globals{'adminmes'}.");
 }
 #webhinweis( "faq.pl - NACH holfaq" );
 
@@ -215,8 +235,8 @@ if (! holfaq(*fkat, *ftit, *finh, *fnrkat) ) {
 ## Kommentare holen, keine Fehlermeldung noetig
 #%rem = &holrem();
 
-my ( %hashtag, @hashtags );
-if ( $hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on' ) {
+my (%hashtag, @hashtags);
+if ($hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on') {
 	#webhinweis("Was mit HASH: tags: $hashtags -- cloud: $hashcloud -- cloudsmall: $hashcloudsmall") if $debug;
 	%hashtag = gethashtags( \%finh ) ;
 	#webhinweis("Was mit HASH ***ENDE*** tags: $hashtags -- cloud: $hashcloud -- cloudsmall: $hashcloudsmall") if $debug;
@@ -231,9 +251,9 @@ $fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausga
 	#webfehler("ausgabekat Before") if $debug;
 ausgabekat($aktkat, $toedit, %fkat);
 	#webfehler("ausgabekat ***ENDE***") if $debug;
-delete $fkat{ 'hashtags' } if defined( $fkat{ 'hashtags' } );  ## take away the false kat
-delete $fkat{ 'hashcloud' } if defined( $fkat{ 'hashcloud' } );  ## take away the false kat
-delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## take away the false kat
+delete $fkat{ 'hashtags' } if defined($fkat{ 'hashtags' });             ## take away the false kat
+delete $fkat{ 'hashcloud' } if defined($fkat{ 'hashcloud' });           ## take away the false kat
+delete $fkat{ 'hashcloudsmall' } if defined($fkat{ 'hashcloudsmall' }); ## take away the false kat
 
 ## FAQ ausgeben mit Link zum Aendern---------------------------------------
 ## brauch ich hier die Kategorien zu uebergeben?
@@ -255,7 +275,7 @@ sub holpfad0 {
 ## Rueckgabe: Verzeichnis ohne Dateiname bzw. letztes Unterverzeichnis
 ## globale Variablen: nurpfad, nurdat, slash
 
-        local (@par)=@_;
+    local (@par) = @_;
         local ($vpfad);
 
         $vpfad = $par[0] ? $par[0] : '';
@@ -271,7 +291,7 @@ sub holpfad0 {
         }
         #print "LEER\n" if ($nurpfad eq '') || print ">$nurpfad<\n";
         #print ">$nurdat<\n";
-        return ($nurpfad);
+    return($nurpfad);
 }
 
 

@@ -19,7 +19,7 @@
 ##
 ###############################################
 
-#!D:/xampp/perl/bin/perl
+#!c:/xampp/perl/bin/perl
 #!/usr/bin/perl
 sub isrightdate {
 	## Rueckgabe: undef = Fehler o falscher user/passwort; 1 = eingeloggt; (sonst) = user

@@ -1,4 +1,4 @@
-#!d:/xampp/perl/bin/perl -w
+#!c:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## whoamip.pl
@@ -7,13 +7,17 @@
 ## IP-Adresse ueber Environment(REMOTE_ADDR)
 #######################################################
 
+my $actdir;
+if($ENV{'PATH'} =~ m/\\/) {$actdir = `cd`;} else {$actdir = `pwd`;} chomp($actdir);
+push(@INC, $actdir);
+
 require 'cgi-lib.pl';
 print PrintHeader();
 print HtmlTop('test whoamip');
 
-my $actdir = `cd`;
-push ( @INC, $actdir );
-chomp $actdir;
+print "$actdir\n";
+#chomp $actdir;
+#push ( @INC, $actdir );
 print "\n<pre>-----\n";
 my $idx = 1;
 #foreach my $inc( @INC ) { print "$idx = $inc\n"; $idx++; }

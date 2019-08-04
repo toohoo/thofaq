@@ -1,4 +1,4 @@
-#!D:/xampp/perl/bin/perl
+#!c:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #***************************************
 #	 sgmtools.pl	    t.h. jan 1998

@@ -1,4 +1,4 @@
-#!d:/xampp/perl/bin/perl
+#!c:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #######################################################
 ## webtools.pl
@@ -778,15 +778,15 @@ sub ausgabekat {
 	#webhinweis( "\$0: $0" );
 	my $scriptname = getfilename( $0 );
 	#webhinweis( "scriptname: $scriptname" );
-	if ( !$fueredit && $input{ 'fueredit' } ) { $fueredit = $input{ 'fueredit' }; }
-	#webhinweis( "fueredit / input{fueredit}: $fueredit / $input{fueredit}" );
+	if ( !$toedit && $input{ 'toedit' } ) { $toedit = $input{ 'toedit' }; }
+	#webhinweis( "toedit / input{toedit}: $toedit / $input{toedit}" );
 	if ( !$hasharray || !$hashcloud ) {
 		my $sicsearchstring = $searchstring;
 		$sicsearchstring =~ s/\#/\%23/i;
 		print '&nbsp;' . webtag( "small", '#EMPTY#' );
-		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&sst=$sicsst\&fueredit=$fueredit" ) if !$hasharray;
+		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&sst=$sicsst\&toedit=$toedit" ) if !$hasharray;
 		print ' - ' if ( !$hasharray && !$hashcloud );
-		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&sst=$sicsst\&fueredit=$fueredit" ) if !$hashcloud;
+		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&sst=$sicsst\&toedit=$toedit" ) if !$hashcloud;
 		print            webtag( "small", '#ENDETAG#' );
 	}
 	print gethashtagsblock( $hasharray );
@@ -861,7 +861,7 @@ sub ausgabefaq {
 			    if ($akat eq "alle") { 
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. $tit{$k} ") 
 			    		. webtag("small", " (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") ") 
 			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") 
 			    	);
@@ -875,7 +875,7 @@ sub ausgabefaq {
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. $tit{$k}") 
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    	);
@@ -1002,7 +1002,7 @@ sub ausgabefaqfound {
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout ) 
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", "[Edit]") );
@@ -1016,7 +1016,7 @@ sub ausgabefaqfound {
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout )  
 			    		. webtag("small", 
 			    			" (" 
-			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&fueredit=$fueredit\&onlypickedkat=1" ) 
+			    			. weblink( "Kat. $nrkat{$k}", "$scriptname?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1" ) 
 			    			. ") "
 			    		)
 			    	);
@@ -1560,8 +1560,8 @@ sub faq2htm {
 	    	#$sictext1 = $text;
 	    	#$sictext1 =~ s/\</\&lt;/sg;
 	    	#$sictext1 =~ s/\>/\&gt;/sg;
-	    	$text =~ s/\#(\w+)([^a-zA-Z0-9;_\-\]]|$)/<a href=\"faqsearch.pl?sst=\%23$1\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" class=\"hashtag\">\#$1<\/a>$2 - /gs ;
-	    	#$text =~ s/<a href=\"[^. \t>\r\n?&].pl?sst=\%23(faq\d+)\&fueredit=[^. \t>\r\n?&]\&kat=[^. \t>\r\n?&]\" class=\"hashtag\">(\#faq\d+)<\/a>([^a-zA-Z0-9;_\-\]]|$) - /$2$3/igs ;
+	    	$text =~ s/\#(\w+)([^a-zA-Z0-9;_\-\]]|$)/<a href=\"faqsearch.pl?sst=\%23$1\&toedit=$input{'toedit'}\&kat=$input{'kat'}\" class=\"hashtag\">\#$1<\/a>$2 - /gs ;
+	    	#$text =~ s/<a href=\"[^. \t>\r\n?&].pl?sst=\%23(faq\d+)\&toedit=[^. \t>\r\n?&]\&kat=[^. \t>\r\n?&]\" class=\"hashtag\">(\#faq\d+)<\/a>([^a-zA-Z0-9;_\-\]]|$) - /$2$3/igs ;
 	    	$text =~ s/(<a href=\")([^\"#]+)\~\~\~/$1$2\#/igs;
 	    	$text =~ s/(\.pl\?kat=\d+)\~\~([^\x22>]+)([\x22>])~/$1\#$2$3/isg;
 	    	$text =~ s/\~(faq\d+)([^\d])/\#$1$2/isg;
@@ -1778,7 +1778,7 @@ sub gethashtagsblock {
 	my $hashcount = @{ $arref };
 	#webhinweis( "IN gethashtagsblock - hashcount: $hashcount" );
 	foreach my $hashtag ( sort( @{ $arref } ) ) {
-			$hashblock .= "<a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
+			$hashblock .= "<a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag</a> - ";
 	}
 	
 	$hashblock .= "</div>\n";
@@ -1819,8 +1819,8 @@ sub gethashtagcloud {
 				#webhinweis( "NOT hashref{$hashtag} > lvl[".($ilvl-1)."] * maxcloud(".($lvl[$ilvl-1] * $maxcloud).") - lvl($lvl)" );
 			}
 		}
-		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
-		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&fueredit=$input{'fueredit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - ";
+		#$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\">$hashtag($$hashref{$hashtag})</a></span> - ";
+		$hashblock .= "<span style=\"font-size: $big[$lvl]em;\"><a href=\"faqsearch.pl?sst=\%23".substr($hashtag,1)."\&toedit=$input{'toedit'}\&kat=$input{'kat'}\" title=\"$$hashref{$hashtag}\">$hashtag</a></span> - ";
 	}
 	#exit;
 	$hashblock .= "</div>\n";
