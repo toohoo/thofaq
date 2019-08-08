@@ -15,7 +15,7 @@ The _INSTALL_ is described under Windows. _Linux_- Users should be able to extra
 1. get a portable **Webserver XAMPP** from 
   [portableapps.com](https://portableapps.com) and install it in dir `D:\XAMPP`
 2. get the **sources** from the Github-project 
-  [toohoo/thofaq](https://github.com/toohoo/thofaq) , copy them to `D:\xampp\htdocs\faq`
+  [toohoo/thofaq](https://github.com/toohoo/thofaq) , copy them to `D:\xampp\htdocs\thofaq`
 3. Data of the **Backup** (_if present_) in `FAQBAK.zip` , get them and copy all \*.dat to `(full-path-of-faq)\cgi-bin`. Get the images from the archiv `FAQBAK-IMG.zip` contained in the backup and restore them to `(full-path-of-faq)\img`.
 4. create an own **user** for editing
 
