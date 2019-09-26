@@ -1,4 +1,4 @@
-#!c:/xampp/perl/bin/perl -w
+#!d:/xampp/perl/bin/perl -w
 #!/usr/bin/perl
 #######################################################
 ## whoamip.pl
@@ -15,7 +15,7 @@ my $wai = dowai();
 #print "$wai\n";
 $wai;
 sub dowai {
-if ($remote_addr = $ENV{ 'REMOTE_ADDR' }) {
+	if ($remote_addr = $ENV{ 'REMOTE_ADDR' }) {
 		if( $remote_addr eq '::1' ) {
 			if($^O =~ m/MSWin32/i) {
 				my $orgin = $/;
@@ -37,7 +37,8 @@ if ($remote_addr = $ENV{ 'REMOTE_ADDR' }) {
 				}
 			return($remote_addr);
 			
-} else {
-	die "Fehler: IP nicht gefunden.";
-}
+	} else {
+		print "\n    <p>    \$^O : [$^O]\n";
+		die "Fehler: IP nicht gefunden.";
+	}
 }

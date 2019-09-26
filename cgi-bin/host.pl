@@ -1,4 +1,4 @@
-#!c:/xampp/perl/bin/perl
+#!d:/xampp/perl/bin/perl
 #!/usr/bin/perl
 #http://www.iiv.de/wolfgang/buerger/tommyhof/test/host.pl
 

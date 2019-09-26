@@ -1,4 +1,4 @@
-#!c:/xampp/perl/bin/perl -w
+#!d:/xampp/perl/bin/perl -w
 #!/usr/bin/perl -w
 #######################################################
 ## webtools.pl
@@ -977,7 +977,14 @@ sub ausgabefaq {
 	if ($isedit) {
 	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[zur\xFCck zu den FAQ]"),"faq.pl?kat=$aktkat"))  . " " . webtag("small",weblink(trans("[alle Kategorien]"),"editfaq.pl?kat=alle")) );
 	} else {  ## normal nicht edit
-	    print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[EDIT]"),"editfaq.pl?kat=$aktkat")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
+	    ## editfaq.pl does not take searchstring, if sst present then better head over to faqsearch.pl with parameters?
+	    ## das ist nicht die richtige Stelle, bei faqsearch wird ausgabefaqfound benutzt
+	    if( $sst ) {
+	        ## ?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1
+	        print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[EDIT]"),"faqsearch.pl?kat=$aktkat\&hashtags=$input{'hashtags'}\&sst=$sst\&toedit=1\&onlypickedkat=")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
+	    } else {
+	        print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[EDIT]"),"editfaq.pl?kat=$aktkat")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
+	    }
 	}
 	print webtag("ol", "type=1", "#EMPTY#");
 	foreach $k (@fke) {
@@ -1062,6 +1069,9 @@ sub ausgabefaqfound {
 	## actions for spoiler
 	our $spoileridx = 1;
 
+    my $masksst = $sst;
+    $masksst =~ s/\#/\%23/g;
+
 	#webhinweis( "scriptname in ausgabefaq: [$scriptname]" );
 	#webhinweis( "sst in ausgabefaqfound: [$sst]" );
 	#webhinweis( "IN ausgabefaqfound; akat: [$akat]" );
@@ -1077,21 +1087,39 @@ sub ausgabefaqfound {
 	    	webtag( "a","name=fragen", trans("Fragen")) 
     		. trans(" zum Thema:") . " ''$kat{$aktkat}'' " 
     		. webtag( "small",
-    			weblink( trans("[zur\xFCck zu den FAQ]"),"faq.pl?kat=$aktkat") ) 
+    			weblink( trans("[zur\xFCck zu den FAQ]"),"faqsearch.pl?kat=$aktkat\&hashtags=$input{'hashtags'}\&sst=$masksst\&onlypickedkat=$onlypickedkat\&toedit=") 
+    		  ) 
+
     		. " " 
     		. webtag( "small", 
     			weblink( trans("[alle Kategorien]"),"editfaq.pl?kat=alle") ) 
 	    );
 	} else {  ## normal nicht edit
-	    print webtag( "h3", "class=faqfragtit", 
-	    	webtag( "a", "name=fragen", trans("Fragen")) 
-	    	. trans(" zum Thema: ") . "''$kat{$aktkat}'' " 
-	    	. webtag( "small", 
-	    		weblink( trans("[EDIT]"), "editfaq.pl?kat=$aktkat") ) 
-	    	. " " 
-	    	. webtag( "small", 
-	    		weblink( trans("[alle Kategorien]"),"faq.pl?kat=alle") ) 
-	    );
+	    ## was ist wenn $sst vorhanden?
+        ## Achtung! $sst wenn '#' enthaelt funktioniert nicht, das muss als %23 maskiert werden
+	    if( $sst ) {
+	        $masksst =~ s/\#/\%23/g;
+    	    print webtag( "h3", "class=faqfragtit", 
+    	    	webtag( "a", "name=fragen", trans("Fragen")) 
+    	    	. trans(" zum Thema: ") . "''$kat{$aktkat}'' " 
+    	    	. webtag( "small", 
+    	    		weblink(trans("[EDIT]"),"faqsearch.pl?kat=$aktkat\&hashtags=$input{'hashtags'}\&sst=$masksst\&toedit=1\&onlypickedkat=$onlypickedkat") 
+    	    	  ) 
+    	    	. " " 
+    	    	. webtag( "small", 
+    	    		weblink( trans("[alle Kategorien]"),"faq.pl?kat=alle") ) 
+    	    );
+	    } else {
+    	    print webtag( "h3", "class=faqfragtit", 
+    	    	webtag( "a", "name=fragen", trans("Fragen")) 
+    	    	. trans(" zum Thema: ") . "''$kat{$aktkat}'' " 
+    	    	. webtag( "small", 
+    	    		weblink( trans("[EDIT]"), "editfaq.pl?kat=$aktkat") ) 
+    	    	. " " 
+    	    	. webtag( "small", 
+    	    		weblink( trans("[alle Kategorien]"),"faq.pl?kat=alle") ) 
+    	    );
+    	}
 	}
 
 	webhinweis( trans("In Kategorie: ") . $akat . trans(" - Suche: ") . $sst );
@@ -1166,7 +1194,7 @@ sub ausgabefaqfound {
 			    		. webtag("a", "href=faqedit.pl?fnr=$k\tclass=faqtitedit", trans("[Edit]")) );
 			    }
 			    print $temp;
-			} else {
+			} else { ## => !$isedit
 			    if ($akat eq "alle") { 
 			    	$temp = webtag("dt", webtag("a","name=faq$k", "$k\. " . $titout )  
 			    		. webtag("small", 

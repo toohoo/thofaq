@@ -1,4 +1,4 @@
-#!c:/xampp/perl/bin/perl -w
+#!d:/xampp/perl/bin/perl -w
 #!/usr/bin/perl -w
 #######################################################
 ## FAQ.pl
@@ -119,9 +119,9 @@ $aktkat = 1;
 $input = "";
 @input = ();
 %input = ();
-my $hashtags = 'off';  ## or simply '' but NOT 'on'
-my $hashcloud = 'off';  ## or simply '' but NOT 'on'
-my $hashcloudsmall = 'off';  ## or simply '' but NOT 'on'
+my $hashtags = 'off';       ## or simply '' but NOT 'on'
+my $hashcloud = 'off';      ## or simply '' but NOT 'on'
+my $hashcloudsmall = 'off'; ## or simply '' but NOT 'on'
 my $lang = "DE";
 
 ## check if set params in system
@@ -244,9 +244,9 @@ if ($hashtags eq 'on' or $hashcloud eq 'on' or $hashcloudsmall eq 'on') {
 }
 
 ## Kategorien ausgeben mit Links zu den anderen Kategorien und Link zum Aendern---------------------------------------
-$fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';  ## tell ausgabekat, it has to write out the hastags
-$fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';  ## tell ausgabekat, it has to write out the hascloud
-$fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on';  ## tell ausgabekat, it has to write out the hascloudsmall
+$fkat{ 'hashtags' } = \@hashtags if $hashtags eq 'on';            ## tell ausgabekat, it has to write out the hastags
+$fkat{ 'hashcloud' } = \%hashtag if $hashcloud eq 'on';           ## tell ausgabekat, it has to write out the hascloud
+$fkat{ 'hashcloudsmall' } = \%hashtag if $hashcloudsmall eq 'on'; ## tell ausgabekat, it has to write out the hascloudsmall
 #$input{'toedit'} = $toedit;
 	#webfehler("ausgabekat Before") if $debug;
 ausgabekat($aktkat, $toedit, %fkat);
@@ -271,9 +271,9 @@ exit(0);
 
 ##-- SUBs ---------------------------------------------
 sub holpfad0 {
-## Uebergabe: vollstaendiges Verzeichnis/Dateiname
-## Rueckgabe: Verzeichnis ohne Dateiname bzw. letztes Unterverzeichnis
-## globale Variablen: nurpfad, nurdat, slash
+    ## Uebergabe: vollstaendiges Verzeichnis/Dateiname
+    ## Rueckgabe: Verzeichnis ohne Dateiname bzw. letztes Unterverzeichnis
+    ## globale Variablen: nurpfad, nurdat, slash
 
     local (@par) = @_;
         local ($vpfad);

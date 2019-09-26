@@ -207,3 +207,24 @@ sub doreplace{
     
     return( $cont );
 }
+
+##########################################
+sub makeid {
+	my ($str, @rest) = @_;
+	my $id = (split(/[\r\n]/, $str))[0];
+	$id =~ s/^[ \t]+//g;
+	$id =~ s/[ \t]+$//g;
+
+	$id =~ s/\xE4/ae/g;
+	$id =~ s/\xF6/oe/g;
+	$id =~ s/\xFC/ue/g;
+	$id =~ s/\xC4/Ae/g;
+	$id =~ s/\xD6/Oe/g;
+	$id =~ s/\xDC/Ue/g;
+	$id =~ s/\xDF/ss/g;
+
+	$id =~ s/[^a-z0-9_\.\-]/./ig;
+	#$id =~ s/\.\.+/./ig;
+	
+	return($id);
+}
