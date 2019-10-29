@@ -1598,7 +1598,23 @@ PSEUDOHINWEISENDE
 		## 	Daher das '&' als '&amp;' maskieren.
 		## 	Aber dennoch die Variable im uebergebenen Hash nicht veraendern
 		$tempstring = $inh{$nr};
+		
+        # XML blocks
+        ## OK, in input  set xml to entities
+    	## 3 steps, find and mask XML, take tagstart <, un-mask XML
+    	my( $xmlcont, $foundxml, $xmlpos );
+    	#while( $text =~ m|\[xml\]((.*?)\&lt;(.*?))\[\/xml\]|si ) {
+    	while( $tempstring =~ m|\[xml\]((.*?)\&lt;(.*?))\[\/xml\]|si ) {
+    		$xmlcont = $1; $foundxml = $&;
+    		$xmlpos = index( $tempstring, $foundxml );
+    		$xmlcont =~ s|\&lt;|<|sig;
+    		substr( $tempstring, $xmlpos, length($foundxml) ) = '__xml__' . $xmlcont . '__/xml__';
+    	}
+    	$tempstring =~ s|__xml__|\[xml\]|sig;
+    	$tempstring =~ s|__/xml__|\[/xml\]|sig;
+
 		$tempstring =~ s/\&/\&amp;/ig;
+		
 		print trans("\nText: <br>"), &inputarea("text", $tempstring, $breitfeld, $hoch), " <br>\n";
 		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("\xC4ndern"), "#EMPTY#");
 		print &webtag("input", "type=submit\tname=aktion\tvalue=".trans("L\xF6schen"), "#EMPTY#");
@@ -1832,6 +1848,23 @@ sub faq2htm {
 	$text =~ s|__pre__|<pre>|sig;
 	$text =~ s|__/pre__|</pre>|sig;
 
+    ## OK, in XML set it back again
+	## 3 steps, find and mask XML, take tagstart <, un-mask XML
+	my( $xmlcont, $foundxml, $xmlpos );
+	#while( $text =~ m|\[xml\]((.*?)\&lt;(.*?))\[\/xml\]|si ) {
+	while( $text =~ m|\[xml\]((.*?)\&lt;(.*?))\[\/xml\]|si ) {
+		$xmlcont = $1; $foundxml = $&;
+		$xmlpos = index( $text, $foundxml );
+		## # do not change it from entity to char
+		# #$xmlcont =~ s|\&lt;|<|sig;
+		$xmlcont =~ s|\&lt;|__lt__|sig;
+		$xmlcont =~ s|<BR>||sig;
+		substr( $text, $xmlpos, length($foundxml) ) = '__xml__' . $xmlcont . '__/xml__';
+	}
+	$text =~ s|__xml__|<pre class="xml">|sig;
+	$text =~ s|__/xml__|</pre>|sig;
+	$text =~ s|__lt__|\&lt;|sig;
+
 	return ($text);	
 
 }
@@ -1883,6 +1916,22 @@ sub input2faq {
     	$text =~ s|<(\/)?pre>|[$1code]|ig;
     	$text =~ s|<(\/)?code>|[$1code]|ig;
     	$text =~ s|<(\/)?blockquote>|[$1quote]|ig;
+
+        # XML blocks
+        ## OK, in input  set xml to entities
+    	## 3 steps, find and mask XML, take tagstart <, un-mask XML
+    	my( $xmlcont, $foundxml, $xmlpos );
+    	#while( $text =~ m|\[xml\]((.*?)\&lt;(.*?))\[\/xml\]|si ) {
+    	while( $text =~ m|\[xml\]((.*?)<(.*?))\[\/xml\]|si ) {
+    		$xmlcont = $1; $foundxml = $&;
+    		$xmlpos = index( $text, $foundxml );
+    		## # do not change it from entity to char
+    		# #$xmlcont =~ s|\&lt;|<|sig;
+    		$xmlcont =~ s|<|\&lt;|sig;
+    		substr( $text, $xmlpos, length($foundxml) ) = '__xml__' . $xmlcont . '__/xml__';
+    	}
+    	$text =~ s|__xml__|\[xml\]|sig;
+    	$text =~ s|__/xml__|\[/xml\]|sig;
 
     	$text =~ s|<[^ >].*?>||ig;
 
