@@ -98,7 +98,7 @@ sub isdating {
 	local ($where, $who, $when, $someone, $something);
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp|debian)/i) { $slash = "/"; }
 	
 	## welche Zeitspanne bis Rauswurf? 15 min?
 	local ($einestunde)= 3600; 	# 3600 = 1 h
@@ -165,7 +165,7 @@ sub pushdating {
 	local ($secondhand) = "dating.dat";
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp|debian)/i) { $slash = "/"; }
 	
 	## Aufbau Datei (tab-separated):
 	## 	ip, user, zeitstempel
@@ -194,7 +194,7 @@ sub killdating {
 	local ($where, $who, $when, $someone, $something);
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp|debian)/i) { $slash = "/"; }
 	
 	## ip, user, zeitstempel
 	## einlesen
@@ -250,7 +250,7 @@ sub freshdating {
 	local ($where, $who, $when, $someone, $something);
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp|debian)/i) { $slash = "/"; }
 	
 	## ip, user, zeitstempel
 	## einlesen
