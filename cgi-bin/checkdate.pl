@@ -32,7 +32,7 @@ sub isrightdate {
 	local ($who,$from) = ();
 	local ($slash) = "\\";
 	
-	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp)/i) { $slash = "/"; }
+	if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|linux|rasp|debian)/i) { $slash = "/"; }
 	#if ($ENV{'SERVER_SOFTWARE'} =~ m/(unix|microsoft)/i) { $slash = "/"; }
 	
 	## wenn er schon eingeloggt ist, dann sollte hier der Zeitstempel aktualisiert werden
