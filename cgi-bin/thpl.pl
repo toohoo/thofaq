@@ -791,8 +791,16 @@ sub holconf {
 #       Ergaenzung einer Routine zum Senden einer Mail sendmail
 #***************************************************
 
-$_aktdir = `cd`;
-chop($_aktdir);
+#print "Content-type: text/html\n\n";
+#print "<p>Config{osname}: $Config{osname}</p>\n";
+if( ($ENV{SERVER_SOFTWARE} =~ m/(Debian|Linux|Unix|Ubuntu|Raspian)/i) || ($ENV{SHELL} =~ m|/bin/bash|  ) ) {
+	$_aktdir = `pwd`;
+} else {
+	$_aktdir = `cd`;
+}
+#print "<p>_aktdir: --[$_aktdir]--</p>\n";
+
+chomp($_aktdir);
 $_urldatn = 'chekurl.dat';
 $_urldat = "$_aktdir\\$_urldatn";
 
