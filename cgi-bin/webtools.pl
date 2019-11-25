@@ -1905,23 +1905,12 @@ sub input2faq {
     	$text =~ s|\n|\x02|ig;
     	## anscheinend Probleme mit \x0d
     	$text =~ s|\x0D||ig;
+    	## links
     	$text =~ s|<a href=[\"\']([^\"\']+)[\"\']>(.*?)<\/a>|\[link=$1\]$2\[\/link\]|ig;
 		## Links in neue Fenster
     	$text =~ s~<a href=[\"\']([^\"\']+)[\"\'] target=\"(_blank|_new|new)\">(.*?)<\/a>~\[linkx=$1\]$3\[\/link\]~ig;
-    	$text =~ s|<b>(.*?)<\/b>|\[b\]$1\[\/b\]|ig;
-    	$text =~ s|<i>(.*?)<\/i>|\[i\]$1\[\/i\]|ig;
-    	$text =~ s|<s>(.*?)<\/s>|\[s\]$1\[\/s\]|ig;
-    	$text =~ s|<strike>(.*?)<\/strike>|\[s\]$1\[\/s\]|ig;
-    	$text =~ s|<(\/)?ul>|[$1list]|ig;
-    	$text =~ s|<li>|[*]|ig;
-    	$text =~ s|<(\/)?ol>|[$1list=1]|ig;
-    	$text =~ s|<ol type=[\"\']([1ai])[\"\']>|[list=$1]|ig;
-    	$text =~ s|<img src=[\"\']([^\"\']+)[\"\']>|[img=$1]|ig;
-    	$text =~ s|<(\/)?pre>|[$1code]|ig;
-    	$text =~ s|<(\/)?code>|[$1code]|ig;
-    	$text =~ s|<(\/)?blockquote>|[$1quote]|ig;
 
-        # XML blocks
+        # XML blocks - has to be done BEFORE the remaining
         ## OK, in input  set xml to entities
     	## 3 steps, find and mask XML, take tagstart <, un-mask XML
     	my( $xmlcont, $foundxml, $xmlpos );
@@ -1936,6 +1925,21 @@ sub input2faq {
     	}
     	$text =~ s|__xml__|\[xml\]|sig;
     	$text =~ s|__/xml__|\[/xml\]|sig;
+
+        ## do the remaining
+    	$text =~ s|<b>(.*?)<\/b>|\[b\]$1\[\/b\]|ig;
+    	$text =~ s|<i>(.*?)<\/i>|\[i\]$1\[\/i\]|ig;
+    	$text =~ s|<s>(.*?)<\/s>|\[s\]$1\[\/s\]|ig;
+    	$text =~ s|<strike>(.*?)<\/strike>|\[s\]$1\[\/s\]|ig;
+    	$text =~ s|<(\/)?ul>|[$1list]|ig;
+    	$text =~ s|<li>|[*]|ig;
+    	$text =~ s|<(\/)?ol>|[$1list=1]|ig;
+    	$text =~ s|<ol type=[\"\']([1ai])[\"\']>|[list=$1]|ig;
+    	$text =~ s|<img src=[\"\']([^\"\']+)[\"\']>|[img=$1]|ig;
+    	$text =~ s|<(\/)?pre>|[$1code]|ig;
+    	$text =~ s|<(\/)?code>|[$1code]|ig;
+    	$text =~ s|<(\/)?blockquote>|[$1quote]|ig;
+
 
     	$text =~ s|<[^ >].*?>||ig;
 
