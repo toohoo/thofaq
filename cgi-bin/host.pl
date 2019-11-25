@@ -32,6 +32,34 @@ print "</table>\n";
 
 print "\n<p>Version: $]</p>\n";
 
-print "<p>Viel Spaﬂ beim Surfen!</p>\n";
+local (@wochentag) = (
+	"Sonntag",
+	"Montag",
+	"Dienstag",
+	"Mittwoch",
+	"Donnerstag",
+	"Freitag",
+	"Samstag"
+	);
+local (@wtkurz) = (
+	"So",
+	"Mo",
+	"Di",
+	"Mi",
+	"Do",
+	"Fr",
+	"Sa"
+	);
+
+local ($jetzt) = time;
+local ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($jetzt);
+$mon++;
+$year+=1900;
+local ($jetztjahr) = $year;
+$mday="0$mday" if ($mday<10);
+$mon="0$mon" if ($mon<10);
+print "<p>$wochentag[$wday], $mday.$mon.$year $hour:$min:$sec</p>\n";
+
+print "<p>Viel Spass beim Surfen!</p>\n";
 print "</html>\n";
 exit(0);

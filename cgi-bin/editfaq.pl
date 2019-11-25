@@ -22,7 +22,19 @@ $scriptname = $ENV{ 'SCRIPT_FILENAME' };
 $slash = "\\";
 $aktdir = &holpfad0($scriptname);
 if( $aktdir eq '' ) { $aktdir = '.'; }
+push (@INC, '.');
+if (!$ENV{ 'SCRIPT_FILENAME' }) {
+    if ($ENV{'PATH'} =~ m/\\/) {$aktdir = `cd`;}
+    else {$aktdir = `pwd`;}
+    chomp($aktdir);
+    if ($aktdir !~ m/cgi-bin.?$/) {$aktdir .= '/cgi-bin';}
+}
 push (@INC, $aktdir);
+#print "Content-type: text/html\n\n";
+#print "<html>\n";
+#print "<p> aktdir: --[$aktdir]--</p>\n\n";
+#print "<p> INC: --[".join('--',@INC)."]-- </p>\n\n";
+#goto ENDE;
 require "thpl.pl";
 require "cgi-lib.pl";
 chdir ($aktdir);
@@ -133,7 +145,7 @@ delete $fkat{ 'hashcloudsmall' } if defined( $fkat{ 'hashcloudsmall' } );  ## ta
 ## brauch ich hier die Kategorien zu uebergeben?
 ausgabefaq($aktkat, $toedit, *fkat, *ftit, *finh, *fnrkat);
 
-
+ENDE:
 print "</html>\n";
 exit(0);
 

@@ -45,14 +45,15 @@ $toedit = undef;
 
 if ($aktdir ne '') {
     push(@INC, $aktdir);
-    push(@INC, "$aktdir\/cgi-bin");
+    push(@INC, "$aktdir\/cgi-bin") if $aktdir !~ m/\/cgi-bin$/;
 }
 else {
     push(@INC, '.');
     push(@INC, './cgi-bin');
 }
 #push (@INC, '.');
-#print "<p>\$aktdir: $aktdir </p>\n";
+#print "Content-type: text/html\n\n";
+#print "<p>\$aktdir: --[$aktdir]-- </p>\n";
 #print "<p>\@INC: ", join( ';',@INC), " </p>\n";
 #my $xpath = `cd`;
 #print "$xpath\n";
