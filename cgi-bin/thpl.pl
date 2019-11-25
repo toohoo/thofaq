@@ -432,7 +432,7 @@ sub getdir_f {
 
 
 #---Ausdruck einer Liste-----------------#pl#
-
+=pod
 sub printListe {
 
 	local($z,$za,$c,$c2,$code,$zbs);
@@ -463,9 +463,9 @@ foreach (@_) {
 };
 print "\nAnzahl: ".@_."\n";
 };
-
+=cut
 #---Ausdruck eines Hash-----------------#ph#
-
+=pod
 sub printHash {
 
 	local(%h)=@_;
@@ -495,7 +495,7 @@ foreach (keys %h) {
 $za--;
 print "\nAnzahl: $za\n";
 };
-
+=cut
 #---Trennen des Pfades aus vollstaendiger Pfadangabe-----------------#hp#
 
 sub holpfad {
@@ -793,6 +793,7 @@ sub holconf {
 
 #print "Content-type: text/html\n\n";
 #print "<p>Config{osname}: $Config{osname}</p>\n";
+if( !defined( $ENV{SHELL} ) ) { $ENV{SHELL} = ''; }
 if( ($ENV{SERVER_SOFTWARE} =~ m/(Debian|Linux|Unix|Ubuntu|Raspian)/i) || ($ENV{SHELL} =~ m|/bin/bash|  ) ) {
 	$_aktdir = `pwd`;
 } else {

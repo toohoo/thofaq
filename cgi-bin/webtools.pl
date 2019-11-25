@@ -979,11 +979,15 @@ sub ausgabefaq {
 	} else {  ## normal nicht edit
 	    ## editfaq.pl does not take searchstring, if sst present then better head over to faqsearch.pl with parameters?
 	    ## das ist nicht die richtige Stelle, bei faqsearch wird ausgabefaqfound benutzt
+        my $tempkattit = 'keine gew&auml;hlt';
+#        print webhinweis("tempkattit:" . defined($tempkattit));
+        if( defined( $kat{$aktkat} ) ) { $tempkattit = $kat{$aktkat}; }
+#        print webhinweis("tempkattit:" . defined($tempkattit));
 	    if( $sst ) {
 	        ## ?kat=$nrkat{$k}\&hashtags=$input{'hashtags'}\&sst=$sicsst\&toedit=$toedit\&onlypickedkat=1
-	        print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[EDIT]"),"faqsearch.pl?kat=$aktkat\&hashtags=$input{'hashtags'}\&sst=$sst\&toedit=1\&onlypickedkat=")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
+	        print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$tempkattit'' " . webtag("small",weblink(trans("[EDIT]"),"faqsearch.pl?kat=$aktkat\&hashtags=$input{'hashtags'}\&sst=$sst\&toedit=1\&onlypickedkat=")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
 	    } else {
-	        print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$kat{$aktkat}'' " . webtag("small",weblink(trans("[EDIT]"),"editfaq.pl?kat=$aktkat")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
+	        print webtag("h3", "class=faqfragtit", webtag("a","name=fragen",trans("Fragen")) . trans(" zum Thema: ")."''$tempkattit'' " . webtag("small",weblink(trans("[EDIT]"),"editfaq.pl?kat=$aktkat")) . " " . webtag("small",weblink(trans("[alle Kategorien]"),"faq.pl?kat=alle")) );
 	    }
 	}
 	print webtag("ol", "type=1", "#EMPTY#");
