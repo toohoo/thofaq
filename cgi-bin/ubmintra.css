@@ -151,7 +151,10 @@ legend {
 	padding: 2px;
 }
 
-.faqfragtit a:link, .faqfragtit a:visited, /*.faqfragtit a:hover,*/ .faqfragtit a:active  {
+.faqfragtit a:link, .faqfragtit a:visited, .faqfragtit a:active, 
+.editfaqkatlink, /*.editfaqkatblock a:link, .editfaqkatblock a:visited, .editfaqkatblock a:active,   */
+.faqeditlink
+{ /*.faqfragtit a:hover,*/ /*.editfaqkatlink*/ /*.faqeditlink*/
 	background-color: #bdbdbd; 
 	border-top: 2px solid #d7d7d7; 
 	border-left: 2px solid #d7d7d7;
