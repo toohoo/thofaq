@@ -1414,7 +1414,7 @@ sub schreibfaq {
 			%f = %inh;
 		}
 
-		foreach $z (keys(%f)) {
+		foreach $z ( sort( keys(%f) ) ) {
 			print DAT "$z\t$f{$z}\n";
 		}
 
