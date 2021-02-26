@@ -150,6 +150,33 @@ legend {
 	margin: 2px;
 	padding: 2px;
 }
+.katwahl a:link {
+	color: black;
+	/*background-color: #9c9c9c;*/
+	text-decoration: none;
+	border-bottom: 1px dotted #8d8d8d; 
+}
+.katwahl a:active, .katwahl a:hover {
+	color: blue;
+	/*background-color: #9c9c9c;*/
+	text-decoration: underline;
+	border-bottom: 1px dotted #8d8d8d;
+	/*font-weight: bold; */
+}
+
+.faqfragen a:link {
+	color: black;
+	/*background-color: #9c9c9c;*/
+	text-decoration: none;
+	border-bottom: 1px dotted #8d8d8d; 
+}
+.faqfragen a:active, .faqfragen a:hover {
+	color: blue;
+	/*background-color: #9c9c9c;*/
+	text-decoration: underline;
+	border-bottom: 1px dotted #8d8d8d;
+	/*font-weight: bold; */
+}
 
 .faqfragtit a:link, .faqfragtit a:visited, .faqfragtit a:active, 
 .editfaqkatlink, /*.editfaqkatblock a:link, .editfaqkatblock a:visited, .editfaqkatblock a:active,   */
@@ -165,6 +192,14 @@ legend {
 	text-decoration: none;
 	color: black;
 }
+.faqfragtit a:active, .faqfragtit a:hover {
+	color: blue;
+	/*background-color: #9c9c9c;*/
+	text-decoration: underline;
+	border-bottom: 1px dotted #8d8d8d;
+	/*font-weight: bold; */
+}
+
 /*
 .faqfragtit a:link {
 	background-color: #bdbdbd; 
