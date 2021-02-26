@@ -56,8 +56,8 @@ $langLinks = ' <small class="langLinks">' . linkLang() . '</small> ';
 $head =~ s|(</h1>)|$langLinks$1|i;
 if( $encoding ) { $head =~ s|ISO\-8859\-1|$encoding|; }
 print $head;
-print &webtag(&weblink(trans("[zurück zu Edit Fragen]"),"editfaq.pl") );
-
+#print &webtag(&weblink(trans("[zurück zu Edit Fragen]"),"editfaq.pl") );
+print &webtag( 'p', "class=faqeditblock",   &weblinkclass(trans("[zurück zu Edit Fragen]"), "editfaq.pl",'faqeditlink') );
 
 ($fkat, $ftit, $finh) = ($globals{"faq-kat"},$globals{"faq-tit"},$globals{"faq-inh"});
 
@@ -121,7 +121,8 @@ if (&ReadParse(*input)) {
 	$tit = $input{"tit"};
 	$inh = $input{"text"};
 
-	print &webtag(&weblink(trans("[zurück zu Edit Fragen in Kategorie $kat]"),"editfaq.pl?kat=$kat") );
+	#print &webtag(&weblink(trans("[zurück zu Edit Fragen in Kategorie $kat]"),"editfaq.pl?kat=$kat") );
+	print &webtag( 'p', "class=faqeditblock",  &weblinkclass(trans("[zurück zu Edit Fragen in Kategorie $kat]"), "editfaq.pl?kat=$kat",'faqeditlink') );
 	
 	## Schutz bei Titel und Inhalt vornehmen
 	## 	titel: Umbrueche, Tabs, Markup raus
