@@ -164,6 +164,17 @@ legend {
 	/*font-weight: bold; */
 }
 
+.searchbox {
+	text-align: right;
+	padding-right: 3px;
+	/*border: thin dotted green;*/
+}
+.hashtagblock {
+	display: block;
+	text-align: center;
+	/*border: thin dotted blue;*/
+}
+
 .faqfragen a:link {
 	color: black;
 	/*background-color: #9c9c9c;*/
@@ -517,6 +528,9 @@ b > code, code > b {
 
 .hashblock {
 	margin: 5px 5px 5px 5px;
+	text-align: center;
+	border-top: thin solid grey;
+	
 }
 
 .hashblock a {
@@ -529,7 +543,7 @@ b > code, code > b {
 	padding: 0 0 0 0;
 	/*padding-top: -5px;*/
 	padding-right: 2px;
-	padding-bottom: 2px;
+	padding-bottom: 1px;
 	margin: 0 0 0 0;
 	margin-top: 3px;
 	margin-right: 1px;

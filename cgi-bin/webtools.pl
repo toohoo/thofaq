@@ -925,7 +925,7 @@ sub ausgabekat {
 	if ( !$hasharray || !$hashcloud || !$hashcloudsmall ) {
 		my $sicsst = $sst; if ( !defined( $sicsst ) ) { $sicsst = ''; }
 		$sicsst =~ s/\#/\%23/i;
-		print '&nbsp;' . webtag( "small", '#EMPTY#' );
+		print '' . webtag( "small", "class=hashtagblock", '#EMPTY#' ); # '&nbsp;' .
 		print weblink( "Hashtags","$scriptname?kat=$aktkat\&hashtags=on\&sst=$sicsst\&toedit=$toedit" ) if !$hasharray;
 		print ' - ' if ( !$hasharray && !$hashcloud );
 		print weblink( "Hashcloud","$scriptname?kat=$aktkat\&hashcloud=on\&sst=$sicsst\&toedit=$toedit" ) if !$hashcloud;
